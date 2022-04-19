@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    wash type list view-->
+    <record id="wash_type_tree_view" model="ir.ui.view">
+        <field name="name">wash.type.tree.view</field>
+        <field name="model">wash.type</field>
+        <field name="arch" type="xml">
+            <tree string="Wash Type">
+                <field name="name"/>
+                <field name="code"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    wash type form view-->
+    <record id="wash_type_form_view" model="ir.ui.view">
+        <field name="name">wash.type.form.view</field>
+        <field name="model">wash.type</field>
+        <field name="arch" type="xml">
+            <form string="Wash Type">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for wash type-->
+    <record id="wash_type_action" model="ir.actions.act_window">
+        <field name="name">Wash Type</field>
+        <field name="res_model">wash.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="wash_type_action" id="wash_type_menu"
+            parent="stock.menu_product_in_config_stock" sequence="101"/>
+
+</odoo>

@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+fabric_type_access_base_user,fabric_type_access_base,model_fabric_type,base.group_user,1,1,1,1
+wash_type_access_base_user,wash_type_access_base,model_wash_type,base.group_user,1,1,1,1
+garment_type_access_base_user,garment_type_access_base,model_garment_type,base.group_user,1,1,1,1

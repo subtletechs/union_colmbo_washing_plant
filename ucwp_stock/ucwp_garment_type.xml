@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    garment type list view-->
+    <record id="garment_type_tree_view" model="ir.ui.view">
+        <field name="name">garment.type.tree.view</field>
+        <field name="model">garment.type</field>
+        <field name="arch" type="xml">
+            <tree string="Garment Type">
+                <field name="name"/>
+                <field name="code"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    garment type form view-->
+    <record id="garment_type_form_view" model="ir.ui.view">
+        <field name="name">garment.type.form.view</field>
+        <field name="model">garment.type</field>
+        <field name="arch" type="xml">
+            <form string="Garment Type">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for garment type-->
+    <record id="garment_type_action" model="ir.actions.act_window">
+        <field name="name">Garment Type</field>
+        <field name="res_model">garment.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="garment_type_action" id="garment_type_menu"
+            parent="stock.menu_product_in_config_stock" sequence="103"/>
+
+</odoo>

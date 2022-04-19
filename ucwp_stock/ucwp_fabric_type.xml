@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    fabric type list view-->
+    <record id="fabric_type_tree_view" model="ir.ui.view">
+        <field name="name">fabric.type.tree.view</field>
+        <field name="model">fabric.type</field>
+        <field name="arch" type="xml">
+            <tree string="Fabric Type">
+                <field name="name"/>
+                <field name="code"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    fabric type form view-->
+    <record id="fabric_type_form_view" model="ir.ui.view">
+        <field name="name">fabric.type.form.view</field>
+        <field name="model">fabric.type</field>
+        <field name="arch" type="xml">
+            <form string="Fabric Type">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for fabric type-->
+    <record id="fabric_type_action" model="ir.actions.act_window">
+        <field name="name">Fabric Type</field>
+        <field name="res_model">fabric.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="fabric_type_action" id="fabric_type_menu"
+            parent="stock.menu_product_in_config_stock" sequence="100"/>
+
+</odoo>
