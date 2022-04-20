@@ -17,7 +17,34 @@
                             <field name="garment_type"/>
                             <field name="customer"/>
                             <field name="garment_select" widget="radio"/>
-                            <field name="samples" attrs="{'invisible': [('garment_select', '=', 'bulk')]}"/>
+                            <field name="samples" attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='default_code']" position="attributes">
+                <attribute name="string">UC Number</attribute>
+            </xpath>
+        </field>
+    </record>
+
+        <!-- view used for product.product only -->
+    <record id="product_product_form_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">product.product.form.view.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_information']" position="before">
+                <!-- Style Information Tab -->
+                <page string="Style Information" name="general_information">
+                        <group name="group_general">
+                            <field name="buyer"/>
+                            <field name="style_no"/>
+                            <field name="fabric_type"/>
+                            <field name="wash_type"/>
+                            <field name="garment_type"/>
+                            <field name="customer"/>
+                            <field name="garment_select" widget="radio"/>
+                            <field name="samples" attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
                     </group>
                 </page>
             </xpath>
