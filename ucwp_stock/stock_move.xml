@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <!-- stock picking form view -->
+    <!-- stock picking tree view -->
     <record id="stock_picking_tree_view_inherit_union_colombo" model="ir.ui.view">
         <field name="name">stock.picking.tree.view.inherit</field>
         <field name="model">stock.picking</field>

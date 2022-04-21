@@ -9,6 +9,7 @@
         'base',
         'stock',
         'sale',
+        'mrp',
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -18,6 +19,7 @@
         'ucwp_stock/ucwp_wash_type.xml',
         'ucwp_stock/ucwp_garment_type.xml',
         'ucwp_sale/sale_order.xml',
+        'ucwp_mrp/mrp_bom_views.xml',
     ],
 
     'installable': True,

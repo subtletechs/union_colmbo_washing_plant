@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- bom lines tree view -->
+    <record id="mrp_bom_tree_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">mrp.bom.form.tree.view.inherit</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_id']" position="after">
+                <field name="time" widget="float_time"/>
+                <field name="temperature"/>
+                <field name="ph"/>
+            </xpath>
+            <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="attributes">
+                <attribute name="string">Load Weight</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- view used for mrp.bom -->
+    <record id="mrp_bom_form_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">mrp.bom.form.view.inherit</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                            <field name="garment_select"/>
+                            <field name="buyer"/>
+                            <field name="style_no"/>
+                            <field name="fabric_type"/>
+                            <field name="wash_type"/>
+                            <field name="machine_type"/>
+                            <field name="lot_size"/>
+                            <field name="per_piece_weight"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
