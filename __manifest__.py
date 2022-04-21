@@ -7,14 +7,17 @@
     'author': 'Subtle Technologies (Pvt) Ltd',
     'depends': [
         'base',
-        'stock'
+        'stock',
+        'sale',
     ],
     'data': [
         'security/ir.model.access.csv',
         'ucwp_stock/product_template.xml',
+        'ucwp_stock/stock_move.xml',
         'ucwp_stock/ucwp_fabric_type.xml',
         'ucwp_stock/ucwp_wash_type.xml',
         'ucwp_stock/ucwp_garment_type.xml',
+        'ucwp_sale/sale_order.xml',
     ],
 
     'installable': True,
