@@ -30,3 +30,5 @@ class ProductProduct(models.Model):
     garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample',
                                       related='product_tmpl_id.garment_select')
     samples = fields.Many2one(comodel_name="garment.sample", string="Samples", related='product_tmpl_id.samples')
+
+

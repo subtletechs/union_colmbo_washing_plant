@@ -4,3 +4,4 @@ wash_type_access_base_user,wash_type_access_base,model_wash_type,base.group_user
 garment_type_access_base_user,garment_type_access_base,model_garment_type,base.group_user,1,1,1,1
 garment_sample_access_base_user,garment_sample_access_base,model_garment_sample,base.group_user,1,1,1,1
 machine_type_access_base_user,machine_type_access_base,model_machine_type,base.group_user,1,1,1,1
+inspection_quantity_access_base_user,inspection_quantity_access_base,model_inspection_quantity,base.group_user,1,1,1,1
