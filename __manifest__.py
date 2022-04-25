@@ -22,6 +22,7 @@
         'ucwp_sale/sale_order.xml',
         'ucwp_mrp/mrp_bom_views.xml',
         'ucwp_quality/quality_views.xml',
+        'ucwp_quality/ucwp_defects.xml',
     ],
 
     'installable': True,

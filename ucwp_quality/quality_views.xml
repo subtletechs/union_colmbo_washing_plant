@@ -17,14 +17,31 @@
                 <field name="quality_of"/>
                 <field name="second_wash"/>
             </xpath>
-            <!--            Inspection Quantity tab-->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="done_quantity" invisible="1"/>
+            </xpath>
+
+            <!--Inspection Quantity tab-->
             <xpath expr="//page[@name='notes']" position="before">
                 <page string="Inspection Quantity" name="inspection_quantity">
-                    <field name="inspection_quantity">
+                    <field name="inspection_quantity"
+                           context="{'default_quantity': done_quantity, 'default_only_with_stock': True}">
                         <tree string="Inspection Quantity" editable="bottom">
                             <field name="quantity"/>
-                            <field name="pass_Quantity"/>
-                            <field name="fail_Quantity"/>
+                            <field name="pass_quantity"/>
+                            <field name="fail_quantity"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+
+            <!--Defects tab-->
+            <xpath expr="//page[@name='notes']" position="before">
+                <page string="Defects" name="defects_lines">
+                    <field name="defects_lines">
+                        <tree string="Defects" editable="bottom">
+                            <field name="defect"/>
+                            <field name="quantity"/>
                         </tree>
                     </field>
                 </page>

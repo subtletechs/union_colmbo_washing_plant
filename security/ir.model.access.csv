@@ -5,3 +5,5 @@ garment_type_access_base_user,garment_type_access_base,model_garment_type,base.g
 garment_sample_access_base_user,garment_sample_access_base,model_garment_sample,base.group_user,1,1,1,1
 machine_type_access_base_user,machine_type_access_base,model_machine_type,base.group_user,1,1,1,1
 inspection_quantity_access_base_user,inspection_quantity_access_base,model_inspection_quantity,base.group_user,1,1,1,1
+defects_access_base_user,defects_access_base,model_defects,base.group_user,1,1,1,1
+defects_lines_access_base_user,defects_lines_access_base,model_defects_lines,base.group_user,1,1,1,1
