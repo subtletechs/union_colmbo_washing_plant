@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+
+    <!--     stock move-->
+    <record id="view_stock_move_nosuggest_operations_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">stock.move.operations.nosuggest.form.view.inherit</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_stock_move_nosuggest_operations"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='move_line_nosuggest_ids']" position="after">
+                <field name="done_qty"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- stock move lines -->
+    <record id="view_stock_move_line_operation_tree_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">stock.move.line.operations.tree.inherit.union.colombo</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lot_name']" position="after">
+                <field name="barcode"/>
+                <!--                <field name="route_operation"/>-->
+            </xpath>
+            <xpath expr="//field[@name='lot_name']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+
+    </record>
+
     <!-- stock picking tree view -->
     <record id="stock_picking_tree_view_inherit_union_colombo" model="ir.ui.view">
         <field name="name">stock.picking.tree.view.inherit</field>
@@ -8,6 +38,37 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_id']" position="after">
                 <field name="invoice_type"/>
+                <field name="wash_type"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Stock Picking internal search-->
+    <record id="view_picking_internal_search_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">stock.picking.internal.search.inherit.union.colombo</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <!-- group by -->
+            <xpath expr="//filter[@name='picking_type']" position="after">
+                <separator/>
+                <filter string="Contact" name="group_by_customer" domain="[]" context="{'group_by': 'partner_id'}"/>
+                <filter string="Created date" name="group_by_create_date" domain="[]"
+                        context="{'group_by': 'create_date'}"/>
+<!--                <filter string="Variant" name="group_by_variant" domain="[]" context="{'group_by': ''}"/>-->
+            </xpath>
+        </field>
+    </record>
+
+    <!-- view used for stock.production.lot  -->
+    <record id="view_production_lot_form_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">stock.production.lot.form.view.inherit</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
+        <field name="arch" type="xml">
+            <!-- Barcode field -->
+            <xpath expr="//group[@name='main_group']/group[1]/field[@name='company_id']" position="after">
+                <field name="barcode"/>
             </xpath>
         </field>
     </record>

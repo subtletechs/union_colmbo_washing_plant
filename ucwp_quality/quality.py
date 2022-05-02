@@ -25,10 +25,13 @@ class QualityPoint(models.Model):
     # Inspection Quantity
     inspection_quantity = fields.One2many(comodel_name="inspection.quantity", inverse_name="quality_id",
                                           string="Inspection Quantity")
-    done_quantity = fields.Float(compute="calculate_quantity")
+    done_quantity = fields.Float(string="Done")
+
+    product = fields.Float(compute="calculate_quantity")
     # Defects
     defects_lines = fields.One2many(comodel_name="defects.lines", inverse_name="quality_check_id", string="Defects")
 
+    @api.depends('product_id')
     def _compute_variant(self):
 
         attribute_ids = self.env['product.attribute'].search([('display_type', '=', 'color')])
@@ -46,25 +49,27 @@ class QualityPoint(models.Model):
                                     record.color = record.color_id.name
                     else:
                         record.color_id = None
+                else:
+                    record.color_id = None
 
-    @api.depends('product_id', 'picking_id')
-    def calculate_quantity(self):
-        for record in self:
-            if record.picking_id:
-                stock_picking = record.picking_id
-                if record.product_id:
-                    product = record.product_id
-                    stock_picking_lines = stock_picking.move_ids_without_package
-                    if stock_picking_lines:
-                        for line in stock_picking_lines:
-                            if line.product_id.id == product.id:
-                                done_qty = line.quantity_done
-                                record.done_quantity = done_qty
-                                break
-                            else:
-                                record.done_quantity = 0
-                    else:
-                        record.done_quantity = 0
+    # @api.depends('product_id', 'picking_id')
+    # def calculate_quantity(self):
+    #     for record in self:
+    #         # if record.picking_id:
+    #         stock_picking = record.picking_id
+    #         # if record.product_id:
+    #         product = record.product_id
+    #         stock_picking_lines = stock_picking.move_ids_without_package
+    #                 # if stock_picking_lines:
+    #         for line in stock_picking_lines:
+    #             if line.product_id.id == product.id:
+    #                 done_qty = line.quantity_done
+    #                 record.done_quantity = done_qty
+    #                 break
+    #             else:
+    #                 record.done_quantity = 0
+    #                 # else:
+    #                 #     record.done_quantity = 0
 
 
 class DefectsLines(models.Model):

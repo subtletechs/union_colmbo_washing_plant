@@ -9,15 +9,16 @@
             <xpath expr="//page[@name='general_information']" position="before">
                 <!-- Style Information Tab -->
                 <page string="Style Information" name="general_information">
-                        <group name="group_general">
-                            <field name="buyer"/>
-                            <field name="style_no"/>
-                            <field name="fabric_type"/>
-                            <field name="wash_type"/>
-                            <field name="garment_type"/>
-                            <field name="customer"/>
-                            <field name="garment_select" widget="radio"/>
-                            <field name="samples" attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
+                    <group name="group_general">
+                        <field name="buyer"/>
+                        <field name="style_no"/>
+                        <field name="fabric_type"/>
+                        <field name="wash_type"/>
+                        <field name="garment_type"/>
+                        <field name="customer"/>
+                        <field name="garment_select" widget="radio"/>
+                        <field name="samples"
+                               attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
                     </group>
                 </page>
             </xpath>
@@ -26,8 +27,29 @@
             </xpath>
         </field>
     </record>
+    <!-- Product Template internal search-->
+    <record id="product_template_search_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">product.template.search.inherit.union.colombo</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <!-- group by -->
+            <xpath expr="//filter[@name='categ_id']" position="after">
+                <separator/>
+                <filter string="Style" name="group_by_style" domain="[]" context="{'group_by': 'style_no'}"/>
+                <filter string="Buyer" name="group_by_buyer" domain="[]" context="{'group_by': 'buyer'}"/>
+                <filter string="Fabric Type" name="group_by_fabric_type" domain="[]"
+                        context="{'group_by': 'fabric_type'}"/>
+                <filter string="Wash Type" name="group_by_wash_type" domain="[]" context="{'group_by': 'wash_type'}"/>
+                <filter string="Contact" name="group_by_customer" domain="[]" context="{'group_by': 'customer'}"/>
+                <filter string="Created date" name="group_by_create_date" domain="[]"
+                        context="{'group_by': 'create_date'}"/>
+            </xpath>
+        </field>
+    </record>
 
-        <!-- view used for product.product only -->
+
+    <!-- view used for product.product only -->
     <record id="product_product_form_view_inherit_union_colombo" model="ir.ui.view">
         <field name="name">product.product.form.view.inherit</field>
         <field name="model">product.product</field>
@@ -36,15 +58,16 @@
             <xpath expr="//page[@name='general_information']" position="before">
                 <!-- Style Information Tab -->
                 <page string="Style Information" name="general_information">
-                        <group name="group_general">
-                            <field name="buyer"/>
-                            <field name="style_no"/>
-                            <field name="fabric_type"/>
-                            <field name="wash_type"/>
-                            <field name="garment_type"/>
-                            <field name="customer"/>
-                            <field name="garment_select" widget="radio"/>
-                            <field name="samples" attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
+                    <group name="group_general">
+                        <field name="buyer"/>
+                        <field name="style_no"/>
+                        <field name="fabric_type"/>
+                        <field name="wash_type"/>
+                        <field name="garment_type"/>
+                        <field name="customer"/>
+                        <field name="garment_select" widget="radio"/>
+                        <field name="samples"
+                               attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
                     </group>
                 </page>
             </xpath>

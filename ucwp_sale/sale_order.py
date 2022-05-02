@@ -26,10 +26,16 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def _onchange_details(self):
-        self.buyer = self.product_id.buyer
-        self.style_no = self.product_id.style_no
-        self.fabric_type = self.product_id.fabric_type
-        self.wash_type = self.product_id.wash_type
-        self.garment_type = self.product_id.garment_type
-        self.garment_select = self.product_id.garment_select
+        if self.product_id.buyer:
+            self.buyer = self.product_id.buyer
+        if self.product_id.style_no:
+            self.style_no = self.product_id.style_no
+        if self.product_id.fabric_type:
+            self.fabric_type = self.product_id.fabric_type
+        if self.product_id.wash_type:
+            self.wash_type = self.product_id.wash_type
+        if self.product_id.garment_type:
+            self.garment_type = self.product_id.garment_type
+        if self.product_id.garment_select:
+            self.garment_select = self.product_id.garment_select
 
