@@ -12,7 +12,9 @@ class StockMove(models.Model):
     invoice_type = fields.Selection([('invoice', 'Invoiceable'), ('not_invoiceable', 'Not-Invoiceable')],
                                     string='Invoice Type')
     wash_type = fields.Selection([('wash', 'Wash'), ('rewash', 'Re-wash')], sting="Wash Type")
-    done_qty = fields.Float(string="Total Done", compute="_compute_done")
+    approval = fields.Selection([('approved', 'Approved'), ('rejected', 'Rejected')], string="Approved/Rejected")
+    comment = fields.Text(string="Comment")
+    done_qty = fields.Float(string="Total Done")  # , compute="_compute_done")
 
     # def write(self, vals):
     #     record_id = self.id
@@ -25,9 +27,7 @@ class StockMove(models.Model):
     #     #     raise UserError('Quantity mismatched!')
     #     return super(StockMove, self).write(vals)
 
-    # @api.depends('move_line_nosuggest_ids.qty_done')
-    # @api.depends('move_line_ids.qty_done')
-    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done', 'picking_type_id.show_reserved')
+    @api.depends('move_line_nosuggest_ids.qty_done')
     def _compute_done(self):
         if not any(self._ids):
             # onchange
@@ -37,7 +37,7 @@ class StockMove(models.Model):
                     quantity_done += move_line.product_uom_id._compute_quantity(
                         move_line.qty_done, move.product_uom, round=False)
                 move.quantity_done = quantity_done
-                print(quantity_done)
+                # print(quantity_done)
         else:
             # compute
             move_lines_ids = set()
@@ -49,7 +49,7 @@ class StockMove(models.Model):
                 ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
                 lazy=False
             )
-            print(data[0]['qty_done'])
+            # print(data[0]['qty_done'])
 
             # if data[0]['qty_done'] != self.product_uom_qty:
             #     raise UserError("Quantity mismatched!")
@@ -80,3 +80,10 @@ class ProductionLot(models.Model):
 
 class Picking(models.Model):
     _inherit = "stock.picking"
+
+    variant_id = fields.Many2one(string="Variant", related="move_ids_without_package.product_id", store=True)
+
+
+    def variant_ids(self):
+        pass
+        # ids = self.env['stock.picking'].search([('')])

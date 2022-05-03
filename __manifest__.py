@@ -11,6 +11,7 @@
         'sale',
         'mrp',
         'quality',
+        'quality_control',
     ],
     'data': [
         'security/ir.model.access.csv',

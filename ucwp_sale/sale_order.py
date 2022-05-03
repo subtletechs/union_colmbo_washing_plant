@@ -18,7 +18,6 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     buyer = fields.Many2one(comodel_name="res.partner", string="Buyer")
-    style_no = fields.Char(string="Style No")
     fabric_type = fields.Many2one(comodel_name="fabric.type", string="Fabric Type")
     wash_type = fields.Many2one(comodel_name="wash.type", string="Wash Type")
     garment_type = fields.Many2one(comodel_name="garment.type", string="Garment Type")
@@ -28,8 +27,6 @@ class SaleOrderLine(models.Model):
     def _onchange_details(self):
         if self.product_id.buyer:
             self.buyer = self.product_id.buyer
-        if self.product_id.style_no:
-            self.style_no = self.product_id.style_no
         if self.product_id.fabric_type:
             self.fabric_type = self.product_id.fabric_type
         if self.product_id.wash_type:

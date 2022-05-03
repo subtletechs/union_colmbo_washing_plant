@@ -9,7 +9,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='measure_on']" position="after">
                 <field name="buyer"/>
-                <field name="style_no"/>
                 <field name="fabric_type"/>
                 <field name="wash_type"/>
                 <field name="color_id" invisible="1"/>

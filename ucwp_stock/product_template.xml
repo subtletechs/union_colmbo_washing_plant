@@ -11,7 +11,6 @@
                 <page string="Style Information" name="general_information">
                     <group name="group_general">
                         <field name="buyer"/>
-                        <field name="style_no"/>
                         <field name="fabric_type"/>
                         <field name="wash_type"/>
                         <field name="garment_type"/>
@@ -36,7 +35,6 @@
             <!-- group by -->
             <xpath expr="//filter[@name='categ_id']" position="after">
                 <separator/>
-                <filter string="Style" name="group_by_style" domain="[]" context="{'group_by': 'style_no'}"/>
                 <filter string="Buyer" name="group_by_buyer" domain="[]" context="{'group_by': 'buyer'}"/>
                 <filter string="Fabric Type" name="group_by_fabric_type" domain="[]"
                         context="{'group_by': 'fabric_type'}"/>
@@ -60,7 +58,6 @@
                 <page string="Style Information" name="general_information">
                     <group name="group_general">
                         <field name="buyer"/>
-                        <field name="style_no"/>
                         <field name="fabric_type"/>
                         <field name="wash_type"/>
                         <field name="garment_type"/>

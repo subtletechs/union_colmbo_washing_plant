@@ -12,7 +12,6 @@ class MrpBom(models.Model):
     garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample',
                                       related='product_tmpl_id.garment_select')
     buyer = fields.Many2one(comodel_name="res.partner", string="Buyer", related='product_tmpl_id.buyer', required=True)
-    style_no = fields.Char(string="Style No", related='product_tmpl_id.style_no', required=True)
     fabric_type = fields.Many2one(comodel_name="fabric.type", string="Fabric Type",
                                   related='product_tmpl_id.fabric_type', required=True)
     wash_type = fields.Many2one(comodel_name="wash.type", string="Wash Type", related='product_tmpl_id.wash_type',

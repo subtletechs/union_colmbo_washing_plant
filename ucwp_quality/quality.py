@@ -12,7 +12,6 @@ class QualityPoint(models.Model):
 
     buyer = fields.Many2one(comodel_name="res.partner", string="Buyer", related='product_id.product_tmpl_id.buyer',
                             required=True)
-    style_no = fields.Char(string="Style No", related='product_id.product_tmpl_id.style_no', required=True)
     fabric_type = fields.Many2one(comodel_name="fabric.type", string="Fabric Type",
                                   related='product_id.product_tmpl_id.fabric_type', required=True)
     wash_type = fields.Many2one(comodel_name="wash.type", string="Wash Type",
