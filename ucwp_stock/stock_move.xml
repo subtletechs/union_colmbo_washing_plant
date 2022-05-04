@@ -21,7 +21,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_name']" position="after">
                 <field name="barcode"/>
-                <!--                <field name="route_operation"/>-->
+                <field name="garment_select" invisible="1"/>
+                <field name="washing_options" attrs="{'invisible': [('garment_select', '=', 'bulk')]}"/>
+<!--                <field name="route_operation"/>-->
             </xpath>
             <xpath expr="//field[@name='lot_name']" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -39,6 +41,8 @@
             <xpath expr="//field[@name='product_id']" position="after">
                 <field name="invoice_type"/>
                 <field name="wash_type"/>
+                <field name="garment_select"/>
+                <field name="samples" attrs="{'invisible': [('garment_select', '=', 'bulk')]}"/>
                 <field name="approval"/>
                 <field name="comment"/>
             </xpath>
