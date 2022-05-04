@@ -15,9 +15,6 @@ class StockMove(models.Model):
     approval = fields.Selection([('approved', 'Approved'), ('rejected', 'Rejected')], string="Approved/Rejected")
     comment = fields.Text(string="Comment")
     done_qty = fields.Float(string="Total Done")  # , compute="_compute_done")
-    garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample',
-                                      related="product_id.garment_select", store=True)
-    samples = fields.Many2one(comodel_name="product.product", string="Samples")
 
     # def write(self, vals):
     #     record_id = self.id
@@ -65,7 +62,7 @@ class StockMoveLine(models.Model):
     washing_options = fields.Many2one(comodel_name="washing.options", string="Washing Options")
     route_operation = fields.Many2one(comodel="mrp.bom", string="Route/Operation")
     garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample',
-                                      related="move_id.garment_select", store=True)
+                                      related="product_id.garment_select", store=True)
 
     @api.model
     def create(self, vals):
@@ -88,6 +85,8 @@ class Picking(models.Model):
     _inherit = "stock.picking"
 
     variant_id = fields.Many2one(string="Variant", related="move_ids_without_package.product_id", store=True)
+    garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample')
+    samples = fields.Many2one(comodel_name="product.product", string="Samples")
 
     def variant_ids(self):
         pass
