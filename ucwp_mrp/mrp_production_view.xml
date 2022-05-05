@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--    bulk production list view-->
+    <record id="bulk_production_tree_view" model="ir.ui.view">
+        <field name="name">bulk.production.tree.view</field>
+        <field name="model">bulk.production</field>
+        <field name="arch" type="xml">
+            <tree string="Bulk Production">
+                <field name="name"/>
+                <field name="product"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    bulk production form view-->
+    <record id="bulk_production_form_view" model="ir.ui.view">
+        <field name="name">bulk.production.form.view</field>
+        <field name="model">bulk.production</field>
+        <field name="arch" type="xml">
+            <form string="Bulk Production">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="product"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Manufacture Orders" name="manufacture_orders">
+                            <field name="manufacture_orders">
+                                <tree string="Manufacture Orders" editable="bottom">
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for bulk production-->
+    <record id="bulk_production_action" model="ir.actions.act_window">
+        <field name="name">Bulk Production</field>
+        <field name="res_model">bulk.production</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="bulk_production_action" id="bulk_production_menu"
+            parent="mrp.menu_mrp_manufacturing" sequence="1"/>
+
+</odoo>

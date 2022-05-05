@@ -8,3 +8,4 @@ inspection_quantity_access_base_user,inspection_quantity_access_base,model_inspe
 defects_access_base_user,defects_access_base,model_defects,base.group_user,1,1,1,1
 defects_lines_access_base_user,defects_lines_access_base,model_defects_lines,base.group_user,1,1,1,1
 washing_options_access_base_user,washing_options_access_base,model_washing_options,base.group_user,1,1,1,1
+bulk_production_access_base_user,bulk_production_access_base,model_bulk_production,base.group_user,1,1,1,1

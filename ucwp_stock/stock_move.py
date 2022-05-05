@@ -1,3 +1,5 @@
+import datetime
+
 from odoo import api, fields, models
 
 from odoo.exceptions import UserError, ValidationError
@@ -87,6 +89,18 @@ class Picking(models.Model):
     variant_id = fields.Many2one(string="Variant", related="move_ids_without_package.product_id", store=True)
     garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample')
     samples = fields.Many2one(comodel_name="product.product", string="Samples")
+
+    # UC-05
+    receive_logistic = fields.Datetime(string='Receive to Log', readonly=True)
+    receive_sample_room = fields.Datetime(string='Receive to Sample Room', readonly=True)
+
+    def receive_logistic_update_datetime(self):
+        """Update logistic order received date and time"""
+        self.write({'receive_logistic': datetime.datetime.now()})
+
+    def receive_sample_update_datetime(self):
+        """Update Sample room order received date and time"""
+        self.write({'receive_sample_room': datetime.datetime.now()})
 
     def variant_ids(self):
         pass
