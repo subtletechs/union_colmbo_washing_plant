@@ -8,6 +8,11 @@
             <tree string="Bulk Production">
                 <field name="name"/>
                 <field name="product"/>
+                <field name="buyer"/>
+                <field name="fabric_type"/>
+                <field name="wash_type"/>
+                <field name="bom"/>
+                <field name="lot_size"/>
             </tree>
         </field>
     </record>
@@ -23,6 +28,13 @@
                         <group>
                             <field name="name"/>
                             <field name="product"/>
+                            <field name="bom"/>
+                        </group>
+                        <group>
+                            <field name="buyer"/>
+                            <field name="fabric_type"/>
+                            <field name="wash_type"/>
+                            <field name="lot_size"/>
                         </group>
                     </group>
                     <notebook>
@@ -30,6 +42,17 @@
                             <field name="manufacture_orders">
                                 <tree string="Manufacture Orders" editable="bottom">
                                     <field name="name"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Lot Information" name="lot_information">
+                            <field name="lot_information">
+                                <tree string="Lot Information" editable="bottom">
+                                    <field name="job_no"/>
+                                    <field name="job_qty"/>
+                                    <field name="machine_no"/>
+                                    <field name="operator_name"/>
+                                    <field name="barcode"/>
                                 </tree>
                             </field>
                         </page>

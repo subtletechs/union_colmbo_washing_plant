@@ -34,3 +34,10 @@ class MachineType(models.Model):
 
     name = fields.Char(sting="name")
     code = fields.Char(string="code")
+
+
+class Machines(models.Model):
+    _name = "mo.machines"
+
+    machine_number = fields.Char(string="Machine Number")
+    machine_type = fields.Many2one(comodel="machine.type", string="Machine Type")

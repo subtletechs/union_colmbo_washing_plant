@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 from odoo.osv.expression import OR
 
 
-class QualityPoint(models.Model):
+class QualityCheck(models.Model):
     _inherit = "quality.check"
 
     buyer = fields.Many2one(comodel_name="res.partner", string="Buyer", related='product_id.product_tmpl_id.buyer',

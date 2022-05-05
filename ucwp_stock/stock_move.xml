@@ -23,7 +23,7 @@
                 <field name="barcode"/>
                 <field name="garment_select" invisible="1"/>
                 <field name="washing_options" attrs="{'invisible': [('garment_select', '=', 'bulk')]}"/>
-<!--                <field name="route_operation"/>-->
+                <!--                <field name="route_operation"/>-->
             </xpath>
             <xpath expr="//field[@name='lot_name']" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -33,7 +33,8 @@
     </record>
 
     <!-- stock picking tree view -->
-    <record id="stock_picking_tree_view_inherit_union_colombo" model="ir.ui.view">
+    <record id="view_picking_form_view_inherit_union_colombo" model="ir.ui.view">
+<!--        view_picking_form-->
         <field name="name">stock.picking.tree.view.inherit</field>
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
@@ -46,7 +47,8 @@
             </xpath>
             <xpath expr="//field[@name='picking_type_id']" position="after">
                 <field name="garment_select"/>
-                <field name="samples" attrs="{'invisible': [('garment_select', '=', 'bulk')]}"/>
+                <field name="samples"
+                       attrs="{'invisible': ['|',('garment_select', '=', 'sample'),('garment_select', '=', False)]}"/>
                 <field name="receive_logistic"/>
                 <field name="receive_sample_room"/>
             </xpath>
