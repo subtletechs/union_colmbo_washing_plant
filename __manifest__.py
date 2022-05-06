@@ -12,6 +12,7 @@
         'mrp',
         'quality',
         'quality_control',
+        'hr',
     ],
     'data': [
         'security/ir.model.access.csv',

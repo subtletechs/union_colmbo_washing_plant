@@ -10,4 +10,4 @@ defects_lines_access_base_user,defects_lines_access_base,model_defects_lines,bas
 washing_options_access_base_user,washing_options_access_base,model_washing_options,base.group_user,1,1,1,1
 bulk_production_access_base_user,bulk_production_access_base,model_bulk_production,base.group_user,1,1,1,1
 mo_lot_information_lines_access_base_user,mo_lot_information_lines_access_base,model_mo_lot_information_lines,base.group_user,1,1,1,1
-mo_machines_access_base_user,mo_machines_access_base,model_mo_machines,base.group_user,1,1,1,1
+mo_machines_access_base_user,mo_machines_access_base,model_mo_machines,,1,1,1,1

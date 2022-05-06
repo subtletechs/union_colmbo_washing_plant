@@ -38,6 +38,7 @@ class MachineType(models.Model):
 
 class Machines(models.Model):
     _name = "mo.machines"
+    _rec_name = "machine_number"
 
     machine_number = fields.Char(string="Machine Number")
-    machine_type = fields.Many2one(comodel="machine.type", string="Machine Type")
+    machine_type = fields.Many2one(comodel_name="machine.type", string="Machine Type")

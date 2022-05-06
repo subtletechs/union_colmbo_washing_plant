@@ -18,6 +18,7 @@ class StockMove(models.Model):
     comment = fields.Text(string="Comment")
     done_qty = fields.Float(string="Total Done")  # , compute="_compute_done")
 
+    # TODO calculate done qty
     # def write(self, vals):
     #     record_id = self.id
     #     stock_move = self.browse(record_id)

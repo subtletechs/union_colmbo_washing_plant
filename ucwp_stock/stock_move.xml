@@ -32,10 +32,10 @@
 
     </record>
 
-    <!-- stock picking tree view -->
+    <!-- stock picking form view -->
     <record id="view_picking_form_view_inherit_union_colombo" model="ir.ui.view">
 <!--        view_picking_form-->
-        <field name="name">stock.picking.tree.view.inherit</field>
+        <field name="name">stock.picking.form.view.inherit</field>
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
