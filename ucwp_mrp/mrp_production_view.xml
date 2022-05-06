@@ -79,4 +79,25 @@
             action="bulk_production_action" id="bulk_production_menu"
             parent="mrp.menu_mrp_manufacturing" sequence="1"/>
 
+    <!-- [UC-08] Manufacturing Orders Form view -->
+    <record id="mrp_production_form_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit.union.colombo</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+<!--            <header>-->
+                <xpath expr="//button[@name='action_confirm']" position="after">
+                    <button name="print_job_card" string="Print Job Card" type="object"
+                            class="btn-primary"/>
+                </xpath>
+<!--            </header>-->
+            <xpath expr="//field[@name='bom_id']" position="after">
+                <field name="mo_barcode"/>
+                <field name="job_no"/>
+                <field name="machine_no"/>
+                <field name="operator_name"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

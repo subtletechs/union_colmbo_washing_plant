@@ -16,7 +16,7 @@ class BulkProduction(models.Model):
     wash_type = fields.Many2one(comodel_name="wash.type", string="Wash Type",
                                 related='product.wash_type', store=True)
     bom = fields.Many2one(comodel_name="mrp.bom", string="Bill of Material")
-    lot_size = fields.Integer(string="Lot Size", related="bom.lot_size")
+    lot_size = fields.Integer(string="Lot Size", related="bom.lot_size", store=True)
     quantity = fields.Integer(string="Bulk size")
     lot_information = fields.One2many(comodel_name="mo.lot.information.lines", inverse_name="bulk_production_id",
                                       string="Lot Information")
@@ -37,6 +37,14 @@ class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
     bulk_id = fields.Many2one(comodel_name="bulk.production", string="Bulk Production")
+    # TODO set mo_barcode, job_no, machine_no, operator_name readonly=True after MO auto generate process
+    mo_barcode = fields.Many2one(comodel_name="mo.lot.information.lines", string="Barcode", readonly=False)
+    job_no = fields.Integer(string="Job No", readonly=False)
+    machine_no = fields.Many2one(comodel_name="mo.machines", string="Machine No", readonly=False)
+    operator_name = fields.Many2one(comodel_name="hr.employee", string="Operator Name", readonly=False)
+
+    def print_job_card(self):
+        pass
 
 
 class LotInformationLines(models.Model):
