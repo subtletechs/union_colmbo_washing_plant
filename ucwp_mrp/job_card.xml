@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--[UC-08]-->
+    <!-- Job Card Template -->
+    <template id="mo_job_card">
+        <t t-call="web.html_container">
+            <div class="page">
+                <center>
+                    <h1>Job Card</h1>
+                </center>
+            </div>
+            <div class="job_card_information">
+                <table border="0" cellpadding="0" cellspacing="0"
+                       style="font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td>
+                            Barcode
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <t t-esc="barcode"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Manufacture Order No.
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <t t-esc="mo_no"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Product Name
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <t t-esc="product"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Buyer
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <t t-esc="buyer"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Wash Type
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <t t-esc="wash_type"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Job No.
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <t t-esc="job_no"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Machine No.
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <t t-esc="machine_no"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Operator Name
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <t t-esc="operator_name"/>
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+                <t t-esc="date_time"/>
+            </div>
+        </t>
+    </template>
+
+    <!--    action for Job Card-->
+    <record id="job_card_action" model="ir.actions.report">
+        <field name="name">Job Card</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">union_colmbo_washing_plant.mo_job_card</field>
+        <field name="report_file">union_colmbo_washing_plant.mo_job_card</field>
+        <field name="binding_model_id" ref="model_mrp_production"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

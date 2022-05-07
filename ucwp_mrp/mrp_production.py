@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from datetime import datetime
 
 
 class BulkProduction(models.Model):
@@ -38,17 +39,38 @@ class MrpProduction(models.Model):
 
     bulk_id = fields.Many2one(comodel_name="bulk.production", string="Bulk Production")
     # TODO set mo_barcode, job_no, machine_no, operator_name readonly=True after MO auto generate process
+    # [UC-08]
     mo_barcode = fields.Many2one(comodel_name="mo.lot.information.lines", string="Barcode", readonly=False)
     job_no = fields.Integer(string="Job No", readonly=False)
     machine_no = fields.Many2one(comodel_name="mo.machines", string="Machine No", readonly=False)
     operator_name = fields.Many2one(comodel_name="hr.employee", string="Operator Name", readonly=False)
 
     def print_job_card(self):
-        pass
+        barcode = self.mo_barcode.barcode
+        product = self.product_id.display_name
+        buyer = self.product_id.buyer.name
+        wash_type = self.product_id.wash_type.display_name
+        job_no = self.job_no
+        machine_no = self.machine_no.display_name
+        operator_name = self.operator_name.display_name
+
+        data = {
+            'barcode': barcode,
+            'mo_no': self.name,
+            'product': product,
+            'buyer': buyer,
+            'wash_type': wash_type,
+            'job_no': job_no,
+            'machine_no': machine_no,
+            'operator_name': operator_name,
+            'date_time': datetime.now()
+        }
+        return self.env.ref('union_colmbo_washing_plant.job_card_action').report_action(self, data=data)
 
 
 class LotInformationLines(models.Model):
     _name = "mo.lot.information.lines"
+    _rec_name = "barcode"
 
     job_no = fields.Integer(string="Job No")
     job_qty = fields.Integer(string="Job Quantity")
