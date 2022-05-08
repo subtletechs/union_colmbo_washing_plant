@@ -44,6 +44,7 @@ class MrpProduction(models.Model):
     job_no = fields.Integer(string="Job No", readonly=False)
     machine_no = fields.Many2one(comodel_name="mo.machines", string="Machine No", readonly=False)
     operator_name = fields.Many2one(comodel_name="hr.employee", string="Operator Name", readonly=False)
+    receipts = fields.Many2one(comodel_name="stock.picking", string="Receipts")
 
     def print_job_card(self):
         barcode = self.mo_barcode.barcode

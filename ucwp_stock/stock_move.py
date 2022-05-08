@@ -95,6 +95,10 @@ class Picking(models.Model):
     receive_logistic = fields.Datetime(string='Receive to Log', readonly=True)
     receive_sample_room = fields.Datetime(string='Receive to Sample Room', readonly=True)
 
+    #
+    receipts = fields.Many2one(comodel_name="stock.picking", string="Receipts")
+    manufacture_order = fields.Many2one(comodel_name="mrp.production", string="Manufacture Order")
+
     def receive_logistic_update_datetime(self):
         """Update logistic order received date and time"""
         self.write({'receive_logistic': datetime.datetime.now()})

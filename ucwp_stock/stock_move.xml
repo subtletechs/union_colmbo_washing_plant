@@ -51,6 +51,8 @@
                        attrs="{'invisible': ['|',('garment_select', '=', 'sample'),('garment_select', '=', False)]}"/>
                 <field name="receive_logistic"/>
                 <field name="receive_sample_room"/>
+                <field name="receipts"/>
+                <field name="manufacture_order"/>
             </xpath>
 
             <xpath expr="//button[@name='action_confirm']" position="after">

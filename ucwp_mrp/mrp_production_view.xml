@@ -93,6 +93,7 @@
 <!--            </header>-->
             <xpath expr="//field[@name='bom_id']" position="after">
                 <field name="mo_barcode"/>
+                <field name="receipts"/>
                 <field name="job_no"/>
                 <field name="machine_no"/>
                 <field name="operator_name"/>
