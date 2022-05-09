@@ -95,7 +95,7 @@ class Picking(models.Model):
     receive_logistic = fields.Datetime(string='Receive to Log', readonly=True)
     receive_sample_room = fields.Datetime(string='Receive to Sample Room', readonly=True)
 
-    #
+    # TODO add filters to stock.picking
     receipts = fields.Many2one(comodel_name="stock.picking", string="Receipts")
     manufacture_order = fields.Many2one(comodel_name="mrp.production", string="Manufacture Order")
 

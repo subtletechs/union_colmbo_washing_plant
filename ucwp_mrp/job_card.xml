@@ -9,16 +9,27 @@
                     <h1>Job Card</h1>
                 </center>
             </div>
+            <br/>
+            <br/>
             <div class="job_card_information">
                 <table border="0" cellpadding="0" cellspacing="0"
                        style="font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <!-- [UC-08] -->
                     <tr>
                         <td>
-                            Barcode
+                            <!-- Barcode-->
                         </td>
-                        <td>:</td>
                         <td>
-                            <t t-esc="barcode"/>
+                            <!-- :  -->
+                        </td>
+                        <td style="align: left;">
+                            <div style="text-align: center; vertical-align: middle; width: 200px; height:60px;">
+                                <img t-if="name"
+                                     t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', name, 600, 150)"
+                                     style="width:200px;height:40px;"/>
+                                <br/>
+<!--                                <t t-esc="name"/>-->
+                            </div>
                         </td>
                     </tr>
                     <tr>
