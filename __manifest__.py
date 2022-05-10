@@ -15,6 +15,7 @@
         'hr',
     ],
     'data': [
+        'data/receipts_data.xml',
         'security/ir.model.access.csv',
         'ucwp_stock/product_template.xml',
         'ucwp_stock/stock_move.xml',
