@@ -5,7 +5,7 @@
         <!-- Sequence for garment receipts -->
         <record id="garment_receipt_inventory_operation" model="ir.sequence">
             <field name="name">Garment Receipt Sequence</field>
-            <field name="code">garment.receipt</field>
+            <field name="code"></field>
             <field name="implementation">standard</field>
             <field name="prefix">WH/G/IN</field>
             <field name="padding">5</field>
