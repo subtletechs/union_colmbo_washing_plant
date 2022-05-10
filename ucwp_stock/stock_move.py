@@ -99,6 +99,9 @@ class Picking(models.Model):
     receipts = fields.Many2one(comodel_name="stock.picking", string="Receipts")
     manufacture_order = fields.Many2one(comodel_name="mrp.production", string="Manufacture Order")
 
+    # To capture garment receipts
+    garment_receipt = fields.Boolean(string="Garment Receipt", default=False, compute="_garment_receipt")
+
     def receive_logistic_update_datetime(self):
         """Update logistic order received date and time"""
         self.write({'receive_logistic': datetime.datetime.now()})
@@ -106,6 +109,17 @@ class Picking(models.Model):
     def receive_sample_update_datetime(self):
         """Update Sample room order received date and time"""
         self.write({'receive_sample_room': datetime.datetime.now()})
+
+    @api.depends("picking_type_id")
+    def _garment_receipt(self):
+        """Check the Operation Type for Garment Receipt"""
+        for record in self:
+            if record.picking_type_id:
+                if record.picking_type_id.garment_receipt:
+                    # record.update({'garment_receipt': True})
+                    record.garment_receipt = True
+                else:
+                    record.garment_receipt = False
 
     # quality check button
     def quality_check(self):
@@ -126,3 +140,10 @@ class WashingOptions(models.Model):
 
     name = fields.Char(string="Name")
     code = fields.Char(string="Code")
+
+
+class StockPickingType(models.Model):
+    _inherit = 'stock.picking.type'
+
+    """To Capture Garment Receipt Operation Type"""
+    garment_receipt = fields.Boolean(string="Garment Receipt", default=False)

@@ -34,31 +34,42 @@
 
     <!-- stock picking form view -->
     <record id="view_picking_form_view_inherit_union_colombo" model="ir.ui.view">
-<!--        view_picking_form-->
+        <!--        view_picking_form-->
         <field name="name">stock.picking.form.view.inherit</field>
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='use_create_lots']" position="after">
+                <field name="garment_receipt" invisible="1"/>
+            </xpath>
             <xpath expr="//field[@name='product_id']" position="after">
                 <field name="invoice_type"/>
                 <field name="wash_type"/>
                 <field name="approval"/>
                 <field name="comment"/>
             </xpath>
-            <xpath expr="//field[@name='picking_type_id']" position="after">
-                <field name="garment_select"/>
-                <field name="samples"
-                       attrs="{'invisible': ['|',('garment_select', '=', 'sample'),('garment_select', '=', False)]}"/>
-                <field name="receive_logistic"/>
-                <field name="receive_sample_room"/>
-                <field name="receipts"/>
-                <field name="manufacture_order"/>
+            <xpath expr="//sheet/group[1]" position="after">
+                <group attrs="{'invisible': [('garment_receipt', '=', False)]}">
+                    <group string="Garment Info">
+                        <field name="garment_select"/>
+                        <field name="samples"
+                               attrs="{'invisible': ['|',('garment_select', '=', 'sample'),('garment_select', '=', False)]}"/>
+                        <field name="receive_logistic"/>
+                        <field name="receive_sample_room"/>
+                        <field name="receipts"/>
+                        <field name="manufacture_order"/>
+                    </group>
+                    <group></group>
+                </group>
             </xpath>
 
             <xpath expr="//button[@name='action_confirm']" position="after">
-                <button name="receive_logistic_update_datetime" string="Update Log Time" type="object" class="oe_highlight" groups="base.group_user"/>
-                <button name="receive_sample_update_datetime" string="Update Sample Room Time" type="object" class="oe_highlight" groups="base.group_user"/>
-                <button name="quality_check" string="Quality Check" type="object" class="oe_highlight" groups="base.group_user"/>
+                <button name="receive_logistic_update_datetime" string="Update Log Time" type="object"
+                        class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('garment_receipt', '=', False)]}"/>
+                <button name="receive_sample_update_datetime" string="Update Sample Room Time" type="object"
+                        class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('garment_receipt', '=', False)]}"/>
+                <button name="quality_check" string="Quality Check" type="object" class="oe_highlight"
+                        groups="base.group_user" attrs="{'invisible': [('garment_receipt', '=', False)]}"/>
             </xpath>
         </field>
     </record>
