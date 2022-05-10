@@ -25,6 +25,7 @@
         'ucwp_mrp/mrp_bom_views.xml',
         'ucwp_quality/quality_views.xml',
         'ucwp_quality/ucwp_defects.xml',
+        'ucwp_quality/ucwp_quality_check_view.xml',
         'ucwp_mrp/mrp_production_view.xml',
         'ucwp_mrp/job_card.xml',
     ],

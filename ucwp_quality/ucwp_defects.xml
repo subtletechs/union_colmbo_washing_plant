@@ -40,7 +40,6 @@
     </record>
 
     <menuitem
-            action="defects_action" id="defects_menu"
-            parent="quality_control.menu_quality_configuration" sequence="35"/>
+            action="defects_action" id="defects_menu" parent="mrp.menu_mrp_configuration" sequence="1"/>
 
 </odoo>

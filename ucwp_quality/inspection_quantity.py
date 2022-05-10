@@ -6,6 +6,7 @@ from odoo.osv.expression import OR
 class InspectionQuantity(models.Model):
     _name = "inspection.quantity"
 
+# TODO need to remove
     quantity = fields.Float(string="Quantity")
     pass_quantity = fields.Float(string="Pass Quantity")
     fail_quantity = fields.Float(string="Fail Quantity", compute="calculate_fail_quantity")

@@ -58,6 +58,7 @@
             <xpath expr="//button[@name='action_confirm']" position="after">
                 <button name="receive_logistic_update_datetime" string="Update Log Time" type="object" class="oe_highlight" groups="base.group_user"/>
                 <button name="receive_sample_update_datetime" string="Update Sample Room Time" type="object" class="oe_highlight" groups="base.group_user"/>
+                <button name="quality_check" string="Quality Check" type="object" class="oe_highlight" groups="base.group_user"/>
             </xpath>
         </field>
     </record>

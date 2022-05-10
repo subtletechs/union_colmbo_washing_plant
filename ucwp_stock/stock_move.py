@@ -13,7 +13,7 @@ class StockMove(models.Model):
 
     invoice_type = fields.Selection([('invoice', 'Invoiceable'), ('not_invoiceable', 'Not-Invoiceable')],
                                     string='Invoice Type')
-    wash_type = fields.Selection([('wash', 'Wash'), ('rewash', 'Re-wash')], sting="Wash Type")
+    wash_type = fields.Selection([('wash', 'Wash'), ('rewash', 'Re-wash')], string="Wash Type")
     approval = fields.Selection([('approved', 'Approved'), ('rejected', 'Rejected')], string="Approved/Rejected")
     comment = fields.Text(string="Comment")
     done_qty = fields.Float(string="Total Done")  # , compute="_compute_done")
@@ -107,9 +107,18 @@ class Picking(models.Model):
         """Update Sample room order received date and time"""
         self.write({'receive_sample_room': datetime.datetime.now()})
 
-    def variant_ids(self):
-        pass
-        # ids = self.env['stock.picking'].search([('')])
+    # quality check button
+    def quality_check(self):
+        view = self.env.ref('union_colmbo_washing_plant.ucwp_quality_check_form_view')
+
+        return {
+            'res_model': 'ucwp.quality.check',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': view.id,
+            'target': 'current',
+            'context': {'default_grn': self.id}
+        }
 
 
 class WashingOptions(models.Model):

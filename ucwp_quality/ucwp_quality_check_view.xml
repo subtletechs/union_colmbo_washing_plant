@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--    quality check form view-->
+    <record id="ucwp_quality_check_form_view" model="ir.ui.view">
+        <field name="name">ucwp.quality.check.form.view</field>
+        <field name="model">ucwp.quality.check</field>
+        <field name="arch" type="xml">
+            <form string="Quality">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="grn"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Quality Lines" name="quality_check_lines">
+                            <field name="quality_check_lines">
+                                <tree string="Quality Lines" editable="bottom">
+                                    <field name="product"/>
+                                    <field name="lot_no"/>
+                                    <field name="pass_fail"/>
+                                    <field name="quantity"/>
+                                    <field name="defects"
+                                           attrs="{'invisible': ['|',('pass_fail', '=', 'pass'),('pass_fail', '=', False)]}"/>
+                                    <field name="image"/>
+                                    <field name="comment"
+                                           attrs="{'required': [('state', '=', 'processed'),('pass_fail', '=', 'fail')], 'invisible': [('pass_fail', '=', 'pass')]}"/>
+                                    <field name="state"/>
+
+                                    <button name="process" string="Process" type="object"
+                                            class="fa fa-check btn-success"
+                                            attrs="{'invisible': ['|',('pass_fail', '=', 'pass'),('pass_fail', '=', False)]}"/>
+                                    <button name="cancel_process" string="Cancel" type="object"
+                                            class="fa fa-times btn-danger"
+                                            attrs="{'invisible': ['|',('pass_fail', '=', 'pass'),('pass_fail', '=', False)]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

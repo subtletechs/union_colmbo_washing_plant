@@ -51,25 +51,6 @@ class QualityCheck(models.Model):
                 else:
                     record.color_id = None
 
-    # @api.depends('product_id', 'picking_id')
-    # def calculate_quantity(self):
-    #     for record in self:
-    #         # if record.picking_id:
-    #         stock_picking = record.picking_id
-    #         # if record.product_id:
-    #         product = record.product_id
-    #         stock_picking_lines = stock_picking.move_ids_without_package
-    #                 # if stock_picking_lines:
-    #         for line in stock_picking_lines:
-    #             if line.product_id.id == product.id:
-    #                 done_qty = line.quantity_done
-    #                 record.done_quantity = done_qty
-    #                 break
-    #             else:
-    #                 record.done_quantity = 0
-    #                 # else:
-    #                 #     record.done_quantity = 0
-
 
 class DefectsLines(models.Model):
     _name = 'defects.lines'
