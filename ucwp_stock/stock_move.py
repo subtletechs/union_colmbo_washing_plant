@@ -100,7 +100,7 @@ class Picking(models.Model):
     manufacture_order = fields.Many2one(comodel_name="mrp.production", string="Manufacture Order")
 
     # To capture garment receipts
-    garment_receipt = fields.Boolean(string="Garment Receipt", default=False, compute="_garment_receipt")
+    garment_receipt = fields.Boolean(string="Garment Receipt", compute="_garment_receipt")
 
     def receive_logistic_update_datetime(self):
         """Update logistic order received date and time"""
