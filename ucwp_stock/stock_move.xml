@@ -49,17 +49,18 @@
                 <field name="comment"/>
             </xpath>
             <xpath expr="//sheet/group[1]" position="after">
-                <group attrs="{'invisible': [('garment_receipt', '=', False)]}">
-                    <group string="Garment Info">
+                <group>
+                    <group string="Garment Info" attrs="{'invisible': [('garment_receipt', '=', False)]}">
                         <field name="garment_select"/>
                         <field name="samples"
                                attrs="{'invisible': ['|',('garment_select', '=', 'sample'),('garment_select', '=', False)]}"/>
                         <field name="receive_logistic"/>
                         <field name="receive_sample_room"/>
-                        <field name="receipts"/>
-                        <field name="manufacture_order"/>
                     </group>
-                    <group></group>
+                    <group>
+                        <field name="receipts" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                        <field name="manufacture_order" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                    </group>
                 </group>
             </xpath>
 
