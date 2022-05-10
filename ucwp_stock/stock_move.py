@@ -1,6 +1,6 @@
 import datetime
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 from odoo.exceptions import UserError, ValidationError
 
@@ -69,7 +69,7 @@ class StockMoveLine(models.Model):
 
     @api.model
     def create(self, vals):
-        sequence = self.env['ir.sequence'].next_by_code('stock_move_line') or _('New')
+        sequence = self.env['ir.sequence'].next_by_code('stock.move.line') or _('New')
         vals['lot_name'] = sequence
         vals['barcode'] = sequence
         return super(StockMoveLine, self).create(vals)

@@ -3,7 +3,7 @@
     <data noupdate="1">
 
         <!-- Sequence for garment receipts -->
-        <record id="stock_location_locations" model="ir.sequence">
+        <record id="garment_receipt_inventory_operation" model="ir.sequence">
             <field name="name">Garment Receipt Sequence</field>
             <field name="code">garment.receipt</field>
             <field name="implementation">standard</field>
