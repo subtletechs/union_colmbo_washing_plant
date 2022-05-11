@@ -27,9 +27,13 @@ class QualityCheckLines(models.Model):
     image = fields.Binary(string="Image")
     ucwp_quality_check_id = fields.Many2one(comodel_name="ucwp.quality.check", string="Quality Check")
     comment = fields.Char(string="Comment")
-    state = fields.Selection([('processed', 'Processed'), ('rejected', 'Rejected')], string="State")
+    state = fields.Selection([('processed', 'Processed'), ('rejected', 'Rejected')], string="State",
+                             compute="calculate_state", store=True)
 
-    # TODO functionality should need to be updated
+    def calculate_state(self):
+        if self.pass_fail == 'pass':
+            self.state = 'processed'
+
     def process(self):
         self.write({'state': 'processed'})
 

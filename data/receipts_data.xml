@@ -17,7 +17,7 @@
         <record id="stocking_picking_type_garment_receipt" model="stock.picking.type">
             <field name="name">Garment Receipts</field>
             <field name="code">incoming</field>
-            <field name="sequence_id" ref="union_colmbo_washing_plant.stock_location_locations"/>
+            <field name="sequence_id" ref="union_colmbo_washing_plant.garment_receipt_inventory_operation"/>
             <field name="sequence_code">IN</field>
             <field name="show_operations">0</field>
             <field name="show_reserved">0</field>
