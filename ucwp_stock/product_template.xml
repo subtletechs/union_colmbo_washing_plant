@@ -6,18 +6,30 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']/span[2]" position="after">
+                <span class="d-inline-block">
+                    <field name="is_garment"/>
+                    <label for="is_garment"/>
+                </span>
+            </xpath>
             <xpath expr="//page[@name='general_information']" position="before">
                 <!-- Style Information Tab -->
-                <page string="Style Information" name="general_information">
+                <page string="Style Information" name="general_information"
+                      attrs="{'invisible': [('is_garment', '=', False)]}">
                     <group name="group_general">
-                        <field name="buyer"/>
-                        <field name="fabric_type"/>
-                        <field name="wash_type"/>
-                        <field name="garment_type"/>
-                        <field name="customer"/>
-                        <field name="garment_select" widget="radio"/>
-                        <field name="samples"
-                               attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
+                        <group>
+                            <field name="buyer" attrs="{'required': [('is_garment', '=', True)]}"/>
+                            <field name="customer" attrs="{'required': [('is_garment', '=', True)]}"/>
+                        </group>
+                        <group>
+                            <field name="fabric_type" attrs="{'required': [('is_garment', '=', True)]}"/>
+                            <field name="wash_type" attrs="{'required': [('is_garment', '=', True)]}"/>
+                            <field name="garment_type" attrs="{'required': [('is_garment', '=', True)]}"/>
+                            <field name="garment_select" widget="radio"
+                                   attrs="{'required': [('is_garment', '=', True)]}"/>
+                            <field name="samples"
+                                   attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
+                        </group>
                     </group>
                 </page>
             </xpath>
@@ -53,18 +65,29 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']/span[2]" position="after">
+                <span class="d-inline-block">
+                    <field name="is_garment"/>
+                    <label for="is_garment"/>
+                </span>
+            </xpath>
             <xpath expr="//page[@name='general_information']" position="before">
                 <!-- Style Information Tab -->
-                <page string="Style Information" name="general_information">
+                <page string="Style Information" name="general_information"
+                      attrs="{'invisible': [('is_garment', '=', False)]}">
                     <group name="group_general">
-                        <field name="buyer"/>
-                        <field name="fabric_type"/>
-                        <field name="wash_type"/>
-                        <field name="garment_type"/>
-                        <field name="customer"/>
-                        <field name="garment_select" widget="radio"/>
-                        <field name="samples"
-                               attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
+                        <group>
+                            <field name="buyer"/>
+                            <field name="customer"/>
+                        </group>
+                        <group>
+                            <field name="fabric_type"/>
+                            <field name="wash_type"/>
+                            <field name="garment_type"/>
+                            <field name="garment_select" widget="radio"/>
+                            <field name="samples"
+                                   attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
+                        </group>
                     </group>
                 </page>
             </xpath>
