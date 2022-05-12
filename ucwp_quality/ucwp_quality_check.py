@@ -41,3 +41,4 @@ class QualityCheckLines(models.Model):
     def cancel_process(self):
         self.write({'state': 'rejected'})
         fail_qty = self.quantity
+

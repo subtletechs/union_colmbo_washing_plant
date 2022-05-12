@@ -17,6 +17,13 @@ class StockMove(models.Model):
     approval = fields.Selection([('approved', 'Approved'), ('rejected', 'Rejected')], string="Approved/Rejected")
     comment = fields.Text(string="Comment")
     done_qty = fields.Float(string="Total Done")  # , compute="_compute_done")
+    # [UC-12]
+    op_type = fields.Many2one('stock.picking.type', 'Operation Type', related="picking_id.picking_type_id", store=True)
+    op_name = fields.Char(string="Name")
+
+    @api.onchange('op_type')
+    def set_operator_name(self):
+        self.op_name = self.op_type.name
 
     # TODO calculate done qty
     # def write(self, vals):
@@ -131,7 +138,7 @@ class Picking(models.Model):
             'view_mode': 'form',
             'view_id': view.id,
             'target': 'current',
-            'context': {'default_grn': self.id}
+            'context': {'default_grn': self.id},
         }
 
 
