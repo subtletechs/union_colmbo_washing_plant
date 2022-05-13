@@ -51,6 +51,14 @@
                         attrs="{'invisible': ['|',('garment_receipt', '=', False),('state','!=', 'done')]}"/>
             </xpath>
 
+            <!-- [UC-11] -->
+            <xpath expr="//sheet/div[1]/button[@name='action_picking_move_tree']" position="before">
+                <button name="action_view_quality_count" type="object" class="oe_stat_button"
+                        attrs="{'invisible': ['|',('quality_count', '=', 0),('garment_receipt', '=', False)]}">
+                    <field name="quality_count" widget="statinfo" string="Quality Count"/>
+                </button>
+            </xpath>
+
             <xpath expr="//field[@name='use_create_lots']" position="after">
                 <field name="garment_receipt" invisible="1"/>
             </xpath>

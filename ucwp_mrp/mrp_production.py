@@ -47,6 +47,8 @@ class MrpProduction(models.Model):
     operator_name = fields.Many2one(comodel_name="hr.employee", string="Operator Name", readonly=False)
     # TODO add filters to stock.picking
     receipts = fields.Many2one(comodel_name="stock.picking", string="Receipts")
+    # [UC-11]
+    # mo_quality_count = fields.Integer(string="Quality Count")  # , compute="mo_quality_count")
 
     def print_job_card(self):
         barcode = self.mo_barcode.barcode
@@ -85,6 +87,15 @@ class MrpProduction(models.Model):
                 'default_quality_point': 'after_wash',
             },
         }
+
+    # [UC-11]
+    def mo_quality_count(self):
+        after_wash_quality_ids = self.env['ucwp.quality.check'].search([('id', '=', self.id)])
+        for after_wash_quality_id in after_wash_quality_ids:
+            quality_check_line_ids = after_wash_quality_id.quality_check_lines.ids
+
+    def mo_action_view_quality_count(self):
+        pass
 
 
 class LotInformationLines(models.Model):

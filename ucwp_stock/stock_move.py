@@ -109,6 +109,9 @@ class Picking(models.Model):
     # To capture garment receipts
     garment_receipt = fields.Boolean(string="Garment Receipt", compute="_garment_receipt")
 
+    # [UC-11] - To calculate stock moves
+    quality_count = fields.Integer(string="Quality Count", compute="compute_quality_count")
+
     def receive_logistic_update_datetime(self):
         """Update logistic order received date and time"""
         self.write({'receive_logistic': datetime.datetime.now()})
@@ -143,6 +146,27 @@ class Picking(models.Model):
                 'default_quality_point': 'before_wash',
             },
         }
+
+    # [UC-11]
+    def compute_quality_count(self):
+        record_ids = self.env['ucwp.quality.check'].search_read([('grn', '=', self.id)])
+        self.quality_count = len(record_ids)
+
+    def action_view_quality_count(self):
+        pass
+        # TODO show quality check records
+        # view = self.env.ref('union_colmbo_washing_plant.ucwp_quality_check_form_view')
+        #
+        # return {
+        #     'res_model': 'ucwp.quality.check',
+        #     'type': 'ir.actions.act_window',
+        #     'view_mode': 'form',
+        #     'view_id': view.id,
+        #     'target': 'current',
+        #     'context': {
+        #         self.env['ucwp.quality.check'].search([('grn', '=', self.id)])
+        #     },
+        # }
 
 
 class WashingOptions(models.Model):
