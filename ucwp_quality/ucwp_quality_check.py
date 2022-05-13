@@ -15,7 +15,6 @@ class UCWPQualityCheck(models.Model):
     quality_point = fields.Selection([('before_wash', 'Before Wash'), ('after_wash', 'After Wash')],
                                      string="Quality Point")
     manufacture_order = fields.Many2one(comodel_name="mrp.production", string="Manufacture Orders")
-    is_clicked = fields.Boolean(string="Clicked", default=False)
 
 
 # [UC-11]

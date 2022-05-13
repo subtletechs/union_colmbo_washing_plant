@@ -24,10 +24,10 @@
         <field name="model">bulk.production</field>
         <field name="arch" type="xml">
             <form string="Bulk Production">
-                <header>
+                <xpath expr="//button[@name='action_confirm']" position="after">
                     <button name="calculate_job_quantity" string="Calculate Jobs" type="object"
                             class="btn-primary"/>
-                </header>
+                </xpath>
                 <sheet>
                     <group>
                         <group>
@@ -85,15 +85,18 @@
         <field name="model">mrp.production</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
-<!--            <header>-->
-                <xpath expr="//button[@name='action_confirm']" position="after">
-                    <button name="print_job_card" string="Print Job Card" type="object"
-                            class="btn-primary"/>
-                </xpath>
-<!--            </header>-->
+            <!-- <header>-->
+            <xpath expr="//button[@name='action_confirm']" position="after">
+                <button name="print_job_card" string="Print Job Card" type="object"
+                        class="oe_highlight"/>
+                <button name="after_quality_check" string="After Quality Check" type="object" class="oe_highlight"
+                        groups="base.group_user"
+                        attrs="{'invisible': [('state','!=', 'done')]}"/>
+            </xpath>
+            <!-- </header> -->
             <xpath expr="//field[@name='bom_id']" position="after">
                 <field name="mo_barcode"/>
-<!--                <field name="receipts"/>-->
+                <!--                <field name="receipts"/>-->
                 <field name="job_no"/>
                 <field name="machine_no"/>
                 <field name="operator_name"/>

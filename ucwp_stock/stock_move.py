@@ -129,7 +129,7 @@ class Picking(models.Model):
                     record.garment_receipt = False
 
     # quality check button
-    def quality_check(self):
+    def before_quality_check(self):
         view = self.env.ref('union_colmbo_washing_plant.ucwp_quality_check_form_view')
 
         return {
@@ -141,7 +141,6 @@ class Picking(models.Model):
             'context': {
                 'default_grn': self.id,
                 'default_quality_point': 'before_wash',
-                'default_is_clicked': True
             },
         }
 

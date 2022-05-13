@@ -71,6 +71,21 @@ class MrpProduction(models.Model):
         }
         return self.env.ref('union_colmbo_washing_plant.job_card_action').report_action(self, data=data)
 
+    def after_quality_check(self):
+        view = self.env.ref('union_colmbo_washing_plant.ucwp_quality_check_form_view')
+
+        return {
+            'res_model': 'ucwp.quality.check',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': view.id,
+            'target': 'current',
+            'context': {
+                'default_manufacture_order': self.id,
+                'default_quality_point': 'after_wash',
+            },
+        }
+
 
 class LotInformationLines(models.Model):
     _name = "mo.lot.information.lines"

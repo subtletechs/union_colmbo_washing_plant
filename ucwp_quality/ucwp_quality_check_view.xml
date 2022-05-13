@@ -12,9 +12,9 @@
                         <group>
                             <!-- [UC-11] -->
                             <field name="grn"
-                                   attrs="{'invisible': [('is_clicked', '=', False)], 'required': [('is_clicked', '=', True)]}"/>
-                            <field name="is_clicked" invisible="1"/>
-                            <field name="manufacture_order" attrs="{'invisible': [('is_clicked', '=', True)]}"/>
+                                   attrs="{'invisible': [('quality_point', '=', 'after_wash')], 'required': [('quality_point', '=', 'before_wash')]}"/>
+                            <field name="manufacture_order"
+                                   attrs="{'invisible': [('quality_point', '=', 'before_wash')], 'required': [('quality_point', '=', 'after_wash')]}"/>
                             <field name="quality_point"/>
                         </group>
                     </group>
