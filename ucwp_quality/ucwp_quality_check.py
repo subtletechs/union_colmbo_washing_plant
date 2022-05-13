@@ -12,6 +12,10 @@ class UCWPQualityCheck(models.Model):
     grn = fields.Many2one(comodel_name="stock.picking", string="GRN")
     quality_check_lines = fields.One2many(comodel_name="quality.check.lines", inverse_name="ucwp_quality_check_id",
                                           string="Quality Lines")
+    quality_point = fields.Selection([('before_wash', 'Before Wash'), ('after_wash', 'After Wash')],
+                                     string="Quality Point")
+    manufacture_order = fields.Many2one(comodel_name="mrp.production", string="Manufacture Orders")
+    is_clicked = fields.Boolean(string="Clicked", default=False)
 
 
 # [UC-11]
@@ -41,4 +45,3 @@ class QualityCheckLines(models.Model):
     def cancel_process(self):
         self.write({'state': 'rejected'})
         fail_qty = self.quantity
-

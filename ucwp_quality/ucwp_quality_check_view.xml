@@ -10,7 +10,12 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="grn"/>
+                            <!-- [UC-11] -->
+                            <field name="grn"
+                                   attrs="{'invisible': [('is_clicked', '=', False)], 'required': [('is_clicked', '=', True)]}"/>
+                            <field name="is_clicked" invisible="1"/>
+                            <field name="manufacture_order" attrs="{'invisible': [('is_clicked', '=', True)]}"/>
+                            <field name="quality_point"/>
                         </group>
                     </group>
                     <notebook>

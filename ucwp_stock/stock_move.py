@@ -138,7 +138,11 @@ class Picking(models.Model):
             'view_mode': 'form',
             'view_id': view.id,
             'target': 'current',
-            'context': {'default_grn': self.id},
+            'context': {
+                'default_grn': self.id,
+                'default_quality_point': 'before_wash',
+                'default_is_clicked': True
+            },
         }
 
 
