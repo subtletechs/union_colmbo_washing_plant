@@ -48,7 +48,31 @@ class MrpProduction(models.Model):
     # TODO add filters to stock.picking
     receipts = fields.Many2one(comodel_name="stock.picking", string="Receipts")
     # [UC-11]
-    # mo_quality_count = fields.Integer(string="Quality Count")  # , compute="mo_quality_count")
+    quality_check_count = fields.Integer(string='Quality Check Count', compute='_get_quality_checks')
+    quality_check_id = fields.Many2one(comodel_name='ucwp.quality.check', compute='_get_quality_checks',copy=False)
+
+    def _get_quality_checks(self):
+        """Calculate the number of quality checks available for the MO and those IDs"""
+        quality_checks = self.env['ucwp.quality.check'].search([('manufacture_order', '=', self.id)], limit=1)
+        if quality_checks:
+            self.quality_check_count = 1
+            self.quality_check_id = quality_checks.id
+        else:
+            self.quality_check_count = 0
+            self.quality_check_id = None
+
+    def action_view_quality_check(self):
+        if self.quality_check_count == 1 :
+            quality_record_id = self.quality_check_id.id
+            view = self.env.ref('union_colmbo_washing_plant.ucwp_quality_check_form_view')
+            return {
+                'res_model': 'ucwp.quality.check',
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'view_id': view.id,
+                'target': 'current',
+                'res_id': quality_record_id
+                }
 
     def print_job_card(self):
         barcode = self.mo_barcode.barcode
@@ -87,15 +111,6 @@ class MrpProduction(models.Model):
                 'default_quality_point': 'after_wash',
             },
         }
-
-    # [UC-11]
-    def mo_quality_count(self):
-        after_wash_quality_ids = self.env['ucwp.quality.check'].search([('id', '=', self.id)])
-        for after_wash_quality_id in after_wash_quality_ids:
-            quality_check_line_ids = after_wash_quality_id.quality_check_lines.ids
-
-    def mo_action_view_quality_count(self):
-        pass
 
 
 class LotInformationLines(models.Model):

@@ -97,16 +97,17 @@
 
             <!-- [UC-11] -->
             <xpath expr="//sheet/div[1]/button[@name='action_view_mrp_production_childs']" position="before">
-                <button name="mo_action_view_quality_count" type="object" class="oe_stat_button">
-                    <!-- attrs="{'invisible': [('quality_count', '=', 0)]}">-->
-<!--                    <field name="mo_quality_count" widget="statinfo" string="Quality Count"/>-->
+                <button name="action_view_quality_check"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible': [('quality_check_count', '=', 0)]}">
+                    <field name="quality_check_count" widget="statinfo" string="Quality Check"/>
                 </button>
             </xpath>
 
             <xpath expr="//field[@name='bom_id']" position="after">
                 <field name="mo_barcode"/>
-<!--                <field name="mo_quality_count"/>-->
-                <!--                <field name="receipts"/>-->
                 <field name="job_no"/>
                 <field name="machine_no"/>
                 <field name="operator_name"/>
