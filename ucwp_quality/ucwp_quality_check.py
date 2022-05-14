@@ -62,9 +62,34 @@ class QualityCheckLines(models.Model):
 
     def rewash_garment(self):
         self.write({'state': 'rewashed'})
+        if self.pass_fail == 'fail' and self.ucwp_quality_check_id.quality_point == 'after_wash':
+            view = self.env.ref('stock.view_picking_form')
+            internal_transfer_operation = self.env['stock.picking.type'].search([('code', '=', 'internal')])
+            return {
+                'res_model': 'stock.picking',
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'view_id': view.id,
+                'target': 'current',
+                'context': {
+                    'default_picking_type_id': internal_transfer_operation.id,
+                },
+            }
 
     def dispose_garment(self):
         self.write({'state': 'disposed'})
+        view = self.env.ref('stock.view_picking_form')
+        internal_transfer_operation = self.env['stock.picking.type'].search([('code', '=', 'internal')])
+        return {
+            'res_model': 'stock.picking',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': view.id,
+            'target': 'current',
+            'context': {
+                'default_picking_type_id': internal_transfer_operation.id,
+            },
+        }
 
     @api.depends('quality_point', 'pass_fail')
     def _display_button(self):
