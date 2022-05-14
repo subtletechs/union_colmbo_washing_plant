@@ -69,27 +69,28 @@ class QualityCheckLines(models.Model):
     @api.depends('quality_point', 'pass_fail')
     def _display_button(self):
         # Process Button visibility
-        if self.quality_point == 'before_wash' and self.pass_fail == 'fail':
-            self.display_process_button = True
-        elif self.quality_point == 'after_wash' and self.pass_fail == 'pass':
-            self.display_process_button = True
-        else:
-            self.display_process_button = False
+        for record in self:
+            if record.quality_point == 'before_wash' and record.pass_fail == 'fail':
+                record.display_process_button = True
+            elif record.quality_point == 'after_wash' and record.pass_fail == 'pass':
+                record.display_process_button = True
+            else:
+                record.display_process_button = False
 
-        # Dispose Button visibility
-        if self.pass_fail == 'fail':
-            self.display_dispose_button = True
-        else:
-            self.display_dispose_button = False
+            # Dispose Button visibility
+            if record.pass_fail == 'fail':
+                record.display_dispose_button = True
+            else:
+                record.display_dispose_button = False
 
-        # Rewash Button visibility
-        if self.quality_point == 'after_wash' and self.pass_fail == 'fail':
-            self.display_rewash_button = True
-        else:
-            self.display_rewash_button = False
+            # Rewash Button visibility
+            if record.quality_point == 'after_wash' and record.pass_fail == 'fail':
+                record.display_rewash_button = True
+            else:
+                record.display_rewash_button = False
 
-        # Return Button visibility
-        if self.quality_point == 'before_wash' and self.pass_fail == 'fail':
-            self.display_return_button = True
-        else:
-            self.display_return_button =False
+            # Return Button visibility
+            if record.quality_point == 'before_wash' and record.pass_fail == 'fail':
+                record.display_return_button = True
+            else:
+                record.display_return_button = False

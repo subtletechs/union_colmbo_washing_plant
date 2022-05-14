@@ -91,7 +91,7 @@
                         class="oe_highlight"/>
                 <button name="after_quality_check" string="After Quality Check" type="object" class="oe_highlight"
                         groups="base.group_user"
-                        attrs="{'invisible': [('state','!=', 'done')]}"/>
+                        attrs="{'invisible': ['|',('state','!=', 'done'),('quality_check_count', '&gt;', 0)]}"/>
             </xpath>
             <!-- </header> -->
 

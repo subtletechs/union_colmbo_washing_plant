@@ -49,7 +49,7 @@ class MrpProduction(models.Model):
     receipts = fields.Many2one(comodel_name="stock.picking", string="Receipts")
     # [UC-11]
     quality_check_count = fields.Integer(string='Quality Check Count', compute='_get_quality_checks')
-    quality_check_id = fields.Many2one(comodel_name='ucwp.quality.check', compute='_get_quality_checks',copy=False)
+    quality_check_id = fields.Many2one(comodel_name='ucwp.quality.check', compute='_get_quality_checks', copy=False)
 
     def _get_quality_checks(self):
         """Calculate the number of quality checks available for the MO and those IDs"""

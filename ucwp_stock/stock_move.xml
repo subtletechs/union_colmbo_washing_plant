@@ -39,6 +39,7 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
+
             <xpath expr="//button[@name='action_confirm']" position="after">
                 <button name="receive_logistic_update_datetime" string="Update Log Time" type="object"
                         class="oe_highlight" groups="base.group_user"
@@ -48,14 +49,14 @@
                         attrs="{'invisible': ['|',('garment_receipt', '=', False),('receive_sample_room','!=', False)]}"/>
                 <button name="before_quality_check" string="Before Quality Check" type="object" class="oe_highlight"
                         groups="base.group_user"
-                        attrs="{'invisible': ['|',('garment_receipt', '=', False),('state','!=', 'done')]}"/>
+                        attrs="{'invisible': ['|','|',('garment_receipt', '=', False),('state','!=', 'done'),('quality_check_count', '&gt;', 0)]}"/>
             </xpath>
 
             <!-- [UC-11] -->
             <xpath expr="//sheet/div[1]/button[@name='action_picking_move_tree']" position="before">
                 <button name="action_view_quality_count" type="object" class="oe_stat_button"
-                        attrs="{'invisible': ['|',('quality_count', '=', 0),('garment_receipt', '=', False)]}">
-                    <field name="quality_count" widget="statinfo" string="Quality Count"/>
+                        attrs="{'invisible': ['|',('quality_check_count', '=', 0),('garment_receipt', '=', False)]}">
+                    <field name="quality_check_count" widget="statinfo" string="Quality Count"/>
                 </button>
             </xpath>
 

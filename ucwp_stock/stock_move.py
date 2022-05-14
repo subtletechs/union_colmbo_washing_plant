@@ -110,7 +110,8 @@ class Picking(models.Model):
     garment_receipt = fields.Boolean(string="Garment Receipt", compute="_garment_receipt")
 
     # [UC-11] - To calculate stock moves
-    quality_count = fields.Integer(string="Quality Count", compute="compute_quality_count")
+    quality_check_count = fields.Integer(string="Quality Count", compute="_get_quality_checks")
+    quality_check_id = fields.Many2one(comodel_name='ucwp.quality.check', compute='_get_quality_checks', copy=False)
 
     def receive_logistic_update_datetime(self):
         """Update logistic order received date and time"""
@@ -148,21 +149,26 @@ class Picking(models.Model):
         }
 
     # [UC-11]
-    def compute_quality_count(self):
-        record_ids = self.env['ucwp.quality.check'].search_read([('grn', '=', self.id)])
-        self.quality_count = len(record_ids)
+    def _get_quality_checks(self):
+        """Calculate the number of quality checks available for the GRN and those IDs"""
+        quality_checks = self.env['ucwp.quality.check'].search([('grn', '=', self.id)], limit=1)
+        if quality_checks:
+            self.quality_check_count = 1
+            self.quality_check_id = quality_checks.id
+        else:
+            self.quality_check_count = 0
+            self.quality_check_id = None
 
     def action_view_quality_count(self):
-        # TODO show quality check records
         view = self.env.ref('union_colmbo_washing_plant.ucwp_quality_check_form_view')
-        id = self.env['ucwp.quality.check'].search([('grn', '=', self.id)]).id
+        record = self.env['ucwp.quality.check'].search([('grn', '=', self.id)], limit=1)
 
         return {
             'res_model': 'ucwp.quality.check',
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'view_id': view.id,
-            'res_id': id,
+            'res_id': record.id,
             'target': 'current',
         }
 
