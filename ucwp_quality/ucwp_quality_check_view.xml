@@ -33,12 +33,26 @@
                                            attrs="{'required': [('state', '=', 'processed'),('pass_fail', '=', 'fail')], 'invisible': [('pass_fail', '=', 'pass')]}"/>
                                     <field name="state"/>
 
-                                    <button name="process" string="Process" type="object"
-                                            class="fa fa-check btn-success"
-                                            attrs="{'invisible': ['|',('pass_fail', '=', 'pass'),('pass_fail', '=', False)]}"/>
-                                    <button name="cancel_process" string="Cancel" type="object"
-                                            class="fa fa-times btn-danger"
-                                            attrs="{'invisible': ['|',('pass_fail', '=', 'pass'),('pass_fail', '=', False)]}"/>
+                                    <button name="process" type="object"
+                                            class="oe_stat_button"
+                                            icon="fa-forward"
+                                            help="Process Garments"
+                                            />
+                                    <button name="return_garment" type="object"
+                                            class="oe_stat_button"
+                                            icon="fa-backward"
+                                            help="Return Garments"
+                                            />
+                                    <button name="rewash_garment" type="object"
+                                            class="oe_stat_button"
+                                            icon="fa-retweet"
+                                            help="Rewash Garments"
+                                            />
+                                    <button name="dispose_garment" type="object"
+                                            class="oe_stat_button"
+                                            icon="fa-stop"
+                                            help="Dispose Garments"
+                                            />
                                 </tree>
                             </field>
                         </page>
