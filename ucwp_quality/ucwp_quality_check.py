@@ -32,9 +32,29 @@ class QualityCheckLines(models.Model):
     comment = fields.Char(string="Comment")
     state = fields.Selection([('processed', 'Processed'), ('disposed', 'Disposed'), ('returned', 'Returned'),
                               ('rewashed', 'Rewashed')], string="State")
+    quality_point = fields.Selection([('before_wash', 'Before Wash'), ('after_wash', 'After Wash')],
+                                     string="Quality Point")
+    display_process_button = fields.Boolean(compute="_display_button")
+    display_return_button = fields.Boolean(compute="_display_button")
+    display_rewash_button = fields.Boolean(compute="_display_button")
+    display_dispose_button = fields.Boolean(compute="_display_button")
 
-    def process(self):
-        self.write({'state': 'processed'})
+    def process_garment(self):
+        if self.quality_point == 'before_wash' and self.pass_fail == 'fail':
+            self.write({'state': 'processed'})
+        if self.quality_point == 'after_wash' and self.pass_fail == 'pass':
+            view = self.env.ref('stock.view_picking_form')
+            internal_transfer_operation = self.env['stock.picking.type'].search([('code', '=', 'internal')])
+            return {
+                'res_model': 'stock.picking',
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'view_id': view.id,
+                'target': 'current',
+                'context': {
+                    'default_picking_type_id': internal_transfer_operation.id,
+                },
+            }
 
     # TODO functionality should need to be updated
     def return_garment(self):
@@ -45,3 +65,31 @@ class QualityCheckLines(models.Model):
 
     def dispose_garment(self):
         self.write({'state': 'disposed'})
+
+    @api.depends('quality_point', 'pass_fail')
+    def _display_button(self):
+        # Process Button visibility
+        if self.quality_point == 'before_wash' and self.pass_fail == 'fail':
+            self.display_process_button = True
+        elif self.quality_point == 'after_wash' and self.pass_fail == 'pass':
+            self.display_process_button = True
+        else:
+            self.display_process_button = False
+
+        # Dispose Button visibility
+        if self.pass_fail == 'fail':
+            self.display_dispose_button = True
+        else:
+            self.display_dispose_button = False
+
+        # Rewash Button visibility
+        if self.quality_point == 'after_wash' and self.pass_fail == 'fail':
+            self.display_rewash_button = True
+        else:
+            self.display_rewash_button = False
+
+        # Return Button visibility
+        if self.quality_point == 'before_wash' and self.pass_fail == 'fail':
+            self.display_return_button = True
+        else:
+            self.display_return_button =False
