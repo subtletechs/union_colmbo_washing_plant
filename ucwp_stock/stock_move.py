@@ -153,20 +153,18 @@ class Picking(models.Model):
         self.quality_count = len(record_ids)
 
     def action_view_quality_count(self):
-        pass
         # TODO show quality check records
-        # view = self.env.ref('union_colmbo_washing_plant.ucwp_quality_check_form_view')
-        #
-        # return {
-        #     'res_model': 'ucwp.quality.check',
-        #     'type': 'ir.actions.act_window',
-        #     'view_mode': 'form',
-        #     'view_id': view.id,
-        #     'target': 'current',
-        #     'context': {
-        #         self.env['ucwp.quality.check'].search([('grn', '=', self.id)])
-        #     },
-        # }
+        view = self.env.ref('union_colmbo_washing_plant.ucwp_quality_check_form_view')
+        id = self.env['ucwp.quality.check'].search([('grn', '=', self.id)]).id
+
+        return {
+            'res_model': 'ucwp.quality.check',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': view.id,
+            'res_id': id,
+            'target': 'current',
+        }
 
 
 class WashingOptions(models.Model):
