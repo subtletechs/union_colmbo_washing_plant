@@ -7,20 +7,21 @@ class BulkProduction(models.Model):
     _name = 'bulk.production'
 
     name = fields.Char(string="Bulk Production", default="New")
-    product = fields.Many2one(comodel_name='product.product', string='Product', required=True)
+    # product = fields.Many2one(comodel_name='product.product', string='Product', required=True)
     manufacture_orders = fields.One2many(comodel_name='mrp.production', inverse_name='bulk_id',
                                          string='Manufacture Orders')
-    buyer = fields.Many2one(comodel_name="res.partner", string="Buyer", related='product.buyer',
-                            store=True)
-    fabric_type = fields.Many2one(comodel_name="fabric.type", string="Fabric Type",
-                                  related='product.fabric_type', store=True)
-    wash_type = fields.Many2one(comodel_name="wash.type", string="Wash Type",
-                                related='product.wash_type', store=True)
-    bom = fields.Many2one(comodel_name="mrp.bom", string="Bill of Material")
-    lot_size = fields.Integer(string="Lot Size", related="bom.lot_size", store=True)
-    quantity = fields.Integer(string="Bulk size")
-    lot_information = fields.One2many(comodel_name="mo.lot.information.lines", inverse_name="bulk_production_id",
-                                      string="Lot Information")
+    # buyer = fields.Many2one(comodel_name="res.partner", string="Buyer", related='product.buyer',
+    #                         store=True)
+    # fabric_type = fields.Many2one(comodel_name="fabric.type", string="Fabric Type",
+    #                               related='product.fabric_type', store=True)
+    # wash_type = fields.Many2one(comodel_name="wash.type", string="Wash Type",
+    #                             related='product.wash_type', store=True)
+    # bom = fields.Many2one(comodel_name="mrp.bom", string="Bill of Material")
+    # lot_size = fields.Integer(string="Lot Size", related="bom.lot_size", store=True)
+    # quantity = fields.Integer(string="Bulk size")
+    # lot_information = fields.One2many(comodel_name="mo.lot.information.lines", inverse_name="bulk_production_id",
+    #                                   string="Lot Information")
+    garment_receipt = fields.Many2one(comodel_name="stock.picking", string="Garment Receipt")
 
     def calculate_job_quantity(self):
         self.lot_information = [(5)]
@@ -62,7 +63,7 @@ class MrpProduction(models.Model):
             self.quality_check_id = None
 
     def action_view_quality_check(self):
-        if self.quality_check_count == 1 :
+        if self.quality_check_count == 1:
             quality_record_id = self.quality_check_id.id
             view = self.env.ref('union_colmbo_washing_plant.ucwp_quality_check_form_view')
             return {

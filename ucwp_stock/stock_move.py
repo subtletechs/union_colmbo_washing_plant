@@ -172,6 +172,20 @@ class Picking(models.Model):
             'target': 'current',
         }
 
+    # [UC-07]
+    def generate_mo(self):
+        bulk_record = self.env['bulk.production'].create({
+            'garment_receipt': self.id
+        })
+        split_lines = self.move_ids_without_package.move_line_nosuggest_ids
+        for split_line in split_lines:
+            self.env['mrp.production'].create({
+                'product_id': split_line.product_id.id,
+                'product_qty': split_line.qty_done,
+                'bulk_id': bulk_record.id,
+                'product_uom_id': split_line.product_uom_id.id
+            })
+
 
 class WashingOptions(models.Model):
     _name = "washing.options"

@@ -7,13 +7,14 @@
         <field name="arch" type="xml">
             <tree string="Bulk Production">
                 <field name="name"/>
-                <field name="product"/>
-                <field name="buyer"/>
-                <field name="fabric_type"/>
-                <field name="wash_type"/>
-                <field name="bom"/>
-                <field name="lot_size"/>
-                <field name="quantity"/>
+                <field name="garment_receipt"/>
+                <!--                <field name="product"/>-->
+                <!--                <field name="buyer"/>-->
+                <!--                <field name="fabric_type"/>-->
+                <!--                <field name="wash_type"/>-->
+                <!--                <field name="bom"/>-->
+                <!--                <field name="lot_size"/>-->
+                <!--                <field name="quantity"/>-->
             </tree>
         </field>
     </record>
@@ -24,23 +25,24 @@
         <field name="model">bulk.production</field>
         <field name="arch" type="xml">
             <form string="Bulk Production">
-                <xpath expr="//button[@name='action_confirm']" position="after">
-                    <button name="calculate_job_quantity" string="Calculate Jobs" type="object"
-                            class="btn-primary"/>
-                </xpath>
+                <header>
+                    <!-- <button name="calculate_job_quantity" string="Calculate Jobs" type="object"-->
+                    <!--         class="btn-primary"/>-->
+                </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="product"/>
-                            <field name="bom"/>
+                            <field name="garment_receipt"/>
+                            <!--                            <field name="product"/>-->
+                            <!--                            <field name="bom"/>-->
                         </group>
                         <group>
-                            <field name="buyer"/>
-                            <field name="fabric_type"/>
-                            <field name="wash_type"/>
-                            <field name="lot_size"/>
-                            <field name="quantity"/>
+                            <!--                            <field name="buyer"/>-->
+                            <!--                            <field name="fabric_type"/>-->
+                            <!--                            <field name="wash_type"/>-->
+                            <!--                            <field name="lot_size"/>-->
+                            <!--                            <field name="quantity"/>-->
                         </group>
                     </group>
                     <notebook>
@@ -51,17 +53,17 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Lot Information" name="lot_information">
-                            <field name="lot_information">
-                                <tree string="Lot Information" editable="bottom">
-                                    <field name="job_no"/>
-                                    <field name="job_qty"/>
-                                    <field name="machine_no"/>
-                                    <field name="operator_name"/>
-                                    <field name="barcode"/>
-                                </tree>
-                            </field>
-                        </page>
+                        <!--                        <page string="Lot Information" name="lot_information">-->
+                        <!--                            <field name="lot_information">-->
+                        <!--                                <tree string="Lot Information" editable="bottom">-->
+                        <!--                                    <field name="job_no"/>-->
+                        <!--                                    <field name="job_qty"/>-->
+                        <!--                                    <field name="machine_no"/>-->
+                        <!--                                    <field name="operator_name"/>-->
+                        <!--                                    <field name="barcode"/>-->
+                        <!--                                </tree>-->
+                        <!--                            </field>-->
+                        <!--                        </page>-->
                     </notebook>
                 </sheet>
             </form>

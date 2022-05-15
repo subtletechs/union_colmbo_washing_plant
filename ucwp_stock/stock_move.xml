@@ -50,6 +50,10 @@
                 <button name="before_quality_check" string="Before Quality Check" type="object" class="oe_highlight"
                         groups="base.group_user"
                         attrs="{'invisible': ['|','|',('garment_receipt', '=', False),('state','!=', 'done'),('quality_check_count', '&gt;', 0)]}"/>
+                <!-- [UC-07] -->
+                <button name="generate_mo" string="Generate MO" type="object"
+                        class="oe_highlight" groups="base.group_user"
+                        attrs="{'invisible': ['|',('garment_receipt', '=', False),('state','!=','done')]}"/>
             </xpath>
 
             <!-- [UC-11] -->
