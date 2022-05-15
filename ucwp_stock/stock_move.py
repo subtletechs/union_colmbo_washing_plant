@@ -113,6 +113,9 @@ class Picking(models.Model):
     quality_check_count = fields.Integer(string="Quality Count", compute="_get_quality_checks")
     quality_check_id = fields.Many2one(comodel_name='ucwp.quality.check', compute='_get_quality_checks', copy=False)
 
+    # [UC-07]
+    bulk_production_count = fields.Integer(string="Bulk Production Count", compute="_get_bulk_production")
+
     def receive_logistic_update_datetime(self):
         """Update logistic order received date and time"""
         self.write({'receive_logistic': datetime.datetime.now()})
@@ -173,18 +176,53 @@ class Picking(models.Model):
         }
 
     # [UC-07]
+    def _get_bulk_production(self):
+        """Calculate Bulk Production count for GRN and IDS"""
+        bulk_production_records = self.env['bulk.production'].search([('garment_receipt', '=', self.id)])
+        if bulk_production_records:
+            self.bulk_production_count = len(bulk_production_records.ids)
+        else:
+            self.bulk_production_count = 0
+
+    def action_view_bulk_production_count(self):
+        bulk_production_records = self.env['bulk.production'].search([('garment_receipt', '=', self.id)])
+
+        if self.bulk_production_count == 1:
+            form_view = self.env.ref('union_colmbo_washing_plant.bulk_production_form_view')
+            return {
+                'res_model': 'bulk.production',
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'view_id': form_view.id,
+                'res_id': bulk_production_records.id,
+                'target': 'current',
+            }
+        else:
+            tree_view = self.env.ref('union_colmbo_washing_plant.bulk_production_tree_view')
+            return {
+                'name': _(self.name),
+                'res_model': 'bulk.production',
+                'type': 'ir.actions.act_window',
+                'view_mode': 'tree',
+                'view_id': tree_view.id,
+                'target': 'current',
+                'domain': [('id', 'in', bulk_production_records.ids)],
+            }
+
     def generate_mo(self):
-        bulk_record = self.env['bulk.production'].create({
-            'garment_receipt': self.id
-        })
-        split_lines = self.move_ids_without_package.move_line_nosuggest_ids
-        for split_line in split_lines:
-            self.env['mrp.production'].create({
-                'product_id': split_line.product_id.id,
-                'product_qty': split_line.qty_done,
-                'bulk_id': bulk_record.id,
-                'product_uom_id': split_line.product_uom_id.id
+        for stock_move in self.move_ids_without_package:
+            bulk_record = self.env['bulk.production'].create({
+                'garment_receipt': self.id,
+                'product': stock_move.product_id.id,
             })
+            split_lines = stock_move.move_line_nosuggest_ids
+            for split_line in split_lines:
+                self.env['mrp.production'].create({
+                    'product_id': split_line.product_id.id,
+                    'product_qty': split_line.qty_done,
+                    'bulk_id': bulk_record.id,
+                    'product_uom_id': split_line.product_uom_id.id
+                })
 
 
 class WashingOptions(models.Model):
