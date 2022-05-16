@@ -224,6 +224,23 @@ class Picking(models.Model):
                     'product_uom_id': split_line.product_uom_id.id
                 })
 
+    def create_invoice(self):
+        invoice_form_view = self.env.ref('account.view_move_form')
+
+        return {
+            'res_model': 'account.move',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': invoice_form_view.id,
+            'target': 'current',
+            'context': {
+                'default_move_type': 'out_invoice',
+                'default_receipts': self.receipts.id,
+                'default_delivery_order': self.id,
+                'default_partner_id': self.receipts.partner_id.id,
+            }
+        }
+
 
 class WashingOptions(models.Model):
     _name = "washing.options"
