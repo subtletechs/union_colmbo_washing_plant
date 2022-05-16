@@ -58,12 +58,18 @@
 
             <!-- [UC-11] -->
             <xpath expr="//sheet/div[1]/button[@name='action_picking_move_tree']" position="before">
-                <button name="action_view_quality_count" type="object" class="oe_stat_button"
+                <button name="action_view_quality_count"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
                         attrs="{'invisible': ['|',('quality_check_count', '=', 0),('garment_receipt', '=', False)]}">
                     <field name="quality_check_count" widget="statinfo" string="Quality Count"/>
                 </button>
                 <!-- [UC-07] -->
-                <button name="action_view_bulk_production_count" type="object" class="oe_stat_button"
+                <button name="action_view_bulk_production_count"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-gears"
                         attrs="{'invisible': ['|',('garment_receipt', '=', False),('bulk_production_count', '=', 0)]}">
                     <field name="bulk_production_count" widget="statinfo" string="Bulk Productions"/>
                 </button>

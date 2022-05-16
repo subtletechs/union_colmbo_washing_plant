@@ -186,9 +186,9 @@ class Picking(models.Model):
 
     def action_view_bulk_production_count(self):
         bulk_production_records = self.env['bulk.production'].search([('garment_receipt', '=', self.id)])
+        form_view = self.env.ref('union_colmbo_washing_plant.bulk_production_form_view')
 
         if self.bulk_production_count == 1:
-            form_view = self.env.ref('union_colmbo_washing_plant.bulk_production_form_view')
             return {
                 'res_model': 'bulk.production',
                 'type': 'ir.actions.act_window',
@@ -203,8 +203,8 @@ class Picking(models.Model):
                 'name': _(self.name),
                 'res_model': 'bulk.production',
                 'type': 'ir.actions.act_window',
-                'view_mode': 'tree',
-                'view_id': tree_view.id,
+                'view_mode': 'list,form',
+                'views': [[tree_view.id, 'list'], [form_view.id, 'form']],
                 'target': 'current',
                 'domain': [('id', 'in', bulk_production_records.ids)],
             }
