@@ -116,6 +116,8 @@ class Picking(models.Model):
     # [UC-07]
     bulk_production_count = fields.Integer(string="Bulk Production Count", compute="_get_bulk_production")
 
+    is_receipt_return = fields.Boolean(string='Stock Receipt return', default=False)
+
     def receive_logistic_update_datetime(self):
         """Update logistic order received date and time"""
         self.write({'receive_logistic': datetime.datetime.now()})

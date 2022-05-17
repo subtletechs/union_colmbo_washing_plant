@@ -80,6 +80,8 @@
 
             <xpath expr="//field[@name='use_create_lots']" position="after">
                 <field name="garment_receipt" invisible="1"/>
+                <field name="is_receipt_return" invisible="0"/>
+
             </xpath>
             <xpath expr="//sheet/group[1]" position="after">
                 <group>

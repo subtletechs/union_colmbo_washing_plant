@@ -31,6 +31,7 @@
         'ucwp_mrp/mrp_production_view.xml',
         'ucwp_mrp/job_card.xml',
         'ucwp_account/ucwp_account_move_views.xml',
+        'ucwp_stock/stock_picking_return_view.xml',
     ],
 
     'installable': True,

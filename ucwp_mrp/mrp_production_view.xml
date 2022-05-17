@@ -48,7 +48,7 @@
                     <notebook>
                         <page string="Manufacture Orders" name="manufacture_orders">
                             <field name="manufacture_orders">
-                                <tree string="Manufacture Orders" editable="bottom">
+                                <tree string="Manufacture Orders">
                                     <field name="name"/>
                                 </tree>
                             </field>

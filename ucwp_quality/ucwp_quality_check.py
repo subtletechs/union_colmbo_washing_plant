@@ -43,6 +43,7 @@ class QualityCheckLines(models.Model):
         if self.quality_point == 'before_wash' and self.pass_fail == 'fail':
             self.write({'state': 'processed'})
         if self.quality_point == 'after_wash' and self.pass_fail == 'pass':
+            self.write({'state': 'processed'})
             view = self.env.ref('stock.view_picking_form')
             internal_transfer_operation = self.env['stock.picking.type'].search([('code', '=', 'internal')])
             return {
@@ -59,6 +60,16 @@ class QualityCheckLines(models.Model):
     # TODO functionality should need to be updated
     def return_garment(self):
         self.write({'state': 'returned'})
+        view = self.env.ref('stock.view_stock_return_picking_form')
+        return {
+            'res_model': 'stock.return.picking',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': view.id,
+            'target': 'new',
+            'context': {'active_id': self.ucwp_quality_check_id.grn.id,
+                        'active_model': 'stock.picking', 'default_is_receipt_return': True},
+        }
 
     def rewash_garment(self):
         self.write({'state': 'rewashed'})
