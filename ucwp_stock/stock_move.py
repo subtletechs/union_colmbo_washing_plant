@@ -86,6 +86,7 @@ class ProductionLot(models.Model):
     _inherit = 'stock.production.lot'
 
     barcode = fields.Char(string="Barcode", readonly=True, compute="_compute_barcode")
+    product_type = fields.Selection([('material', 'Material'), ('finish', 'Finish Product')], string='Product Type')
 
     def _compute_barcode(self):
         self.barcode = self.name
