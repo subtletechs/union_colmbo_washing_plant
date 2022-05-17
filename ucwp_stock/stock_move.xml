@@ -56,7 +56,7 @@
                         attrs="{'invisible': ['|',('garment_receipt', '=', False),('state','!=','done')]}"/>
                 <button name="create_invoice" string="Create Invoice" type="object"
                         class="oe_highlight" groups="base.group_user"
-                        attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                        attrs="{'invisible': ['|',('picking_type_code', '!=', 'outgoing'),('state','!=','done')]}"/>
             </xpath>
 
             <!-- [UC-11] -->
@@ -75,6 +75,14 @@
                         icon="fa-gears"
                         attrs="{'invisible': ['|',('garment_receipt', '=', False),('bulk_production_count', '=', 0)]}">
                     <field name="bulk_production_count" widget="statinfo" string="Bulk Productions"/>
+                </button>
+                <!-- [UC-17] -->
+                <button name="action_view_invoice_count"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible': [('invoice_count', '=', 0)]}">
+                    <field name="invoice_count" widget="statinfo" string="Invoices"/>
                 </button>
             </xpath>
 

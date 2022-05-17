@@ -11,7 +11,7 @@ class StockMove(models.Model):
     _inherit = "stock.move"
     # _order = "create_date asc, sequence, id"
 
-    invoice_type = fields.Selection([('invoice', 'Invoiceable'), ('not_invoiceable', 'Not-Invoiceable')],
+    invoice_type = fields.Selection([('invoice', 'Invoiceable'), ('not_invoiceable', 'Non-Invoiceable')],
                                     string='Invoice Type')
     wash_type = fields.Selection([('wash', 'Wash'), ('rewash', 'Re-wash')], string="Wash Type")
     approval = fields.Selection([('approved', 'Approved'), ('rejected', 'Rejected')], string="Approved/Rejected")
@@ -117,6 +117,9 @@ class Picking(models.Model):
     bulk_production_count = fields.Integer(string="Bulk Production Count", compute="_get_bulk_production")
 
     is_receipt_return = fields.Boolean(string='Stock Receipt return', default=False)
+
+    # [UC-17]
+    invoice_count = fields.Integer(string="Invoice Count", compute="_get_invoice")
 
     def receive_logistic_update_datetime(self):
         """Update logistic order received date and time"""
@@ -226,8 +229,19 @@ class Picking(models.Model):
                     'product_uom_id': split_line.product_uom_id.id
                 })
 
+    # [UC-17]
     def create_invoice(self):
         invoice_form_view = self.env.ref('account.view_move_form')
+        do_stock_moves = self.move_ids_without_package
+        grn_stock_moves = self.receipts.move_ids_without_package
+        invoiced_list = []
+        for do_stock_move in do_stock_moves:
+            # product_id = stock_move_record.product_id.id
+            records = grn_stock_moves.filtered(
+                lambda move_lines: move_lines.product_id.id == do_stock_move.product_id.id)
+            for record in records:
+                if record.invoice_type == 'invoice':
+                    invoiced_list.append(record.id)
 
         return {
             'res_model': 'account.move',
@@ -240,8 +254,19 @@ class Picking(models.Model):
                 'default_receipts': self.receipts.id,
                 'default_delivery_order': self.id,
                 'default_partner_id': self.receipts.partner_id.id,
+                'default_invoice_line_ids': [(6, 0, invoiced_list)],
             }
         }
+
+    def _get_invoice(self):
+        invoices = self.env['account.move'].search([('delivery_order', '=', self.id)])
+        if invoices:
+            self.invoice_count = len(invoices.ids)
+        else:
+            self.invoice_count = 0
+
+    def action_view_invoice_count(self):
+        pass
 
 
 class WashingOptions(models.Model):
