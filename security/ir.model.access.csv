@@ -13,3 +13,4 @@ mo_lot_information_lines_access_base_user,mo_lot_information_lines_access_base,m
 mo_machines_access_base_user,mo_machines_access_base,model_mo_machines,,1,1,1,1
 ucwp_quality_check_access_base_user,ucwp_quality_check_access_base,model_ucwp_quality_check,base.group_user,1,1,1,1
 quality_check_lines_access_base_user,quality_check_lines_access_base,model_quality_check_lines,base.group_user,1,1,1,1
+account_move_wizard_access_base_user,account_move_wizard_access_base,model_account_move_wizard,base.group_user,1,1,1,1

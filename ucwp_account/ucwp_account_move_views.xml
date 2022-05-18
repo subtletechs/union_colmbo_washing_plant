@@ -6,10 +6,33 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_register_payment']" position="after">
+                <button string="Special Payment" name="action_special_payments" type="object" class="oe_highlight"/>
+            </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="receipts"/>
                 <field name="delivery_order"/>
+                <field name="balance_in_days"/>
             </xpath>
         </field>
     </record>
+
+    <!--    special payment details wizard form view-->
+    <record id="special_payment_details_form_view" model="ir.ui.view">
+        <field name="name">special.payment.details.wizard.form</field>
+        <field name="model">account.move.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Special Register Payment">
+                <group class="oe_title">
+                    <field name="balance_in_days"/>
+                </group>
+                <footer>
+                    <button name="action_register_payment" string="Special Register Payment" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
 </odoo>
