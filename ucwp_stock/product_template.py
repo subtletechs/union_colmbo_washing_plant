@@ -17,7 +17,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def create(self, values):
-        sequence = self.env['ir.sequence'].next_by_code('product_uc_number') or _('New')
+        sequence = self.env['ir.sequence'].next_by_code('product.uc.number') or _('New')
         values['default_code'] = sequence
         return super(ProductTemplate, self).create(values)
 

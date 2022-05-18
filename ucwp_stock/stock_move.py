@@ -76,9 +76,19 @@ class StockMoveLine(models.Model):
 
     @api.model
     def create(self, vals):
-        sequence = self.env['ir.sequence'].next_by_code('stock.move.line') or _('New')
-        vals['lot_name'] = sequence
-        vals['barcode'] = sequence
+        if 'picking_id' in vals:
+            picking_obj = self.env['stock.picking'].browse(vals.get('picking_id'))
+            if picking_obj.picking_type_id.garment_receipt:
+                stock_move = self.env['stock.move'].browse(vals.get('move_id'))
+                sequence = self.env['ir.sequence'].next_by_code('stock.move.line') or _('New')
+                lot_id = self.env['stock.production.lot'].create({
+                    'name' :sequence,
+                    'product_id': stock_move.product_id,
+                    'barcode' : sequence
+                })
+                if lot_id:
+                    vals['lot_name'] = lot_id.id
+                    vals['barcode'] = lot_id.name
         return super(StockMoveLine, self).create(vals)
 
 
