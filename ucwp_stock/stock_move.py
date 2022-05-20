@@ -82,7 +82,7 @@ class StockMoveLine(models.Model):
                 stock_move = self.env['stock.move'].browse(vals.get('move_id'))
                 sequence = self.env['ir.sequence'].next_by_code('stock.move.line') or _('New')
                 lot_id = self.env['stock.production.lot'].create({
-                    'name':sequence,
+                    'name': sequence,
                     'product_id': stock_move.product_id.id,
                     'barcode': sequence,
                     'product_type': 'material'

@@ -13,7 +13,7 @@ class ProductTemplate(models.Model):
     garment_type = fields.Many2one(comodel_name="garment.type", string="Garment Type")
     customer = fields.Many2one(comodel_name="res.partner", string="Customer")
     garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample')
-    samples = fields.Many2one(comodel_name="garment.sample", string="Samples")
+    samples = fields.Many2one(comodel_name="garment.sample", string="Sample Type")
 
     @api.model
     def create(self, values):

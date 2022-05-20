@@ -9,12 +9,6 @@
                 <field name="name"/>
                 <field name="garment_receipt"/>
                 <field name="product"/>
-                <!-- <field name="buyer"/>-->
-                <!-- <field name="fabric_type"/>-->
-                <!-- <field name="wash_type"/>-->
-                <!-- <field name="bom"/>-->
-                <!-- <field name="lot_size"/>-->
-                <!-- <field name="quantity"/>-->
             </tree>
         </field>
     </record>
@@ -31,20 +25,11 @@
                 </header>
                 <sheet>
                     <group>
-                        <group>
                             <field name="name"/>
                             <field name="garment_receipt"/>
                             <field name="product"/>
-                            <!-- <field name="bom"/>-->
-                        </group>
-                        <group>
-                            <!-- <field name="buyer"/>-->
-                            <!-- <field name="fabric_type"/>-->
-                            <!-- <field name="wash_type"/>-->
-                            <!-- <field name="lot_size"/>-->
-                            <!-- <field name="quantity"/>-->
-                        </group>
                     </group>
+                    <group></group>
                     <notebook>
                         <page string="Manufacture Orders" name="manufacture_orders">
                             <field name="manufacture_orders">
@@ -53,17 +38,14 @@
                                 </tree>
                             </field>
                         </page>
-                        <!-- <page string="Lot Information" name="lot_information">-->
-                        <!--     <field name="lot_information">-->
-                        <!--         <tree string="Lot Information" editable="bottom">-->
-                        <!--             <field name="job_no"/>-->
-                        <!--             <field name="job_qty"/>-->
-                        <!--             <field name="machine_no"/>-->
-                        <!--             <field name="operator_name"/>-->
-                        <!--             <field name="barcode"/>-->
-                        <!--         </tree>-->
-                        <!--     </field>-->
-                        <!-- </page>-->
+                        <page string="Manufacture Operation Stages" name="manufacture_operation_stages">
+                            <field name="manufacture_operation_stages">
+                                <tree string="Manufacture Operation Stages">
+                                    <field name="bom"/>
+                                    <field name="lot_size"/>
+                                </tree>
+                            </field>
+                        </page>
                     </notebook>
                 </sheet>
             </form>
@@ -114,6 +96,51 @@
                 <field name="machine_no"/>
                 <field name="operator_name"/>
             </xpath>
+        </field>
+    </record>
+
+    <!--    Manufacture operation stages list view-->
+    <record id="manufacture_operation_stages_tree_view" model="ir.ui.view">
+        <field name="name">manufacture.operation.stages.tree.view</field>
+        <field name="model">manufacture.operation.stages</field>
+        <field name="arch" type="xml">
+            <tree string="Manufacture Operation Stages">
+                <field name="bom"/>
+                <field name="lot_size"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    Manufacture operation stages form view-->
+    <record id="manufacture_operation_stages_form_view" model="ir.ui.view">
+        <field name="name">manufacture.operation.form.view</field>
+        <field name="model">manufacture.operation.stages</field>
+        <field name="arch" type="xml">
+            <form string="Manufacture Operation Stages">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="bom"/>
+                        </group>
+                        <group>
+                            <field name="lot_size"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Operation Lines" name="operation_lines">
+                            <field name="operation_lines">
+                                <tree string="Operation Lines" editable="bottom">
+                                    <field name="job_no"/>
+                                    <field name="job_qty"/>
+                                    <field name="machine_no"/>
+                                    <field name="operator_name"/>
+                                    <field name="barcode"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
         </field>
     </record>
 
