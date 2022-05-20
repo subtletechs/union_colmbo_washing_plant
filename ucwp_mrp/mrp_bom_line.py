@@ -21,14 +21,6 @@ class MrpBom(models.Model):
     per_piece_weight = fields.Float(string="Per piece weight")
 
 
-class MrpBomLine(models.Model):
-    _inherit = 'mrp.bom.line'
-
-    time = fields.Float(sting="Time")
-    temperature = fields.Float(string="Temperature")
-    ph = fields.Float(string="pH")
-
-
 class MachineType(models.Model):
     _name = "machine.type"
 
@@ -42,3 +34,44 @@ class Machines(models.Model):
 
     machine_number = fields.Char(string="Machine Number")
     machine_type = fields.Many2one(comodel_name="machine.type", string="Machine Type")
+
+
+class MrpRoutingWorkcenter(models.Model):
+    _inherit = 'mrp.routing.workcenter'
+
+    sub_process = fields.One2many(comodel_name='mrp.routing.sub.process', inverse_name='mrp_routing_workcenter_id',
+                                  string='Sub Process')
+
+
+class MrpRoutingSubProcess(models.Model):
+    _name = 'mrp.routing.sub.process'
+
+    sub_process = fields.Many2one(comodel_name='routing.sub.process', string='Sub Process', required=True)
+    time = fields.Float(sting="Time")
+    temperature = fields.Float(string="Temperature")
+    ph = fields.Float(string="pH")
+    mrp_routing_workcenter_id = fields.Many2one(comodel_name='mrp.routing.workcenter', string="Operation")
+
+
+class RoutingSubProcess(models.Model):
+    _name = 'routing.sub.process'
+
+    name = fields.Char(string='Sub Process', required=True)
+
+
+class MrpBomLine(models.Model):
+    _inherit = 'mrp.bom.line'
+
+    sub_process = fields.Many2one(comodel_name='routing.sub.process', string='Sub Process')
+
+    @api.onchange('operation_id')
+    def set_domain_sub_process(self):
+        sub_list =[]
+        if self.operation_id:
+            if self.operation_id.sub_process:
+                for records in self.operation_id.sub_process:
+                    sub_list.append(records.sub_process)
+        return {'domain':{'sub_process':[('id','in',sub_list)]}}
+
+
+

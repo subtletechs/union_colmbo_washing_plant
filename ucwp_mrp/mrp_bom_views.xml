@@ -7,11 +7,8 @@
         <field name="model">mrp.bom</field>
         <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
         <field name="arch" type="xml">
-            <!-- bom lines tree view -->
-            <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_id']" position="after">
-                <field name="time" widget="float_time"/>
-                <field name="temperature"/>
-                <field name="ph"/>
+            <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='operation_id']" position="after">
+                <field name="sub_process"/>
             </xpath>
             <!-- Rename product_qty field -->
             <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="attributes">
@@ -19,13 +16,97 @@
             </xpath>
             <!-- BOM main view customization -->
             <xpath expr="//field[@name='product_id']" position="after">
-                            <field name="garment_select"/>
-                            <field name="buyer"/>
-                            <field name="fabric_type"/>
-                            <field name="wash_type"/>
-                            <field name="machine_type"/>
-                            <field name="lot_size"/>
-                            <field name="per_piece_weight"/>
+                <field name="garment_select"/>
+                <field name="buyer"/>
+                <field name="fabric_type"/>
+                <field name="wash_type"/>
+                <field name="machine_type"/>
+                <field name="lot_size"/>
+                <field name="per_piece_weight"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--    Routing Sub Process Tree View -->
+    <record id="routing_sub_process_tree_view" model="ir.ui.view">
+        <field name="name">routing.sub.process.tree.view</field>
+        <field name="model">routing.sub.process</field>
+        <field name="arch" type="xml">
+            <tree string="Routing Sub Process">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    Routing Sub Process Form View -->
+    <record id="routing_sub_process_form_view" model="ir.ui.view">
+        <field name="name">routing.sub.process.form.view</field>
+        <field name="model">routing.sub.process</field>
+        <field name="arch" type="xml">
+            <form string="Routing Sub Process">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    MRP Routing Sub Process Tree View -->
+    <record id="mrp_routing_sub_process_tree_view" model="ir.ui.view">
+        <field name="name">mrp.routing.sub.process.tree.view</field>
+        <field name="model">mrp.routing.sub.process</field>
+        <field name="arch" type="xml">
+            <tree string="MRP Routing Sub Process">
+                <field name="sub_process"/>
+                <field name="time"/>
+                <field name="temperature"/>
+                <field name="ph"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    MRP Routing Sub Process Form View -->
+    <record id="mrp_routing_sub_process_form_view" model="ir.ui.view">
+        <field name="name">mrp.routing.sub.process.form.view</field>
+        <field name="model">mrp.routing.sub.process</field>
+        <field name="arch" type="xml">
+            <form string="MRP Routing Sub Process">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="sub_process"/>
+                        </group>
+                        <group>
+                            <field name="time"/>
+                            <field name="temperature"/>
+                            <field name="ph"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- view used for mrp routing workcenter -->
+    <record id="mrp_routing_workcenter_form_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.form.view.inherit</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Sub Operation tab customization -->
+            <xpath expr="//page[@name='worksheet']" position="after">
+                <page string="Sub Processes" name="sub_process">
+                    <field name="sub_process">
+                        <tree string="Sub Process" editable="bottom">
+                            <field name="sub_process"/>
+                            <field name="time"/>
+                            <field name="temperature"/>
+                            <field name="ph"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
         </field>
     </record>
