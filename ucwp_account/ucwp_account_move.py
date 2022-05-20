@@ -19,6 +19,9 @@ class AccountMove(models.Model):
             'view_mode': 'form',
             'view_id': special_payment_form_view.id,
             'target': 'new',
+            'context': {
+                'default_invoice_number': self.id
+            }
         }
 
 
@@ -26,11 +29,20 @@ class AccountMove(models.TransientModel):
     _name = "account.move.wizard"
 
     balance_in_days = fields.Integer(string="Balance in Days")
+    invoice_number = fields.Many2one(comodel_name="account.move", string="Invoice Number")
 
-    # TODO call register payment method
     def action_register_payment(self):
-        pass
+        invoice_record = self.env['account.move'].search([('id', '=', self.invoice_number.id)], limit=1)
+        invoice_record.balance_in_days = self.balance_in_days
+        return {
+            'name': _('Special Register Payment'),
+            'res_model': 'account.payment.register',
+            'view_mode': 'form',
+            'context': {
+                'active_model': 'account.move',
+                'active_ids': invoice_record.id,
+            },
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }
 
-
-class AccountPaymentRegister(models.TransientModel):
-    _inherit = 'account.payment.register'
