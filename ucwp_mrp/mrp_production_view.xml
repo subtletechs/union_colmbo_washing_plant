@@ -22,12 +22,17 @@
                 <header>
                     <!-- <button name="calculate_job_quantity" string="Calculate Jobs" type="object"-->
                     <!--         class="btn-primary"/>-->
+                    <button name="generate_mo"
+                            string="Generate MO"
+                            type="object" class="oe_highlight" groups="base.group_user"
+                            attrs="{'invisible': [('is_clicked','=',True)]}"/>
                 </header>
                 <sheet>
                     <group>
                         <field name="name"/>
                         <field name="garment_receipt"/>
                         <field name="product"/>
+                        <field name="is_clicked" invisible="1"/>
                     </group>
                     <group></group>
                     <notebook>
@@ -117,12 +122,6 @@
         <field name="model">manufacture.operation.stages</field>
         <field name="arch" type="xml">
             <form string="Manufacture Operation Stages">
-                <header>
-                    <button name="generate_mo"
-                            string="Generate MO"
-                            type="object" class="oe_highlight" groups="base.group_user"/>
-                    <!--                        attrs="{'invisible': [()]}"/>-->
-                </header>
                 <sheet>
                     <group>
                         <group>
@@ -141,7 +140,7 @@
                                     <field name="machine_no"/>
                                     <field name="operator_name"/>
                                     <field name="barcode"/>
-                                    <field name="manufacture_order"/>
+                                    <field name="bulk_production" invisible="1"/>
                                 </tree>
                             </field>
                         </page>
