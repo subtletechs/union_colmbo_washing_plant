@@ -119,6 +119,18 @@ class ManufactureOperationStages(models.Model):
                                       string="Operation Lines")
     bulk_production_id = fields.Many2one(comodel_name="bulk.production", string="Bulk ID")
 
+    def generate_mo(self):
+        for operation_line in self.operation_lines:
+            self.env['mrp.production'].create({
+                'product_id': self.bulk_production_id.product_id.id,
+                'product_uom_id': self.bulk_production_id.product_uom_id.id,
+                'job_no': operation_line.job_no,
+                'product_qty': operation_line.job_qty,
+                'machine_no': operation_line.machine_no,
+                'operator_name': operation_line.operator_name,
+                'barcode': operation_line.barcode
+            })
+
 
 class OperationLines(models.Model):
     _name = "operation.lines"
@@ -131,9 +143,10 @@ class OperationLines(models.Model):
     barcode = fields.Many2one(comodel_name="stock.production.lot", string="Barcode")
     manufacture_operation_stages_id = fields.Many2one(comodel_name="manufacture.operation.stages",
                                                       string="MO stages ID", invisible=True)
+    manufacture_order = fields.Many2one(comodel_name="mrp.production", string="Manufacture Order")
 
     @api.model
     def create(self, values):
         job_sequence = self.env['ir.sequence'].next_by_code('lot_information_lines') or _('New')
         values['barcode'] = job_sequence
-        return super(LotInformationLines, self).create(values)
+        return super(OperationLines, self).create(values)
