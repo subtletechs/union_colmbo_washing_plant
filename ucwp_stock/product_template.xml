@@ -11,6 +11,18 @@
                     <field name="is_garment"/>
                     <label for="is_garment"/>
                 </span>
+                <span class="d-inline-block" attrs="{'invisible': [('is_garment', '=', False)]}">
+                    <field name="is_sample"/>
+                    <label for="is_sample"/>
+                </span>
+                <span class="d-inline-block" attrs="{'invisible': [('is_garment', '=', False)]}">
+                    <field name="is_bulk"/>
+                    <label for="is_bulk"/>
+                </span>
+                <span class="d-inline-block" attrs="{'invisible': [('is_garment', '=', True)]}">
+                    <field name="is_chemical"/>
+                    <label for="is_chemical"/>
+                </span>
             </xpath>
             <xpath expr="//page[@name='general_information']" position="before">
                 <!-- Style Information Tab -->
@@ -25,7 +37,7 @@
                             <field name="fabric_type" attrs="{'required': [('is_garment', '=', True)]}"/>
                             <field name="wash_type" attrs="{'required': [('is_garment', '=', True)]}"/>
                             <field name="garment_type" attrs="{'required': [('is_garment', '=', True)]}"/>
-                            <field name="garment_select" widget="radio"
+                            <field name="garment_select" widget="radio" invisible="1"
                                    attrs="{'required': [('is_garment', '=', True)]}"/>
                             <field name="samples"
                                    attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
@@ -33,6 +45,22 @@
                     </group>
                 </page>
             </xpath>
+
+            <xpath expr="//page[@name='general_information']" position="after">
+                <!-- MSDS Information Tab -->
+                <page string="MSDS Information" name="msds_information"
+                      attrs="{'invisible': [('is_chemical', '=', False)]}">
+                    <group name="group_chemical">
+                        <group>
+                            <field name="msds_in_english"/>
+                        </group>
+                        <group>
+                            <field name="msds_in_sinhala"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
             <xpath expr="//field[@name='default_code']" position="attributes">
                 <attribute name="string">UC Number</attribute>
             </xpath>
@@ -70,6 +98,18 @@
                     <field name="is_garment"/>
                     <label for="is_garment"/>
                 </span>
+                <span class="d-inline-block" attrs="{'invisible': [('is_garment', '=', False)]}">
+                    <field name="is_sample"/>
+                    <label for="is_sample"/>
+                </span>
+                <span class="d-inline-block" attrs="{'invisible': [('is_garment', '=', False)]}">
+                    <field name="is_bulk"/>
+                    <label for="is_bulk"/>
+                </span>
+                <span class="d-inline-block" attrs="{'invisible': [('is_garment', '=', True)]}">
+                    <field name="is_chemical"/>
+                    <label for="is_chemical"/>
+                </span>
             </xpath>
             <xpath expr="//page[@name='general_information']" position="before">
                 <!-- Style Information Tab -->
@@ -84,9 +124,24 @@
                             <field name="fabric_type"/>
                             <field name="wash_type"/>
                             <field name="garment_type"/>
-                            <field name="garment_select" widget="radio"/>
+                            <field name="garment_select" widget="radio" invisible="1"/>
                             <field name="samples"
                                    attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//page[@name='general_information']" position="after">
+                <!-- MSDS Information Tab -->
+                <page string="MSDS Information" name="msds_information"
+                      attrs="{'invisible': [('is_chemical', '=', False)]}">
+                    <group name="group_chemical">
+                        <group>
+                            <field name="msds_in_english"/>
+                        </group>
+                        <group>
+                            <field name="msds_in_sinhala"/>
                         </group>
                     </group>
                 </page>

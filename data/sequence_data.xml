@@ -22,5 +22,30 @@
             <field name="number_increment">1</field>
             <field name="number_next_actual">1</field>
         </record>
+
+        <!-- Sequence for BOM Number -->
+        <record id="bom_lot_sequence" model="ir.sequence">
+            <field name="name">BOM Sequence</field>
+            <field name="code">bom.code</field>
+            <field name="implementation">standard</field>
+            <field name="prefix">BOM/</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+        </record>
+
+
+        <!-- Sequence for UC Reference Number -->
+        <record id="uc_reference_sequence" model="ir.sequence">
+            <field name="name">UC Reference</field>
+            <field name="code">product.uc.number</field>
+            <field name="implementation">standard</field>
+            <field name="prefix">UC/</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+        </record>
+
+
     </data>
 </odoo>
