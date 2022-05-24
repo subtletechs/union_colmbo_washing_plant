@@ -15,7 +15,7 @@
             <xpath expr="//page[@name='general_information']" position="before">
                 <!-- Style Information Tab -->
                 <page string="Style Information" name="general_information"
-                      attrs="{'invisible': [('is_garment', '=', False)]}">
+                      attrs="{'invisible': [('is_garment','=',False)]}">
                     <group name="group_general">
                         <group>
                             <field name="buyer" attrs="{'required': [('is_garment', '=', True)]}"/>

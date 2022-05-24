@@ -7,6 +7,18 @@
         <field name="model">mrp.bom</field>
         <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
         <field name="arch" type="xml">
+            <!-- [UC-10] -->
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','=', 'confirm')]}"/>
+                    <button name="action_draft" string="Set to Draft" type="object"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','!=', 'confirm')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                </header>
+            </xpath>
             <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='operation_id']" position="after">
                 <field name="sub_process"/>
             </xpath>
@@ -23,6 +35,7 @@
                 <field name="machine_type"/>
                 <field name="lot_size"/>
                 <field name="per_piece_weight"/>
+                <field name="development_bom"/>
             </xpath>
         </field>
     </record>

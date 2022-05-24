@@ -1,5 +1,6 @@
 from odoo import api, fields, models, _
 from datetime import datetime
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 
 class BulkProduction(models.Model):
@@ -125,6 +126,12 @@ class MrpProduction(models.Model):
                 'default_quality_point': 'after_wash',
             },
         }
+
+    # [UC-10]
+    def action_confirm(self):
+        if self.bom_id.state == 'draft':
+            raise ValidationError(_('BoM should need to be validated first'))
+        return super(MrpProduction, self).action_confirm()
 
 
 # [UC-07]

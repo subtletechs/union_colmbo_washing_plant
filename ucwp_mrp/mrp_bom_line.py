@@ -19,6 +19,15 @@ class MrpBom(models.Model):
     machine_type = fields.Many2one(comodel_name="machine.type", string="Machine Type")
     lot_size = fields.Integer(string="Lot size")
     per_piece_weight = fields.Float(string="Per piece weight")
+    # [UC-10]
+    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')], string="State", default="draft")
+    development_bom = fields.Boolean(string="Development BOM", default=False)
+
+    def action_confirm(self):
+        self.state = 'confirm'
+
+    def action_draft(self):
+        self.state = 'draft'
 
 
 class MachineType(models.Model):
