@@ -24,10 +24,10 @@ class MrpBom(models.Model):
     development_bom = fields.Boolean(string="Development BOM", default=False)
 
     def action_confirm(self):
-        self.state = 'confirm'
+        self.write({'state': 'confirm'})
 
     def action_draft(self):
-        self.state = 'draft'
+        self.write({'state': 'draft'})
 
 
 class MachineType(models.Model):
@@ -50,6 +50,7 @@ class MrpRoutingWorkcenter(models.Model):
 
     sub_process = fields.One2many(comodel_name='mrp.routing.sub.process', inverse_name='mrp_routing_workcenter_id',
                                   string='Sub Process')
+    process_type = fields.Selection([('dry', 'Dry Process'), ('wet', 'Wet Process')], string="Process Type")
 
 
 class MrpRoutingSubProcess(models.Model):
@@ -75,12 +76,9 @@ class MrpBomLine(models.Model):
 
     @api.onchange('operation_id')
     def set_domain_sub_process(self):
-        sub_list =[]
+        sub_list = []
         if self.operation_id:
             if self.operation_id.sub_process:
                 for records in self.operation_id.sub_process:
                     sub_list.append(records.sub_process)
-        return {'domain':{'sub_process':[('id','in',sub_list)]}}
-
-
-
+        return {'domain': {'sub_process': [('id', 'in', sub_list)]}}
