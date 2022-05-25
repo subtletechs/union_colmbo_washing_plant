@@ -9,13 +9,10 @@ from collections import defaultdict
 class MrpBom(models.Model):
     _inherit = 'mrp.bom'
 
-    garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample',
-                                      related='product_tmpl_id.garment_select')
-    buyer = fields.Many2one(comodel_name="res.partner", string="Buyer", related='product_tmpl_id.buyer', required=True)
-    fabric_type = fields.Many2one(comodel_name="fabric.type", string="Fabric Type",
-                                  related='product_tmpl_id.fabric_type', required=True)
-    wash_type = fields.Many2one(comodel_name="wash.type", string="Wash Type", related='product_tmpl_id.wash_type',
-                                required=True)
+    garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample')
+    buyer = fields.Many2one(comodel_name="res.partner", string="Buyer")
+    fabric_type = fields.Many2one(comodel_name="fabric.type", string="Fabric Type")
+    wash_type = fields.Many2one(comodel_name="wash.type", string="Wash Type")
     machine_type = fields.Many2one(comodel_name="machine.type", string="Machine Type")
     lot_size = fields.Integer(string="Lot size")
     per_piece_weight = fields.Float(string="Per piece weight")
@@ -28,6 +25,16 @@ class MrpBom(models.Model):
 
     def action_draft(self):
         self.write({'state': 'draft'})
+
+    @api.onchange('product_tmpl_id')
+    def update_style_details(self):
+        """Update Style Information according to the selected products"""
+        if self.product_tmpl_id:
+            product_obj = self.product_tmpl_id
+            self.garment_select = product_obj.garment_select
+            self.buyer = product_obj.buyer
+            self.fabric_type = product_obj.fabric_type
+            self.wash_type = product_obj.wash_type
 
 
 class MachineType(models.Model):

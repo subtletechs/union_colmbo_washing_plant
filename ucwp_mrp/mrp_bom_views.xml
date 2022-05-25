@@ -26,16 +26,21 @@
             <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="attributes">
                 <attribute name="string">Load Weight</attribute>
             </xpath>
-            <!-- BOM main view customization -->
-            <xpath expr="//field[@name='product_id']" position="after">
-                <field name="garment_select"/>
-                <field name="buyer"/>
-                <field name="fabric_type"/>
-                <field name="wash_type"/>
-                <field name="machine_type"/>
-                <field name="lot_size"/>
-                <field name="per_piece_weight"/>
-                <field name="development_bom"/>
+
+            <xpath expr="//sheet/group[1]" position="after">
+                <group>
+                    <group string="Style Info">
+                        <field name="garment_select"/>
+                        <field name="buyer"/>
+                        <field name="fabric_type"/>
+                        <field name="wash_type"/>
+                    </group>
+                    <group string="Other Info">
+                        <field name="machine_type"/>
+                        <field name="lot_size"/>
+                        <field name="per_piece_weight"/>
+                    </group>
+                </group>
             </xpath>
         </field>
     </record>
