@@ -38,22 +38,28 @@
                         <group>
                             <field name="product_id"/>
                             <field name="gsn"/>
+                            <field name="fabric_composition"/>
+                            <field name="res_currency" invisible="1"/>
                         </group>
                         <group></group>
                     </group>
                     <notebook>
                         <page string="Pre Costing Lines" name="pre_costing_lines">
                             <field name="pre_costing_lines">
-                                <tree string="Pre Costing Lines">
+                                <tree string="Pre Costing Lines" editable="bottom">
+                                    <field name="res_currency" invisible="1"/>
                                     <field name="process_type"/>
                                     <field name="operation"/>
-                                    <field name="cost"/>
+                                    <field name="cost" widget="monetary"/>
                                     <field name="margin"/>
                                     <field name="pieces_for_hour_actual"/>
                                     <field name="pieces_for_hour_target"/>
-                                    <field name="price"/>
+                                    <field name="price" widget="monetary"/>
                                 </tree>
                             </field>
+                            <group  class="oe_subtotal_footer oe_right">
+                                <field name="total_line_costs" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            </group>
                         </page>
                         <page string="Style Info">
                             <group>
@@ -65,6 +71,7 @@
                                     <field name="fabric_type"/>
                                     <field name="wash_type"/>
                                     <field name="garment_type"/>
+                                    <field name="garment_select"/>
                                 </group>
                             </group>
                         </page>
@@ -93,11 +100,11 @@
             <tree string="Pre Costing Lines">
                 <field name="process_type"/>
                 <field name="operation"/>
-                <field name="cost"/>
+                <field name="cost" widget="monetary"/>
                 <field name="margin"/>
                 <field name="pieces_for_hour_actual"/>
                 <field name="pieces_for_hour_target"/>
-                <field name="price"/>
+                <field name="price" widget="monetary"/>
             </tree>
         </field>
     </record>
@@ -117,9 +124,9 @@
                             <field name="pieces_for_hour_target"/>
                         </group>
                         <group>
-                            <field name="cost"/>
+                            <field name="cost" widget="monetary"/>
                             <field name="margin"/>
-                            <field name="price"/>
+                            <field name="price" widget="monetary"/>
                         </group>
                     </group>
                 </sheet>
