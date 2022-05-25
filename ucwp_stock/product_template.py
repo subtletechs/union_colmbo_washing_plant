@@ -95,3 +95,11 @@ class ProductProduct(models.Model):
     # UC-21 chemical MSDS descriptions
     msds_in_english = fields.Text(string='In English', related='product_tmpl_id.msds_in_english', store=True)
     msds_in_sinhala = fields.Text(string='In Sinhala', related='product_tmpl_id.msds_in_sinhala', store=True)
+
+    @api.model
+    def create(self, values):
+        product_template = values['product_tmpl_id']
+        product_tmpl = self.env['product.template'].browse(product_template)
+        values['default_code'] = product_tmpl.default_code
+
+        return super(ProductProduct, self).create(values)
