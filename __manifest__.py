@@ -18,6 +18,7 @@
         'data/receipts_data.xml',
         'data/stock_data.xml',
         'data/sequence_data.xml',
+        'data/pre_costing_data.xml',
         'security/ir.model.access.csv',
         'ucwp_stock/product_template.xml',
         'ucwp_stock/stock_move.xml',
@@ -33,6 +34,7 @@
         'ucwp_mrp/job_card.xml',
         'ucwp_account/ucwp_account_move_views.xml',
         'ucwp_stock/stock_picking_return_view.xml',
+        'ucwp_pre_costing/ucwp_pre_costing_view.xml',
     ],
 
     'installable': True,
