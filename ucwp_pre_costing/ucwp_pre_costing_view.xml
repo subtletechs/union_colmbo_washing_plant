@@ -41,6 +41,34 @@
                         </group>
                         <group></group>
                     </group>
+                    <notebook>
+                        <page string="Pre Costing Lines" name="pre_costing_lines">
+                            <field name="pre_costing_lines">
+                                <tree string="Pre Costing Lines">
+                                    <field name="process_type"/>
+                                    <field name="operation"/>
+                                    <field name="cost"/>
+                                    <field name="margin"/>
+                                    <field name="pieces_for_hour_actual"/>
+                                    <field name="pieces_for_hour_target"/>
+                                    <field name="price"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Style Info">
+                            <group>
+                                <group>
+                                    <field name="buyer"/>
+                                    <field name="customer"/>
+                                </group>
+                                <group>
+                                    <field name="fabric_type"/>
+                                    <field name="wash_type"/>
+                                    <field name="garment_type"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -57,4 +85,45 @@
             action="pre_costing_action" id="pre_costing_menu"
             parent="stock.menu_product_in_config_stock" sequence="500"/>
 
+    <!-- Pre Costing Lines list view -->
+    <record id="pre_costing_lines_tree_view" model="ir.ui.view">
+        <field name="name">pre.costing.lines.tree.view</field>
+        <field name="model">pre.costing.lines</field>
+        <field name="arch" type="xml">
+            <tree string="Pre Costing Lines">
+                <field name="process_type"/>
+                <field name="operation"/>
+                <field name="cost"/>
+                <field name="margin"/>
+                <field name="pieces_for_hour_actual"/>
+                <field name="pieces_for_hour_target"/>
+                <field name="price"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Pre Costing Lines form view-->
+    <record id="pre_costing_lines_form_view" model="ir.ui.view">
+        <field name="name">pre.costing.lines.form.view</field>
+        <field name="model">pre.costing.lines</field>
+        <field name="arch" type="xml">
+            <form string="Pre Costing Lines">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="process_type"/>
+                            <field name="operation"/>
+                            <field name="pieces_for_hour_actual"/>
+                            <field name="pieces_for_hour_target"/>
+                        </group>
+                        <group>
+                            <field name="cost"/>
+                            <field name="margin"/>
+                            <field name="price"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 </odoo>
