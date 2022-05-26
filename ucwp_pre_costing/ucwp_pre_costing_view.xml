@@ -90,7 +90,7 @@
 
     <menuitem
             action="pre_costing_action" id="pre_costing_menu"
-            parent="stock.menu_product_in_config_stock" sequence="500"/>
+            parent="sale.sale_menu_root" sequence="2"/>
 
     <!-- Pre Costing Lines list view -->
     <record id="pre_costing_lines_tree_view" model="ir.ui.view">
