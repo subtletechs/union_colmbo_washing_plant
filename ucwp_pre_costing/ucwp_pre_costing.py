@@ -6,8 +6,8 @@ class PreCosting(models.Model):
     _description = "Pre Costing"
 
     # TODO pre costing must be added to sales menu
-    name = fields.Char(string="Name")
-    product_id = fields.Many2one(comodel_name="product.product", string="Product", required=True, default="New")
+    name = fields.Char(string="Name", default="New")
+    product_id = fields.Many2one(comodel_name="product.product", string="Product", required=True)
     total_line_costs = fields.Monetary(currency_field='res_currency', string="Total Price", readonly=True, store=True,
                                        compute="_calculate_total_line_costs")
     res_currency = fields.Many2one(comodel_name='res.currency', default=lambda self: self.env.company.currency_id)

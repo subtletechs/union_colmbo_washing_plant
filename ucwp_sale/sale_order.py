@@ -12,6 +12,10 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     garment_type = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample', required=True)
+    pre_costing = fields.Many2many(comodel_name="pre.costing", string="Pre Costing")
+
+    need_to_approve = fields.Boolean(string="Need Pre Cost Approval", default=False)
+    is_approved = fields.Boolean(string="Approved", default=False)
 
 
 class SaleOrderLine(models.Model):
@@ -36,3 +40,18 @@ class SaleOrderLine(models.Model):
         if self.product_id.garment_select:
             self.garment_select = self.product_id.garment_select
 
+
+class PreCostingApproval(models.Model):
+    _name = "pre.costing.approval"
+    _description = "Approval For Pre Costing"
+
+    quotation = fields.Many2one(comodel_name="sale.order", string="Quotation", domain="[('state', '=', 'draft')]")
+    state = fields.Selection([('waiting', 'Waiting for Approval'), ('approved', 'Approved')], string="State",
+                             default='waiting')
+
+    def action_approve(self):
+        self.write({'state': 'approved'})
+        # TODO set value of SO approved field True
+
+    def action_wait(self):
+        self.write({'state': 'waiting'})
