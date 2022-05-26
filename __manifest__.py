@@ -35,6 +35,7 @@
         'ucwp_account/ucwp_account_move_views.xml',
         'ucwp_stock/stock_picking_return_view.xml',
         'ucwp_pre_costing/ucwp_pre_costing_view.xml',
+        'ucwp_pre_costing/ucwp_pre_costing_approval_view.xml',
     ],
 
     'installable': True,

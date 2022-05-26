@@ -5,7 +5,6 @@ class PreCosting(models.Model):
     _name = "pre.costing"
     _description = "Pre Costing"
 
-    # TODO pre costing must be added to sales menu
     name = fields.Char(string="Name", default="New")
     product_id = fields.Many2one(comodel_name="product.product", string="Product", required=True)
     total_line_costs = fields.Monetary(currency_field='res_currency', string="Total Price", readonly=True, store=True,
