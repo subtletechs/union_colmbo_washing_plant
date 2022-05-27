@@ -19,6 +19,7 @@
         'data/stock_data.xml',
         'data/sequence_data.xml',
         'data/pre_costing_data.xml',
+        'data/style_expire_cron.xml',
         'security/ir.model.access.csv',
         'ucwp_stock/product_template.xml',
         'ucwp_stock/stock_move.xml',
