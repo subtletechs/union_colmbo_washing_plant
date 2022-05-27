@@ -9,7 +9,11 @@ class ProductTemplate(models.Model):
     is_garment = fields.Boolean(string="Is Garment Product ?", default=True)
     is_sample = fields.Boolean(string="Is Sample Garment ?", default=False)
     is_bulk = fields.Boolean(string="Is Bulk Garment ?", default=False)
-    is_chemical = fields.Boolean (string='Is Chemical ?', default=False)
+    is_chemical = fields.Boolean(string='Is Chemical ?', default=False)
+
+    # [UC-24]
+    available_certification = fields.Boolean(string="Available Certification")
+    certification = fields.Text(string="Certification")
 
     buyer = fields.Many2one(comodel_name="res.partner", string="Buyer")
     fabric_type = fields.Many2one(comodel_name="fabric.type", string="Fabric Type")
@@ -59,7 +63,7 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         product_object = self.browse(self.id)
-        product_name =  product_object.name
+        product_name = product_object.name
 
         if 'is_bulk' in vals:
             if vals['is_bulk']:
@@ -80,17 +84,26 @@ class ProductProduct(models.Model):
     is_bulk = fields.Boolean(string="Is Bulk Garment ?", related='product_tmpl_id.is_bulk', store=True)
     is_chemical = fields.Boolean(string='Is Chemical ?', related='product_tmpl_id.is_chemical', store=True)
 
+    # [UC-24]
+    available_certification = fields.Boolean(string="Available Certification",
+                                             related='product_tmpl_id.available_certification', store=True)
+    certification = fields.Text(string="Certification",
+                                related='product_tmpl_id.certification', store=True)
+
     buyer = fields.Many2one(comodel_name="res.partner", string="Buyer", related='product_tmpl_id.buyer',
                             store=True)
     fabric_type = fields.Many2one(comodel_name="fabric.type", string="Fabric Type",
                                   related='product_tmpl_id.fabric_type', store=True)
-    wash_type = fields.Many2one(comodel_name="wash.type", string="Wash Type", related='product_tmpl_id.wash_type', store=True)
+    wash_type = fields.Many2one(comodel_name="wash.type", string="Wash Type", related='product_tmpl_id.wash_type',
+                                store=True)
     garment_type = fields.Many2one(comodel_name="garment.type", string="Garment Type",
                                    related='product_tmpl_id.garment_type', store=True)
-    customer = fields.Many2one(comodel_name="res.partner", string="Customer", related='product_tmpl_id.customer', store=True)
+    customer = fields.Many2one(comodel_name="res.partner", string="Customer", related='product_tmpl_id.customer',
+                               store=True)
     garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample',
                                       related='product_tmpl_id.garment_select', store=True)
-    samples = fields.Many2one(comodel_name="garment.sample", string="Samples", related='product_tmpl_id.samples', store=True)
+    samples = fields.Many2one(comodel_name="garment.sample", string="Samples", related='product_tmpl_id.samples',
+                              store=True)
 
     # UC-21 chemical MSDS descriptions
     msds_in_english = fields.Text(string='In English', related='product_tmpl_id.msds_in_english', store=True)

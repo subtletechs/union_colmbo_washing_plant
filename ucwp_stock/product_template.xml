@@ -23,6 +23,11 @@
                     <field name="is_chemical"/>
                     <label for="is_chemical"/>
                 </span>
+                <!-- [UC-24] -->
+                <span class="d-inline-block" attrs="{'invisible': [('is_garment', '=', False)]}">
+                    <field name="available_certification"/>
+                    <label for="available_certification"/>
+                </span>
             </xpath>
             <xpath expr="//page[@name='general_information']" position="before">
                 <!-- Style Information Tab -->
@@ -42,6 +47,14 @@
                             <field name="samples"
                                    attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
                         </group>
+                    </group>
+                    <!-- [UC-24] -->
+                    <group>
+                        <group>
+                            <field name="certification"
+                                   attrs="{'required': [('available_certification', '=', True)], 'invisible': [('available_certification', '=', False)]}"/>
+                        </group>
+                        <group></group>
                     </group>
                 </page>
             </xpath>
@@ -122,6 +135,11 @@
                     <field name="is_chemical"/>
                     <label for="is_chemical"/>
                 </span>
+                <!-- [UC-24] -->
+                <span class="d-inline-block" attrs="{'invisible': [('is_garment', '=', False)]}">
+                    <field name="available_certification"/>
+                    <label for="available_certification"/>
+                </span>
             </xpath>
             <xpath expr="//page[@name='general_information']" position="before">
                 <!-- Style Information Tab -->
@@ -140,6 +158,14 @@
                             <field name="samples"
                                    attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
                         </group>
+                    </group>
+                    <!-- [UC-24] -->
+                    <group>
+                        <group>
+                            <field name="certification"
+                                   attrs="{'required': [('available_certification', '=', True)], 'invisible': [('available_certification', '=', False)]}"/>
+                        </group>
+                        <group></group>
                     </group>
                 </page>
             </xpath>
@@ -164,7 +190,7 @@
         </field>
     </record>
 
-        <!-- Product Product list view -->
+    <!-- Product Product list view -->
     <record id="product_product_tree_view_inherit_union_colombo" model="ir.ui.view">
         <field name="name">product.product.tree.inherit</field>
         <field name="model">product.product</field>
