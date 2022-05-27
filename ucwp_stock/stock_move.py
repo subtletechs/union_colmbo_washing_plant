@@ -92,6 +92,12 @@ class StockMoveLine(models.Model):
                     vals['barcode'] = lot_id.name
         return super(StockMoveLine, self).create(vals)
 
+    def print_barcode(self):
+        data = {
+            'barcode': self.barcode,
+        }
+        return self.env.ref('union_colmbo_washing_plant.stock_move_line_barcode_action').report_action(self, data=data)
+
 
 class ProductionLot(models.Model):
     _inherit = 'stock.production.lot'

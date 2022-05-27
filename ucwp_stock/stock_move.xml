@@ -21,6 +21,11 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_name']" position="after">
                 <field name="barcode"/>
+                <button name="print_barcode" type="object"
+                        class="oe_stat_button"
+                        icon="fa-barcode"
+                        help="Print Barcode"
+                />
                 <field name="garment_select" invisible="1"/>
                 <field name="washing_options" attrs="{'invisible': [('garment_select', '=', 'bulk')]}"/>
             </xpath>
