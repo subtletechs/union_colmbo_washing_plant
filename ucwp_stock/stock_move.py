@@ -70,7 +70,6 @@ class StockMoveLine(models.Model):
 
     barcode = fields.Char(string="Barcode", readonly=True)
     washing_options = fields.Many2one(comodel_name="washing.options", string="Washing Options")
-    route_operation = fields.Many2one(comodel="mrp.bom", string="Route/Operation")
     garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample',
                                       related="product_id.garment_select", store=True)
 

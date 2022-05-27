@@ -11,7 +11,10 @@ class ProductTemplate(models.Model):
     is_bulk = fields.Boolean(string="Is Bulk Garment ?", default=False)
     is_chemical = fields.Boolean(string='Is Chemical ?', default=False)
 
-    # [UC-24]
+    # [UC-23]- Add chemical standards to product template
+    chemical_standards = fields.One2many(comodel_name="chemical.standards", inverse_name="product_tmpl_id", string="Chemical Standards")
+
+    # [UC-24]- Add certification to product template and product variant
     available_certification = fields.Boolean(string="Available Certification")
     certification = fields.Text(string="Certification")
 
@@ -84,11 +87,9 @@ class ProductProduct(models.Model):
     is_bulk = fields.Boolean(string="Is Bulk Garment ?", related='product_tmpl_id.is_bulk', store=True)
     is_chemical = fields.Boolean(string='Is Chemical ?', related='product_tmpl_id.is_chemical', store=True)
 
-    # [UC-24]
-    available_certification = fields.Boolean(string="Available Certification",
-                                             related='product_tmpl_id.available_certification', store=True)
-    certification = fields.Text(string="Certification",
-                                related='product_tmpl_id.certification', store=True)
+    # [UC-24]- Add certification to product template and product variant
+    available_certification = fields.Boolean(string="Available Certification")
+    certification = fields.Text(string="Certification")
 
     buyer = fields.Many2one(comodel_name="res.partner", string="Buyer", related='product_tmpl_id.buyer',
                             store=True)
@@ -105,7 +106,7 @@ class ProductProduct(models.Model):
     samples = fields.Many2one(comodel_name="garment.sample", string="Samples", related='product_tmpl_id.samples',
                               store=True)
 
-    # UC-21 chemical MSDS descriptions
+    # [UC-21]- chemical MSDS descriptions
     msds_in_english = fields.Text(string='In English', related='product_tmpl_id.msds_in_english', store=True)
     msds_in_sinhala = fields.Text(string='In Sinhala', related='product_tmpl_id.msds_in_sinhala', store=True)
 
@@ -116,3 +117,13 @@ class ProductProduct(models.Model):
         values['default_code'] = product_tmpl.default_code
 
         return super(ProductProduct, self).create(values)
+
+
+# [UC-23]
+class ChemicalStandards(models.Model):
+    _name = "chemical.standards"
+    _description = "Chemical Standards"
+
+    name = fields.Char(string="Name")
+    document = fields.Binary(string="Document")
+    product_tmpl_id = fields.Many2one(comodel_name="product.product", string="Product Template ID")

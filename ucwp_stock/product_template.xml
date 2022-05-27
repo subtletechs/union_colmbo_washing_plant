@@ -72,6 +72,16 @@
                         </group>
                     </group>
                 </page>
+                <!-- Chemical Standards Tab -->
+                <page string="Chemical Standards" name="chemical_standards"
+                      attrs="{'invisible': [('is_chemical', '=', False)]}">
+                    <field name="chemical_standards">
+                        <tree string="Chemical Standards" editable="bottom">
+                            <field name="name" attrs="{'required': [('parent.is_chemical', '=', True)]}"/>
+                            <field name="document" attrs="{'required': [('parent.is_chemical', '=', True)]}"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
 
             <xpath expr="//field[@name='default_code']" position="attributes">
@@ -200,6 +210,46 @@
                 <attribute name="string">UC Number</attribute>
             </xpath>
         </field>
+    </record>
+
+    <!-- [UC-23] -->
+    <!-- Chemical Standards list view-->
+    <record id="chemical_standards_tree_view" model="ir.ui.view">
+        <field name="name">chemical.standards.tree.view</field>
+        <field name="model">chemical.standards</field>
+        <field name="arch" type="xml">
+            <tree string="Chemical Standards">
+                <field name="name"/>
+                <field name="document"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Chemical Standards form view-->
+    <record id="chemical_standards_form_view" model="ir.ui.view">
+        <field name="name">chemical_standards.form.view</field>
+        <field name="model">chemical.standards</field>
+        <field name="arch" type="xml">
+            <form string="Chemical Standards">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="document"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for Chemical Standards-->
+    <record id="chemical_standards_action" model="ir.actions.act_window">
+        <field name="name">Chemical Standards</field>
+        <field name="res_model">chemical.standards</field>
+        <field name="view_mode">tree,form</field>
     </record>
 
 </odoo>
