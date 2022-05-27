@@ -23,6 +23,9 @@ class ProductTemplate(models.Model):
     lab_reports = fields.One2many(comodel_name="lab.reports", inverse_name="product_template_id",
                                   string="Test/Lab Reports")
 
+    # [UC-28]- Set Active / Inactive to Product Template
+    active = fields.Boolean(string="Active", default=True)
+
     buyer = fields.Many2one(comodel_name="res.partner", string="Buyer")
     fabric_type = fields.Many2one(comodel_name="fabric.type", string="Fabric Type")
     wash_type = fields.Many2one(comodel_name="wash.type", string="Wash Type")
@@ -102,6 +105,9 @@ class ProductProduct(models.Model):
     # [UC-24]- Add certification to product template and product variant
     available_certification = fields.Boolean(string="Available Certification")
     certification = fields.Text(string="Certification")
+
+    # [UC-28]- Set Active / Inactive to Product Template
+    active = fields.Boolean(string="Active", default=True)
 
     buyer = fields.Many2one(comodel_name="res.partner", string="Buyer", related='product_tmpl_id.buyer',
                             store=True)

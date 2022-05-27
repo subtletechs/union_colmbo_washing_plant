@@ -26,6 +26,7 @@
         'ucwp_stock/ucwp_wash_type.xml',
         'ucwp_stock/ucwp_garment_type.xml',
         'ucwp_stock/stock_move_line_barcode.xml',
+        'ucwp_stock/res_config_settings.xml',
         'ucwp_sale/sale_order.xml',
         'ucwp_mrp/mrp_bom_views.xml',
         'ucwp_quality/quality_views.xml',
