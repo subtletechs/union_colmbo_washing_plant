@@ -84,6 +84,19 @@
                 </page>
             </xpath>
 
+            <!-- Lab/Reports Tab -->
+            <xpath expr="//page[@name='inventory']" position="after">
+                <page string="Test/Lab Reports" name="lab_reports"
+                      attrs="{'invisible': [('is_garment', '=', False)]}">
+                    <field name="lab_reports">
+                        <tree string="Test/Lab Reports" editable="bottom">
+                            <field name="name" attrs="{'required': [('parent.is_garment', '=', True)]}"/>
+                            <field name="document" attrs="{'required': [('parent.is_garment', '=', True)]}"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+
             <xpath expr="//field[@name='default_code']" position="attributes">
                 <attribute name="string">UC Number</attribute>
             </xpath>

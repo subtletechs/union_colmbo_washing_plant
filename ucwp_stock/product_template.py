@@ -12,11 +12,16 @@ class ProductTemplate(models.Model):
     is_chemical = fields.Boolean(string='Is Chemical ?', default=False)
 
     # [UC-23]- Add chemical standards to product template
-    chemical_standards = fields.One2many(comodel_name="chemical.standards", inverse_name="product_tmpl_id", string="Chemical Standards")
+    chemical_standards = fields.One2many(comodel_name="chemical.standards", inverse_name="product_tmpl_id",
+                                         string="Chemical Standards")
 
     # [UC-24]- Add certification to product template and product variant
     available_certification = fields.Boolean(string="Available Certification")
     certification = fields.Text(string="Certification")
+
+    # [UC-25]- Test/Lab Reports tab
+    lab_reports = fields.One2many(comodel_name="lab.reports", inverse_name="product_template_id",
+                                  string="Test/Lab Reports")
 
     buyer = fields.Many2one(comodel_name="res.partner", string="Buyer")
     fabric_type = fields.Many2one(comodel_name="fabric.type", string="Fabric Type")
@@ -45,6 +50,13 @@ class ProductTemplate(models.Model):
         if not self.is_garment:
             self.is_sample = False
             self.is_bulk = False
+        if self.is_garment:
+            self.is_chemical = False
+
+    @api.onchange('is_chemical')
+    def update_is_garment(self):
+        if self.is_chemical:
+            self.is_garment = False
 
     @api.model
     def create(self, values):
@@ -127,3 +139,12 @@ class ChemicalStandards(models.Model):
     name = fields.Char(string="Name")
     document = fields.Binary(string="Document")
     product_tmpl_id = fields.Many2one(comodel_name="product.product", string="Product Template ID")
+
+
+class LabReports(models.Model):
+    _name = "lab.reports"
+    _description = "Lab Reports"
+
+    name = fields.Char(string="Report Name")
+    document = fields.Binary(string="Report Files")
+    product_template_id = fields.Many2one(comodel_name="product.product", string="Product Template ID")
