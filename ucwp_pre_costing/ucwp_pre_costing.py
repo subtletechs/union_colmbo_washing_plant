@@ -12,7 +12,7 @@ class PreCosting(models.Model):
     res_currency = fields.Many2one(comodel_name='res.currency', default=lambda self: self.env.company.currency_id)
     gsn = fields.Float(string="GSN")
     fabric_composition = fields.Text(string="Fabric Composition")
-    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')], string="States")
+    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')], string="States", default="draft")
     pre_costing_lines = fields.One2many(comodel_name="pre.costing.lines", inverse_name="pre_costing_id",
                                         string="Pre Costing Name", store=True)
     buyer = fields.Many2one(comodel_name="res.partner", string="Buyer", related="product_id.buyer", store=True)
@@ -34,6 +34,7 @@ class PreCosting(models.Model):
 
     @api.depends('pre_costing_lines.price')
     def _calculate_total_line_costs(self):
+        """Calculate Total for each Pre costing line"""
         total_line_costs = 0
         for pre_costing_line in self.pre_costing_lines:
             total_line_costs = total_line_costs + pre_costing_line.price
