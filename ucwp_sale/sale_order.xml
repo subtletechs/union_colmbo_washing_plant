@@ -20,12 +20,12 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="garment_type"/>
-                <field name="need_to_approve"/>
-                <field name="is_approved" invisible="1"/>
             </xpath>
             <xpath expr="//group[@name='order_details']" position="after">
                 <group string="Pre Costing">
                     <field name="pre_costing" widget="many2many_tags"/>
+                    <field name="need_to_approve" invisible="1"/>
+                    <field name="is_approved" invisible="1"/>
                 </group>
             </xpath>
 

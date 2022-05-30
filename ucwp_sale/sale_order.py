@@ -14,7 +14,8 @@ class SaleOrder(models.Model):
     garment_type = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample', required=True)
     pre_costing = fields.Many2many(comodel_name="pre.costing", string="Pre Costing")
 
-    need_to_approve = fields.Boolean(string="Need Pre Cost Approval", default=False, compute="_compute_need_to_approve")
+    need_to_approve = fields.Boolean(string="Need Pre Cost Approval", default=False, required=True,
+                                     compute="_compute_need_to_approve")
     is_approved = fields.Boolean(string="Approved", default=False)
 
     # UC-30
@@ -37,8 +38,17 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self).action_confirm()
 
     def _compute_need_to_approve(self):
-        # TODO : complete the code
-        pass
+        if self.pre_costing:
+            for record in self.pre_costing:
+                for sale_order_line in self.order_line:
+                    if record.product_id == sale_order_line.product_id:
+                        if record.total_line_costs > sale_order_line.price_subtotal:
+                            self.need_to_approve = True
+                        else:
+                            self.need_to_approve = False
+                    break
+        else:
+            self.need_to_approve = False
 
 
 class SaleOrderLine(models.Model):
