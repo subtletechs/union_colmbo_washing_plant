@@ -1,5 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from datetime import datetime, timedelta
 
 
 class ProductTemplate(models.Model):
@@ -136,6 +137,40 @@ class ProductProduct(models.Model):
 
         return super(ProductProduct, self).create(values)
 
+    def action_style_expire(self):
+        """Check conditions to set Styles Archive"""
+        set_days = self.env['res.config.settings'].search([('style_expire', '=', True)], limit=1)
+        if set_days:
+            number_of_days = set_days.days
+            current_date = datetime.today()
+            from_date = current_date - timedelta(days=number_of_days)
+
+            active_product_variants = self.env['product.product'].search(
+                [('active', '=', True), ('is_garment', '=', True)])
+            if active_product_variants:
+                for active_product_variant in active_product_variants:
+                    product_qty_available = active_product_variant.qty_available
+
+                    picking_records = self.env['stock.picking'].search(
+                        [('scheduled_date', '<', from_date),
+                         ('picking_type_id.code', 'in', ['outgoing', 'incoming']),
+                         ('state', 'not in', ['draft', 'cancel'])])
+                    picking_available = False
+                    if picking_records:
+                        for picking_record in picking_records:
+                            for picking_line in picking_record.move_ids_without_package:
+                                if picking_line.product_id.id == active_product_variant.id:
+                                    picking_available = True
+                    if picking_available is False and product_qty_available > 0:
+                        self.env['style.archive.approval'].create({
+                            'product_id': active_product_variant.id,
+                            'state': 'draft',
+                        })
+                    elif picking_available is False and product_qty_available <= 0:
+                        active_product_variant.write({
+                            'active': False
+                        })
+
 
 # [UC-23]
 class ChemicalStandards(models.Model):
@@ -154,3 +189,20 @@ class LabReports(models.Model):
     name = fields.Char(string="Report Name")
     document = fields.Binary(string="Report Files")
     product_template_id = fields.Many2one(comodel_name="product.product", string="Product Template ID")
+
+
+# [UC-28]
+class StyleArchiveApproval(models.Model):
+    _name = "style.archive.approval"
+    _description = "Style Archive Approval"
+
+    product_id = fields.Many2one(comodel_name="product.product", string="Product", required=True)
+    state = fields.Selection([('draft', 'Draft'), ('approved', 'Approved')], string="Status", default='draft')
+
+    def action_approve(self):
+        """Approve record and set product inactive"""
+        self.write({'state': 'approved'})
+        self.product_id.active = False
+
+    def action_set_to_draft(self):
+        self.write({'state': 'draft'})

@@ -265,4 +265,58 @@
         <field name="view_mode">tree,form</field>
     </record>
 
+
+    <!-- [UC-28] -->
+    <!-- Style Archive Approval list view-->
+    <record id="style_archive_approval_tree_view" model="ir.ui.view">
+        <field name="name">style.archive.approval.tree.view</field>
+        <field name="model">style.archive.approval</field>
+        <field name="arch" type="xml">
+            <tree string="Style Archive Approval">
+                <field name="product_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Style Archive Approval form view -->
+    <record id="style_archive_approval_form_view" model="ir.ui.view">
+        <field name="name">style.archive.approval.form.view</field>
+        <field name="model">style.archive.approval</field>
+        <field name="arch" type="xml">
+            <form string="Style Archive Approval">
+                <header>
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','!=', 'draft')]}"/>
+                    <button name="action_set_to_draft" string="Set to Draft" type="object"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','!=', 'approved')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                        </group>
+                        <group>
+
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- action for Style Archive Approval -->
+    <record id="style_archive_approval_action" model="ir.actions.act_window">
+        <field name="name">Style Archive Approval</field>
+        <field name="res_model">style.archive.approval</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="style_archive_approval_action" id="style_archive_approval_menu"
+            parent="mrp.menu_mrp_manufacturing" sequence="30"/>
+
 </odoo>
