@@ -17,6 +17,10 @@ class SaleOrder(models.Model):
     need_to_approve = fields.Boolean(string="Need Pre Cost Approval", default=False, compute="_compute_need_to_approve")
     is_approved = fields.Boolean(string="Approved", default=False)
 
+    # UC-30
+    po_availability = fields.Selection([('po', 'PO'), ('temp_po', 'TEMP PO'), ('no_po', 'No PO')],
+                                       string='PO Availability')
+
     def action_confirm(self):
         if self.need_to_approve is True and self.is_approved is False:
             view = self.env.ref('union_colmbo_washing_plant.pre_costing_approval_wizard_form_view')
@@ -34,13 +38,7 @@ class SaleOrder(models.Model):
 
     def _compute_need_to_approve(self):
         # TODO : complete the code
-        if self.pre_costing:
-            for record in self.pre_costing:
-                for sale_order_line in self.order_line:
-                    if record.product_id == sale_order_line.product_id:
-                        if record.total_line_costs > sale_order_line.price_subtotal:
-                            self.need_to_approve = True
-                            break
+        pass
 
 
 class SaleOrderLine(models.Model):

@@ -140,6 +140,11 @@ class Picking(models.Model):
     invoice_count = fields.Integer(string="Invoice Count", compute="_get_invoice")
     invoice_id = fields.Many2one(comodel_name="account.move", string="Invoice ID", compute="_get_invoice")
 
+    # [UC-30]
+    po_availability = fields.Selection([('po', 'PO'), ('temp_po', 'TEMP PO'), ('no_po', 'No PO')],
+                                       string='PO Availability')
+    customer_ref = fields.Char(string='Customer Ref')
+
     def receive_logistic_update_datetime(self):
         """Update logistic order received date and time"""
         self.write({'receive_logistic': datetime.datetime.now()})

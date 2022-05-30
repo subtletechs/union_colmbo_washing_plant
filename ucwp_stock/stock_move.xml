@@ -97,6 +97,12 @@
             </xpath>
             <xpath expr="//sheet/group[1]" position="after">
                 <group>
+                    <group attrs="{'invisible': [('garment_receipt', '=', False)]}">
+                        <field name="po_availability"/>
+                        <field name="customer_ref" attrs="{'required': [('po_availability', 'in', ['po', 'temp_po'])]}"/>
+                    </group>
+                </group>
+                <group>
                     <group string="Garment Info" attrs="{'invisible': [('garment_receipt', '=', False)]}">
                         <field name="garment_select"/>
                         <field name="samples"
