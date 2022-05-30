@@ -125,6 +125,7 @@ class Picking(models.Model):
 
     # To capture garment receipts
     garment_receipt = fields.Boolean(string="Garment Receipt", compute="_garment_receipt")
+    chemical_receipt = fields.Boolean(string="Chemical Receipt", compute="_chemical_receipt")
 
     # [UC-11] - To calculate stock moves
     quality_check_count = fields.Integer(string="Quality Count", compute="_get_quality_checks")
@@ -157,6 +158,16 @@ class Picking(models.Model):
                     record.garment_receipt = True
                 else:
                     record.garment_receipt = False
+
+    @api.depends('picking_type_id')
+    def _chemical_receipt(self):
+        """Check the Operation Type for Chemical Receipt"""
+        for record in self:
+            if record.picking_type_id:
+                if record.picking_type_id.chemical_receipt:
+                    record.chemical_receipt = True
+                else:
+                    record.chemical_receipt = False
 
     # quality check button
     def before_quality_check(self):
@@ -307,3 +318,7 @@ class StockPickingType(models.Model):
 
     """To Capture Garment Receipt Operation Type"""
     garment_receipt = fields.Boolean(string="Garment Receipt", default=False)
+
+    # To Capture Chemical Receipt Operation Type
+    chemical_receipt = fields.Boolean(string="Chemical Receipt", default=False)
+
