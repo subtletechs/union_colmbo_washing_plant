@@ -23,6 +23,7 @@ class SaleOrder(models.Model):
                                        string='PO Availability')
 
     def action_confirm(self):
+        """Popup Pre Costing Approval wizard and  send quotation id"""
         if self.need_to_approve is True and self.is_approved is False:
             view = self.env.ref('union_colmbo_washing_plant.pre_costing_approval_wizard_form_view')
             return {
@@ -38,6 +39,7 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self).action_confirm()
 
     def _compute_need_to_approve(self):
+        """Compute need_to_approve value"""
         if self.pre_costing:
             for record in self.pre_costing:
                 for sale_order_line in self.order_line:
