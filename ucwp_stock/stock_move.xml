@@ -51,7 +51,7 @@
                 <button name="receive_sample_update_datetime" string="Update Sample Room Time" type="object"
                         class="oe_highlight" groups="base.group_user"
                         attrs="{'invisible': ['|',('garment_receipt', '=', False),('receive_sample_room','!=', False)]}"/>
-                <button name="before_quality_check" string="Before Quality Check" type="object" class="oe_highlight"
+                <button name="before_quality_check" string="Before-wash QC" type="object" class="oe_highlight"
                         groups="base.group_user"
                         attrs="{'invisible': ['|','|',('garment_receipt', '=', False),('state','!=', 'done'),('quality_check_count', '&gt;', 0)]}"/>
                 <!-- [UC-07] -->
@@ -70,7 +70,7 @@
                         class="oe_stat_button"
                         icon="fa-pencil-square-o"
                         attrs="{'invisible': ['|',('quality_check_count', '=', 0),('garment_receipt', '=', False)]}">
-                    <field name="quality_check_count" widget="statinfo" string="Quality Count"/>
+                    <field name="quality_check_count" widget="statinfo" string="Quality Check"/>
                 </button>
                 <!-- [UC-07] -->
                 <button name="action_view_bulk_production_count"
@@ -78,7 +78,7 @@
                         class="oe_stat_button"
                         icon="fa-gears"
                         attrs="{'invisible': ['|',('garment_receipt', '=', False),('bulk_production_count', '=', 0)]}">
-                    <field name="bulk_production_count" widget="statinfo" string="Bulk Productions"/>
+                    <field name="bulk_production_count" widget="statinfo" string="Parent Manufacturing Orders"/>
                 </button>
                 <!-- [UC-17] -->
                 <button name="action_view_invoice_count"
@@ -93,7 +93,6 @@
             <xpath expr="//field[@name='use_create_lots']" position="after">
                 <field name="garment_receipt" invisible="1"/>
                 <field name="is_receipt_return" invisible="1"/>
-
             </xpath>
             <xpath expr="//sheet/group[1]" position="after">
                 <group>
@@ -118,7 +117,7 @@
                 </group>
             </xpath>
 
-            <xpath expr="//field[@name='product_id']" position="after">
+            <xpath expr="//field[@name='description_picking']" position="after">
                 <field name="op_name" invisible="1"/>
                 <field name="invoice_type" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
                 <field name="wash_type" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>

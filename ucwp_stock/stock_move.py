@@ -116,7 +116,7 @@ class Picking(models.Model):
     samples = fields.Many2one(comodel_name="product.product", string="Samples")
 
     # UC-05
-    receive_logistic = fields.Datetime(string='Receive to Log', readonly=True)
+    receive_logistic = fields.Datetime(string="Receive to Logistics", readonly=True)
     receive_sample_room = fields.Datetime(string='Receive to Sample Room', readonly=True)
 
     # TODO add filters to stock.picking
@@ -128,11 +128,11 @@ class Picking(models.Model):
     chemical_receipt = fields.Boolean(string="Chemical Receipt", compute="_chemical_receipt")
 
     # [UC-11] - To calculate stock moves
-    quality_check_count = fields.Integer(string="Quality Count", compute="_get_quality_checks")
+    quality_check_count = fields.Integer(string="Quality Check", compute="_get_quality_checks")
     quality_check_id = fields.Many2one(comodel_name='ucwp.quality.check', compute='_get_quality_checks', copy=False)
 
     # [UC-07]
-    bulk_production_count = fields.Integer(string="Bulk Production Count", compute="_get_bulk_production")
+    bulk_production_count = fields.Integer(string="Parent Manufacturing Order Count", compute="_get_bulk_production")
 
     is_receipt_return = fields.Boolean(string='Stock Receipt return', default=False)
 
@@ -176,6 +176,7 @@ class Picking(models.Model):
 
     # quality check button
     def before_quality_check(self):
+        """Create Quality Check record"""
         view = self.env.ref('union_colmbo_washing_plant.ucwp_quality_check_form_view')
 
         return {
@@ -216,7 +217,7 @@ class Picking(models.Model):
 
     # [UC-07]
     def _get_bulk_production(self):
-        """Calculate Bulk Production count for GRN and IDS"""
+        """Calculate Parent Manufacturing Order count for GRN and IDS"""
         bulk_production_records = self.env['bulk.production'].search([('garment_receipt', '=', self.id)])
         if bulk_production_records:
             self.bulk_production_count = len(bulk_production_records.ids)
