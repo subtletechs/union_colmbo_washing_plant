@@ -29,7 +29,7 @@
                 <button name="preview_garment_receipt"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-globe icon"
+                        icon="fa-plane icon"
                         attrs="{'invisible': [('garment_receipt_count', '=', 0)]}">
                     <field name="garment_receipt_count" widget="statinfo" string="Garment Receipts"/>
                 </button>
