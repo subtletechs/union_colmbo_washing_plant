@@ -148,6 +148,10 @@ class Picking(models.Model):
     # To Map the sale order
     sale_id = fields.Many2one(comodel_name='sale.order', string='Sale Order')
 
+    # Functional Testing 8. Gate pass number
+    customer_gate_pass_no = fields.Char(string="Customer Gate Pass No.")
+    customer_manual_ref = fields.Char(string="Manual Ref")
+
     def receive_logistic_update_datetime(self):
         """Update logistic order received date and time"""
         self.write({'receive_logistic': datetime.datetime.now()})

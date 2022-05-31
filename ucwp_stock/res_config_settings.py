@@ -9,5 +9,3 @@ class ResConfigSettings(models.TransientModel):
                                   config_parameter='union_colmbo_washing_plant.style_expire')
     days = fields.Integer(string="Days",
                           config_parameter='union_colmbo_washing_plant.days')
-
-

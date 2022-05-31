@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-    <!--     stock move-->
+    <!-- stock move-->
     <record id="view_stock_move_nosuggest_operations_inherit_union_colombo" model="ir.ui.view">
         <field name="name">stock.move.operations.nosuggest.form.view.inherit</field>
         <field name="model">stock.move</field>
@@ -99,7 +99,12 @@
                 <group>
                     <group attrs="{'invisible': [('garment_receipt', '=', False)]}">
                         <field name="po_availability"/>
-                        <field name="customer_ref" attrs="{'required': [('po_availability', 'in', ['po', 'temp_po'])]}"/>
+                        <field name="customer_ref"
+                               attrs="{'required': [('po_availability', 'in', ['po', 'temp_po'])]}"/>
+                    </group>
+                    <group string="Customer Gate Pass">
+                        <field name="customer_gate_pass_no"/>
+                        <field name="customer_manual_ref"/>
                     </group>
                 </group>
                 <group>
