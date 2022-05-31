@@ -61,6 +61,7 @@
                 <button name="create_invoice" string="Create Invoice" type="object"
                         class="oe_highlight" groups="base.group_user"
                         attrs="{'invisible': ['|',('picking_type_code', '!=', 'outgoing'),('state','!=','done')]}"/>
+                <field name="sale_id" invisible="1"/>
             </xpath>
 
             <!-- [UC-11] -->

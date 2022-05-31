@@ -10,7 +10,4 @@ class ResConfigSettings(models.TransientModel):
     days = fields.Integer(string="Days",
                           config_parameter='union_colmbo_washing_plant.days')
 
-    def action_style_expire(self):
-        set_days = self.days
-        current_date = date.today()
-        from_date = current_date - timedelta(days=set_days)
+

@@ -18,6 +18,23 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='payment_action_void']" position="before">
+                <button name="generate_garment_receipt" type="object" class="btn-primary"
+                        string="Garment Receipt"
+                />
+            </xpath>
+
+            <!-- Garment Receipt State Button -->
+            <xpath expr="//button[@name='preview_sale_order']" position="before">
+                <button name="preview_garment_receipt"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-globe icon"
+                        attrs="{'invisible': [('garment_receipt_count', '=', 0)]}">
+                    <field name="garment_receipt_count" widget="statinfo" string="Garment Receipts"/>
+                </button>
+            </xpath>
+
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="garment_type"/>
             </xpath>
@@ -30,11 +47,12 @@
             </xpath>
 
             <xpath expr="//field[@name='require_payment']" position="after">
-                    <field name="po_availability"/>
+                <field name="po_availability"/>
             </xpath>
             <xpath expr="//field[@name='client_order_ref']" position="attributes">
-                    <attribute name="attrs">{
-                        'required': [('po_availability', 'in', ['po', 'temp_po'])]}</attribute>
+                <attribute name="attrs">{
+                    'required': [('po_availability', 'in', ['po', 'temp_po'])]}
+                </attribute>
             </xpath>
 
 

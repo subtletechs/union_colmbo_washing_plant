@@ -145,6 +145,9 @@ class Picking(models.Model):
                                        string='PO Availability')
     customer_ref = fields.Char(string='Customer Ref')
 
+    # To Map the sale order
+    sale_id = fields.Many2one(comodel_name='sale.order', string='Sale Order')
+
     def receive_logistic_update_datetime(self):
         """Update logistic order received date and time"""
         self.write({'receive_logistic': datetime.datetime.now()})

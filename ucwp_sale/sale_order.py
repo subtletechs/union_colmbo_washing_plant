@@ -22,6 +22,47 @@ class SaleOrder(models.Model):
     po_availability = fields.Selection([('po', 'PO'), ('temp_po', 'TEMP PO'), ('no_po', 'No PO')],
                                        string='PO Availability')
 
+    # garment receipt info
+    garment_receipt_count = fields.Integer(string='Invoice Count', compute='_get_garment_receipts')
+    garment_receipt_ids = fields.Many2many("stock.picking", string='Garment Receipt', compute="_get_garment_receipts", copy=False,)
+
+    def _get_garment_receipts(self):
+        """To Get the related Garment Receipts count and IDs"""
+        for record in self:
+            stock_picking = self.env['stock.picking'].search([('sale_id', '=', record.id)])
+            if stock_picking:
+                picking_ids = stock_picking.ids
+                record.garment_receipt_ids = picking_ids
+                record.garment_receipt_count = len(picking_ids)
+            else:
+                record.garment_receipt_count = 0
+
+    def preview_garment_receipt(self):
+        """Preview Garment Receipts"""
+        garment_receipts = self.mapped('garment_receipt_ids')
+        if len(garment_receipts) > 1:
+            tree_view = self.env.ref('stock.vpicktree').id
+            return {
+                'name': 'Garment Receipts',
+                'res_model' : 'stock.picking',
+                'type': 'ir.actions.act_window',
+                'view_mode': 'tree',
+                'view_id': tree_view,
+                'target': 'current',
+                'domain': [('id', 'in', garment_receipts.ids)],
+
+            }
+        elif len(garment_receipts) ==1:
+            form_view = self.env.ref('stock.view_picking_form').id
+            return {
+                'res_model' : 'stock.picking',
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'view_id': form_view,
+                'res_id': garment_receipts.id,
+                'target': 'current',
+            }
+
     def action_confirm(self):
         """Popup Pre Costing Approval wizard and  send quotation id"""
         if self.need_to_approve is True and self.is_approved is False:
@@ -51,6 +92,30 @@ class SaleOrder(models.Model):
                     break
         else:
             self.need_to_approve = False
+
+    def generate_garment_receipt(self):
+        """Generate the Garment Receipt from Sale Order"""
+        # TODO : Complete the code
+        garment_inventory_operation = self.env['stock.picking.type'].search([('garment_receipt', '=', True)], limit=1)
+        if not garment_inventory_operation:
+            pass
+        view = self.env.ref('stock.view_picking_form')
+        return {
+            'res_model': 'stock.picking',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': view.id,
+            'target': 'current',
+            'context': {
+                'default_picking_type_id': garment_inventory_operation.id,
+                'default_partner_id': self.partner_id.id,
+                'default_sale_id': self.id,
+                'default_origin': self.name,
+                'default_po_availability': self.po_availability,
+                'default_customer_ref': self.client_order_ref
+
+            }
+        }
 
 
 class SaleOrderLine(models.Model):
