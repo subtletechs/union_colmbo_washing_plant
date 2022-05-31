@@ -11,6 +11,7 @@ class AccountMove(models.Model):
     balance_in_days = fields.Integer(string="Balance in Days", readonly=True, track_visibility='always')
 
     def action_special_payments(self):
+        """Action for Special payment in Invoice"""
         special_payment_form_view = self.env.ref('union_colmbo_washing_plant.special_payment_details_form_view')
 
         return {
@@ -25,13 +26,14 @@ class AccountMove(models.Model):
         }
 
 
-class AccountMove(models.TransientModel):
+class AccountMoveWizard(models.TransientModel):
     _name = "account.move.wizard"
 
     balance_in_days = fields.Integer(string="Balance in Days")
     invoice_number = fields.Many2one(comodel_name="account.move", string="Invoice Number")
 
     def action_register_payment(self):
+        """Popup Register payment view"""
         invoice_record = self.env['account.move'].search([('id', '=', self.invoice_number.id)], limit=1)
         invoice_record.balance_in_days = self.balance_in_days
         return {

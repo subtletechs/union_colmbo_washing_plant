@@ -23,9 +23,9 @@ class PreCostingApprovalWizard(models.TransientModel):
     _name = "pre.costing.approval.wizard"
 
     quotation = fields.Many2one(comodel_name="sale.order", string="Quotation", domain="[('state', '=', 'draft')]")
-    # warning = fields.Text(string="Warning", compute="_compute_warning")
 
     def create_approval(self):
+        """Create Pre Costing Approval record"""
         self.env['pre.costing.approval'].create({
             'quotation': self.quotation.id,
             'state': 'waiting',

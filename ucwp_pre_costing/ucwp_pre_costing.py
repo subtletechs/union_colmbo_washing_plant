@@ -26,6 +26,7 @@ class PreCosting(models.Model):
     garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample', readonly=True)
 
     def action_confirm(self):
+        """Set sequence and change state to Confirm"""
         sequence = self.env['ir.sequence'].next_by_code('pre.costing') or _('New')
         self.write({'state': 'confirm', 'name': sequence})
 
@@ -63,5 +64,6 @@ class PreCostingLines(models.Model):
 
     @api.depends('cost', 'margin')
     def _calculate_cost(self):
+        """Calculate total per line"""
         for record in self:
             record.price = record.cost * ((100 + record.margin) / 100)
