@@ -4,6 +4,7 @@ from odoo import api, fields, models, _, tools
 class PreCostingApproval(models.Model):
     _name = "pre.costing.approval"
     _description = "Approval For Pre Costing"
+    _rec_name = "quotation"
 
     quotation = fields.Many2one(comodel_name="sale.order", string="Quotation", domain="[('state', '=', 'draft')]")
     state = fields.Selection([('waiting', 'Waiting for Approval'), ('approved', 'Approved')], string="State",
@@ -11,12 +12,11 @@ class PreCostingApproval(models.Model):
 
     def action_approve(self):
         self.write({'state': 'approved'})
-        # TODO set value of SO approved field True
-        field = self.quotation.is_approved
         self.quotation.is_approved = True
 
     def action_wait(self):
         self.write({'state': 'waiting'})
+        self.quotation.is_approved = False
 
 
 class PreCostingApprovalWizard(models.TransientModel):

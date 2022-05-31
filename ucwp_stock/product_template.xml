@@ -172,6 +172,7 @@
                         <group>
                             <field name="buyer"/>
                             <field name="customer"/>
+                            <field name="active"/>
                         </group>
                         <group>
                             <field name="fabric_type"/>
@@ -317,6 +318,6 @@
 
     <menuitem
             action="style_archive_approval_action" id="style_archive_approval_menu"
-            parent="mrp.menu_mrp_manufacturing" sequence="30"/>
+            parent="stock.menu_stock_warehouse_mgmt" sequence="40"/>
 
 </odoo>

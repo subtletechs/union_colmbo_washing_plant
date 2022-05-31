@@ -195,6 +195,7 @@ class LabReports(models.Model):
 class StyleArchiveApproval(models.Model):
     _name = "style.archive.approval"
     _description = "Style Archive Approval"
+    _rec_name = "product_id"
 
     product_id = fields.Many2one(comodel_name="product.product", string="Product", required=True)
     state = fields.Selection([('draft', 'Draft'), ('approved', 'Approved')], string="Status", default='draft')
@@ -205,4 +206,6 @@ class StyleArchiveApproval(models.Model):
         self.product_id.active = False
 
     def action_set_to_draft(self):
+        """Approve record and set product active"""
         self.write({'state': 'draft'})
+        self.product_id.active = True

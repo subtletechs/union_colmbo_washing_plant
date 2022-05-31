@@ -51,7 +51,7 @@
             action="pre_costing_approval_action" id="pre_costing_approval_menu"
             parent="sale.sale_order_menu" sequence="2"/>
 
-        <!-- pre costing approval wizard form view-->
+    <!-- pre costing approval wizard form view-->
     <record id="pre_costing_approval_wizard_form_view" model="ir.ui.view">
         <field name="name">pre.costing.approval.wizard.form.view</field>
         <field name="model">pre.costing.approval.wizard</field>
@@ -61,16 +61,22 @@
                     <div>
                         <h1>Warning</h1>
                     </div>
+                    <br/>
+                    <div>
+                        <p>
+                            Product Pre costing Total is greater than product subtotal in Sale order
+                        </p>
+                    </div>
                     <group>
                         <group>
-                            <field name="quotation"/>
+                            <field name="quotation" invisible="1"/>
                         </group>
                         <group>
                         </group>
                     </group>
                 </sheet>
                 <footer>
-                    <button name="create_approval" string="Approve" class="btn-primary" type="object"/>
+                    <button name="create_approval" string="Request Approval" class="btn-primary" type="object"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
