@@ -7,7 +7,7 @@ class BulkProduction(models.Model):
     """ Bulk Manufacturing Orders """
     _name = 'bulk.production'
 
-    name = fields.Char(string="Bulk Production", default="New")
+    name = fields.Char(string="Parent Manufacturing Order", default="New")
     product = fields.Many2one(comodel_name='product.product', string='Product', required=True)
     manufacture_orders = fields.One2many(comodel_name='mrp.production', inverse_name='bulk_id',
                                          string='Manufacture Orders')
@@ -51,7 +51,7 @@ class BulkProduction(models.Model):
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
-    bulk_id = fields.Many2one(comodel_name="bulk.production", string="Bulk Production")
+    bulk_id = fields.Many2one(comodel_name="bulk.production", string="Parent Manufacturing Order")
     # TODO set mo_barcode, job_no, machine_no, operator_name readonly=True after MO auto generate process
     # [UC-08]
     # TODO : if mo_barcode not required remove when deploy
@@ -90,6 +90,7 @@ class MrpProduction(models.Model):
             }
 
     def print_job_card(self):
+        """Print Job Card for MO"""
         barcode = self.mo_barcode.barcode
         product = self.product_id.display_name
         buyer = self.product_id.buyer.name
@@ -113,6 +114,7 @@ class MrpProduction(models.Model):
         return self.env.ref('union_colmbo_washing_plant.job_card_action').report_action(self, data=data)
 
     def after_quality_check(self):
+        """Popup quality check view"""
         view = self.env.ref('union_colmbo_washing_plant.ucwp_quality_check_form_view')
 
         return {
@@ -156,5 +158,5 @@ class OperationLines(models.Model):
     barcode = fields.Many2one(comodel_name="stock.production.lot", string="Barcode")
     manufacture_operation_stages_id = fields.Many2one(comodel_name="manufacture.operation.stages",
                                                       string="MO stages ID", invisible=True)
-    bulk_production = fields.Many2one(comodel_name="bulk.production", string="Bulk Production",
+    bulk_production = fields.Many2one(comodel_name="bulk.production", string="Parent Manufacturing Order",
                                       related="manufacture_operation_stages_id.bulk_production_id")

@@ -5,7 +5,7 @@
         <field name="name">bulk.production.tree.view</field>
         <field name="model">bulk.production</field>
         <field name="arch" type="xml">
-            <tree string="Bulk Production">
+            <tree string="Parent Manufacturing Order">
                 <field name="name"/>
                 <field name="garment_receipt"/>
                 <field name="product"/>
@@ -18,7 +18,7 @@
         <field name="name">bulk.production.form.view</field>
         <field name="model">bulk.production</field>
         <field name="arch" type="xml">
-            <form string="Bulk Production">
+            <form string="Parent Manufacturing Order">
                 <header>
                     <!-- <button name="calculate_job_quantity" string="Calculate Jobs" type="object"-->
                     <!--         class="btn-primary"/>-->
@@ -59,7 +59,7 @@
 
     <!--    action for bulk production-->
     <record id="bulk_production_action" model="ir.actions.act_window">
-        <field name="name">Bulk Production</field>
+        <field name="name">Parent Manufacturing Orders</field>
         <field name="res_model">bulk.production</field>
         <field name="view_mode">tree,form</field>
     </record>
