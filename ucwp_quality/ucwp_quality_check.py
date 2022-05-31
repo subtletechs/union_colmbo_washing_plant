@@ -4,6 +4,7 @@ from odoo import api, fields, models, _
 class UCWPQualityCheck(models.Model):
     _name = "ucwp.quality.check"
     _description = 'Quality Check'
+    _rec_name = "grn"
 
     quantity = fields.Integer(string="Quantity")
     fail_quantity = fields.Integer(string="Fail Quantity")
@@ -30,8 +31,8 @@ class QualityCheckLines(models.Model):
     image = fields.Binary(string="Image")
     ucwp_quality_check_id = fields.Many2one(comodel_name="ucwp.quality.check", string="Quality Check")
     comment = fields.Char(string="Comment")
-    state = fields.Selection([('processed', 'Processed'), ('disposed', 'Disposed'), ('returned', 'Returned'),
-                              ('rewashed', 'Rewashed')], string="State")
+    state = fields.Selection([('processed', 'Process'), ('disposed', 'Dispose'), ('returned', 'Returned'),
+                              ('rewashed', 'Rewash')], string="State", readonly=True)
     quality_point = fields.Selection([('before_wash', 'Before Wash'), ('after_wash', 'After Wash')],
                                      string="Quality Point")
     display_process_button = fields.Boolean(compute="_display_button")
