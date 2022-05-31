@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!--    quality check form view-->
+    <!-- quality check form view-->
+        <record id="ucwp_quality_check_tree_view" model="ir.ui.view">
+        <field name="name">ucwp.quality.check.tree.view</field>
+        <field name="model">ucwp.quality.check</field>
+        <field name="arch" type="xml">
+            <tree string="Quality">
+                <field name="grn"/>
+                <field name="manufacture_order"/>
+                <field name="quality_point"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- quality check form view-->
     <record id="ucwp_quality_check_form_view" model="ir.ui.view">
         <field name="name">ucwp.quality.check.form.view</field>
         <field name="model">ucwp.quality.check</field>
@@ -30,6 +43,7 @@
                                     <field name="product"/>
                                     <field name="lot_no"/>
                                     <field name="pass_fail"/>
+                                    <field name="inspected_qty"/>
                                     <field name="quantity"/>
                                     <field name="defects"
                                            attrs="{'invisible': ['|',('pass_fail', '=', 'pass'),('pass_fail', '=', False)]}"/>
@@ -70,5 +84,16 @@
             </form>
         </field>
     </record>
+
+        <!--    action for quality check-->
+    <record id="ucwp_quality_check_action" model="ir.actions.act_window">
+        <field name="name">Quality Check</field>
+        <field name="res_model">ucwp.quality.check</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="ucwp_quality_check_action" id="ucwp_quality_check_menu"
+            parent="stock.menu_stock_root" sequence="90"/>
 
 </odoo>

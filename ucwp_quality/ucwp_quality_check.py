@@ -6,9 +6,6 @@ class UCWPQualityCheck(models.Model):
     _description = 'Quality Check'
     _rec_name = "grn"
 
-    quantity = fields.Integer(string="Quantity")
-    fail_quantity = fields.Integer(string="Fail Quantity")
-    pass_quantity = fields.Integer(string="Pass Quantity")
     # [UC-11]
     grn = fields.Many2one(comodel_name="stock.picking", string="GRN")
     quality_check_lines = fields.One2many(comodel_name="quality.check.lines", inverse_name="ucwp_quality_check_id",
@@ -35,6 +32,9 @@ class QualityCheckLines(models.Model):
                               ('rewashed', 'Rewash')], string="State", readonly=True)
     quality_point = fields.Selection([('before_wash', 'Before Wash'), ('after_wash', 'After Wash')],
                                      string="Quality Point")
+    # Functional Testing 15.
+    inspected_qty = fields.Float(string="Inspected Quantity")
+
     display_process_button = fields.Boolean(compute="_display_button")
     display_return_button = fields.Boolean(compute="_display_button")
     display_rewash_button = fields.Boolean(compute="_display_button")
