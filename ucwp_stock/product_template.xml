@@ -226,6 +226,18 @@
         </field>
     </record>
 
+    <!-- Functional Testing 1 -->
+    <record id="product_variant_easy_edit_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">product.product.view.form.easy.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="attributes">
+                <attribute name="string">UC Number</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <!-- [UC-23] -->
     <!-- Chemical Standards list view-->
     <record id="chemical_standards_tree_view" model="ir.ui.view">
