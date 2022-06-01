@@ -257,19 +257,22 @@ class Picking(models.Model):
             }
 
     def generate_mo(self):
-        for stock_move in self.move_ids_without_package:
-            bulk_record = self.env['bulk.production'].create({
-                'garment_receipt': self.id,
-                'product': stock_move.product_id.id,
-            })
-            split_lines = stock_move.move_line_nosuggest_ids
-            for split_line in split_lines:
-                self.env['mrp.production'].create({
-                    'product_id': split_line.product_id.id,
-                    'product_qty': split_line.qty_done,
-                    'bulk_id': bulk_record.id,
-                    'product_uom_id': split_line.product_uom_id.id
+        if self.move_ids_without_package:
+            for stock_move in self.move_ids_without_package:
+                bulk_record = self.env['bulk.production'].create({
+                    'garment_receipt': self.id,
+                    'product': stock_move.product_id.id,
+                    'garment_select': stock_move.product_id.garment_select,
                 })
+                if stock_move.move_line_nosuggest_ids and self.garment_select == 'sample':
+                    split_lines = stock_move.move_line_nosuggest_ids
+                    for split_line in split_lines:
+                        self.env['mrp.production'].create({
+                            'product_id': split_line.product_id.id,
+                            'product_qty': split_line.qty_done,
+                            'bulk_id': bulk_record.id,
+                            'product_uom_id': split_line.product_uom_id.id
+                        })
 
     def _get_invoice(self):
         invoices = self.env['account.move'].search([('delivery_order', '=', self.id)], limit=1)
