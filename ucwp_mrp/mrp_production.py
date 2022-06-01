@@ -17,6 +17,13 @@ class BulkProduction(models.Model):
                                                    inverse_name="bulk_production_id")
     is_clicked = fields.Boolean(string="Clicked", default=False)
 
+    @api.model
+    def create(self, values):
+        # Generate sequence for Parent MO
+        sequence = self.env['ir.sequence'].next_by_code('parent.manufacture.order') or _('New')
+        values['name'] = sequence
+        return super(BulkProduction, self).create(values)
+
     # TODO uncomment if lot information available
     def calculate_job_quantity(self):
         pass
