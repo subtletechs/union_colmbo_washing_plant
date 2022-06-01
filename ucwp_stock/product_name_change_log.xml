@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Product name change log tree view-->
+    <record id="product_name_change_log_tree_view" model="ir.ui.view">
+        <field name="name">product.name.change.log.tree.view</field>
+        <field name="model">product.name.change.log</field>
+        <field name="arch" type="xml">
+            <tree string="Product Name Change Log" create="false">
+                <field name="main_product" invisible="1"/>
+                <field name="product_name"/>
+                <field name="previous_name"/>
+                <field name="type"/>
+                <field name="user"/>
+                <field name="data_time"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    Action for Product Name change log-->
+    <record id="product_name_change_log_action" model="ir.actions.act_window">
+        <field name="name">Product name change log</field>
+        <field name="res_model">product.name.change.log</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem
+            action="product_name_change_log_action" id="product_nane_change_log_menu"
+            parent="stock.menu_warehouse_report" sequence="100"/>
+
+</odoo>
