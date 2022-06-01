@@ -20,8 +20,6 @@
         <field name="arch" type="xml">
             <form string="Parent Manufacturing Order">
                 <header>
-                    <!-- <button name="calculate_job_quantity" string="Calculate Jobs" type="object"-->
-                    <!--         class="btn-primary"/>-->
                     <button name="generate_mo"
                             string="Generate MO"
                             type="object" class="oe_highlight" groups="base.group_user"
@@ -35,6 +33,7 @@
                         <field name="is_clicked" invisible="1"/>
                         <!-- Product garment type -->
                         <field name="garment_select" widget="radio" invisible="1"/>
+                        <field name="quantity_done" invisible="1"/>
                     </group>
                     <group></group>
                     <notebook>
@@ -47,7 +46,8 @@
                         </page>
                         <page string="Manufacture Operation Stages" name="manufacture_operation_stages"
                               attrs="{'invisible': [('garment_select', '=', 'sample')]}">
-                            <field name="manufacture_operation_stages" context="{'variant':product}">
+                            <field name="manufacture_operation_stages"
+                                   context="{'variant':product, 'quantity_done':quantity_done}">
                                 <tree string="Manufacture Operation Stages">
                                     <field name="bom" options="{'no_create': True, 'no_create_edit':True}"/>
                                     <field name="lot_size"/>
@@ -125,6 +125,10 @@
         <field name="model">manufacture.operation.stages</field>
         <field name="arch" type="xml">
             <form string="Manufacture Operation Stages">
+                <header>
+                    <button name="calculate_job_quantity" string="Calculate Jobs" type="object"
+                            class="btn-primary"/>
+                </header>
                 <sheet>
                     <group>
                         <group>

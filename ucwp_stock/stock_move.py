@@ -263,6 +263,7 @@ class Picking(models.Model):
                     'garment_receipt': self.id,
                     'product': stock_move.product_id.id,
                     'garment_select': stock_move.product_id.garment_select,
+                    'quantity_done': stock_move.quantity_done,
                 })
                 if stock_move.move_line_nosuggest_ids and self.garment_select == 'sample':
                     split_lines = stock_move.move_line_nosuggest_ids

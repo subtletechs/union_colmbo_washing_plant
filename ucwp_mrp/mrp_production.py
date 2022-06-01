@@ -19,6 +19,7 @@ class BulkProduction(models.Model):
 
     # Garment type of the product
     garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample', readonly=True)
+    quantity_done = fields.Float(string="Done")
 
     @api.model
     def create(self, values):
@@ -31,19 +32,6 @@ class BulkProduction(models.Model):
     @api.onchange('product')
     def set_garment_type(self):
         self.garment_select = self.product.garment_select
-
-    # TODO uncomment if lot information available
-    def calculate_job_quantity(self):
-        pass
-        # self.lot_information = [(5)]
-        # jobs = int(self.quantity / self.lot_size) + 2
-        # quantity = self.quantity
-        # for job_no in range(1, jobs):
-        #     if quantity > self.lot_size:
-        #         self.lot_information = [(0, 0, {'job_no': job_no, 'job_qty': self.lot_size})]
-        #         quantity -= self.lot_size
-        #     else:
-        #         self.lot_information = [(0, 0, {'job_no': job_no, 'job_qty': quantity})]
 
     def generate_mo(self):
         self.is_clicked = True
@@ -155,6 +143,12 @@ class MrpProduction(models.Model):
 class ManufactureOperationStages(models.Model):
     _name = "manufacture.operation.stages"
 
+    bom = fields.Many2one(comodel_name="mrp.bom", string="Bill of Material", required=True)
+    lot_size = fields.Integer(string="Lot size", related="bom.lot_size", store=True, readonly=True)
+    operation_lines = fields.One2many(comodel_name="operation.lines", inverse_name="manufacture_operation_stages_id",
+                                      string="Operation Lines", required=True)
+    bulk_production_id = fields.Many2one(comodel_name="bulk.production", string="Bulk ID")
+
     @api.onchange('bom')
     def update_domain_bom(self):
         """Set demain to filter BOMs related to product"""
@@ -172,11 +166,17 @@ class ManufactureOperationStages(models.Model):
                     'domain': {'bom': [('id', 'in', bom_list)]}
                 }
 
-    bom = fields.Many2one(comodel_name="mrp.bom", string="Bill of Material", required=True)
-    lot_size = fields.Integer(string="Lot size", related="bom.lot_size", store=True, readonly=True)
-    operation_lines = fields.One2many(comodel_name="operation.lines", inverse_name="manufacture_operation_stages_id",
-                                      string="Operation Lines")
-    bulk_production_id = fields.Many2one(comodel_name="bulk.production", string="Bulk ID")
+    def calculate_job_quantity(self):
+        self.operation_lines = [(5)]
+        quantity_done = self.env.context.get('quantity_done')
+        jobs = int(quantity_done / self.lot_size) + 2
+        for job_no in range(1, jobs):
+            # if quantity_done != 0:
+            if quantity_done > self.lot_size:
+                self.operation_lines = [(0, 0, {'job_no': job_no, 'job_qty': self.lot_size})]
+                quantity_done -= self.lot_size
+            else:
+                self.operation_lines = [(0, 0, {'job_no': job_no, 'job_qty': quantity_done})]
 
 
 class OperationLines(models.Model):
