@@ -155,6 +155,23 @@ class MrpProduction(models.Model):
 class ManufactureOperationStages(models.Model):
     _name = "manufacture.operation.stages"
 
+    @api.onchange('bom')
+    def update_domain_bom(self):
+        """Set demain to filter BOMs related to product"""
+        if 'variant' in self.env.context:
+            variant = self.env.context.get('variant')
+            bom_ids = self.env['mrp.bom'].search([('product_id', '=', variant)])
+            bom_list = []
+            if bom_ids:
+                bom_list = bom_ids.ids
+                return {
+                    'domain': {'bom': [('id', 'in', bom_list)]}
+                }
+            else:
+                return {
+                    'domain': {'bom': [('id', 'in', bom_list)]}
+                }
+
     bom = fields.Many2one(comodel_name="mrp.bom", string="Bill of Material", required=True)
     lot_size = fields.Integer(string="Lot size", related="bom.lot_size", store=True, readonly=True)
     operation_lines = fields.One2many(comodel_name="operation.lines", inverse_name="manufacture_operation_stages_id",
@@ -168,7 +185,7 @@ class OperationLines(models.Model):
 
     job_no = fields.Integer(string="Job No")
     job_qty = fields.Integer(string="Job Quantity")
-    machine_no = fields.Many2one(comodel_name="mo.machines", string="Machine No")
+    machine_no = fields.Many2one(comodel_name="mrp.workcenter", string="Machine No")
     operator_name = fields.Many2one(comodel_name="hr.employee", string="Operator Name")
     barcode = fields.Many2one(comodel_name="stock.production.lot", string="Barcode")
     manufacture_operation_stages_id = fields.Many2one(comodel_name="manufacture.operation.stages",
