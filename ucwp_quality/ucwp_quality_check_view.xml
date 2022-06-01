@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- quality check form view-->
-        <record id="ucwp_quality_check_tree_view" model="ir.ui.view">
+    <record id="ucwp_quality_check_tree_view" model="ir.ui.view">
         <field name="name">ucwp.quality.check.tree.view</field>
         <field name="model">ucwp.quality.check</field>
         <field name="arch" type="xml">
@@ -34,7 +34,7 @@
                     <notebook>
                         <page string="Quality Lines" name="quality_check_lines">
                             <field name="quality_check_lines" context="{'default_quality_point':quality_point}">
-                                <tree string="Quality Lines" editable="bottom">
+                                <tree string="Quality Lines">
                                     <field name="quality_point" invisible="1"/>
                                     <field name="display_process_button" invisible="1"/>
                                     <field name="display_return_button" invisible="1"/>
@@ -47,35 +47,9 @@
                                     <field name="quantity"/>
                                     <field name="defects"
                                            attrs="{'invisible': ['|',('pass_fail', '=', 'pass'),('pass_fail', '=', False)]}"/>
-                                    <field name="image"/>
                                     <field name="comment"
                                            attrs="{'required': [('state', '=', 'processed'),('pass_fail', '=', 'fail')], 'invisible': [('pass_fail', '=', 'pass')]}"/>
                                     <field name="state"/>
-
-                                    <button name="process_garment" type="object"
-                                            class="oe_stat_button"
-                                            icon="fa-forward"
-                                            help="Process Garments"
-                                            attrs="{'invisible': [('display_process_button', '=', False)]}"
-                                    />
-                                    <button name="return_garment" type="object"
-                                            class="oe_stat_button"
-                                            icon="fa-backward"
-                                            help="Return Garments"
-                                            attrs="{'invisible': [('display_return_button', '=', False)]}"
-                                    />
-                                    <button name="rewash_garment" type="object"
-                                            class="oe_stat_button"
-                                            icon="fa-retweet"
-                                            help="Rewash Garments"
-                                            attrs="{'invisible': [('display_rewash_button', '=', False)]}"
-                                    />
-                                    <button name="dispose_garment" type="object"
-                                            class="oe_stat_button"
-                                            icon="fa-stop"
-                                            help="Dispose Garments"
-                                            attrs="{'invisible': [('display_dispose_button', '=', False)]}"
-                                    />
                                 </tree>
                             </field>
                         </page>
@@ -85,7 +59,70 @@
         </field>
     </record>
 
-        <!--    action for quality check-->
+
+    <!-- Quality check lines form view-->
+    <record id="ucwp_quality_check_line_tree_view" model="ir.ui.view">
+        <field name="name">ucwp.quality.check.line.tree.view</field>
+        <field name="model">quality.check.lines</field>
+        <field name="arch" type="xml">
+            <form string="Quality Lines">
+                <header>
+                    <field name="quality_point" invisible="1"/>
+                    <field name="display_process_button" invisible="1"/>
+                    <field name="display_return_button" invisible="1"/>
+                    <field name="display_rewash_button" invisible="1"/>
+                    <field name="display_dispose_button" invisible="1"/>
+
+                    <button name="process_garment" type="object"
+                            class="oe_stat_button"
+                            icon="fa-forward"
+                            help="Process Garments"
+                            attrs="{'invisible': [('display_process_button', '=', False)]}"
+                    />
+                    <button name="return_garment" type="object"
+                            class="oe_stat_button"
+                            icon="fa-backward"
+                            help="Return Garments"
+                            attrs="{'invisible': [('display_return_button', '=', False)]}"
+                    />
+                    <button name="rewash_garment" type="object"
+                            class="oe_stat_button"
+                            icon="fa-retweet"
+                            help="Rewash Garments"
+                            attrs="{'invisible': [('display_rewash_button', '=', False)]}"
+                    />
+                    <button name="dispose_garment" type="object"
+                            class="oe_stat_button"
+                            icon="fa-stop"
+                            help="Dispose Garments"
+                            attrs="{'invisible': [('display_dispose_button', '=', False)]}"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="processed,disposed,returned,rewashed, "/>
+
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product"/>
+                            <field name="lot_no"/>
+                            <field name="pass_fail"/>
+                            <field name="inspected_qty"/>
+                            <field name="quantity"/>
+                            <field name="defects"
+                                   attrs="{'invisible': ['|',('pass_fail', '=', 'pass'),('pass_fail', '=', False)]}"/>
+                            <field name="comment"
+                                   attrs="{'required': [('state', '=', 'processed'),('pass_fail', '=', 'fail')], 'invisible': [('pass_fail', '=', 'pass')]}"/>
+                        </group>
+                        <group>
+                            <field name="image" widget="image"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for quality check-->
     <record id="ucwp_quality_check_action" model="ir.actions.act_window">
         <field name="name">Quality Check</field>
         <field name="res_model">ucwp.quality.check</field>
