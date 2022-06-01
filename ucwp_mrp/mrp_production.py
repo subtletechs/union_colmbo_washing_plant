@@ -17,12 +17,20 @@ class BulkProduction(models.Model):
                                                    inverse_name="bulk_production_id")
     is_clicked = fields.Boolean(string="Clicked", default=False)
 
+    # Garment type of the product
+    garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample', readonly=True)
+
     @api.model
     def create(self, values):
         # Generate sequence for Parent MO
         sequence = self.env['ir.sequence'].next_by_code('parent.manufacture.order') or _('New')
         values['name'] = sequence
         return super(BulkProduction, self).create(values)
+
+    # Select garment type for product
+    @api.onchange('product')
+    def set_garment_type(self):
+        self.garment_select = self.product.garment_select
 
     # TODO uncomment if lot information available
     def calculate_job_quantity(self):

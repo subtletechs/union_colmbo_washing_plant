@@ -33,6 +33,8 @@
                         <field name="garment_receipt"/>
                         <field name="product"/>
                         <field name="is_clicked" invisible="1"/>
+                        <!-- Product garment type -->
+                        <field name="garment_select" widget="radio" invisible="1"/>
                     </group>
                     <group></group>
                     <notebook>
@@ -43,7 +45,8 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Manufacture Operation Stages" name="manufacture_operation_stages">
+                        <page string="Manufacture Operation Stages" name="manufacture_operation_stages"
+                              attrs="{'invisible': [('garment_select', '=', 'sample')]}">
                             <field name="manufacture_operation_stages">
                                 <tree string="Manufacture Operation Stages">
                                     <field name="bom"/>
