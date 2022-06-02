@@ -57,7 +57,8 @@
                 <!-- [UC-07] -->
                 <button name="generate_mo" string="Generate MO" type="object"
                         class="oe_highlight" groups="base.group_user"
-                        attrs="{'invisible': ['|','|',('garment_receipt', '=', False),('state','!=','done'),('bulk_production_count','=',1)]}"/>
+                        attrs="{'invisible': ['|','|','|',('garment_receipt', '=', False),('state','!=','done'),
+                        ('bulk_production_count','=',1), ('bypass_qc', '=', True)]}"/>
                 <button name="create_invoice" string="Create Invoice" type="object"
                         class="oe_highlight" groups="base.group_user"
                         attrs="{'invisible': ['|',('picking_type_code', '!=', 'outgoing'),('state','!=','done')]}"/>
@@ -115,7 +116,10 @@
                         <field name="receive_logistic"/>
                         <field name="receive_sample_room"/>
                     </group>
-                    <group>
+                    <group string="Before Wash QC Bypass" attrs="{'invisible': [('garment_receipt', '=', False)]}">
+                        <field name="bypass_qc"/>
+                        <field name="bypass_comment" attrs="{'required': [('bypass_qc', '=', True)], 'invisible': [('bypass_qc', '=', False)]}"/>
+                        <field name="bypassed_by" attrs="{'required': [('bypass_qc', '=', True)], 'invisible': [('bypass_qc', '=', False)]}"/>
                         <field name="receipts" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                         <field name="manufacture_order"
                                attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>

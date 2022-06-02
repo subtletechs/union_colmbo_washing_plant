@@ -111,6 +111,13 @@ class ProductionLot(models.Model):
 class Picking(models.Model):
     _inherit = "stock.picking"
 
+    # @api.model
+    # def default_get(self, fields):
+    #     res = super(Picking, self).default_get(fields)
+    #     active_id = self.env.context.get('active_id')
+    #     active_model = self.env.context.get('active_model')
+    #     return res
+
     variant_id = fields.Many2one(string="Variant", related="move_ids_without_package.product_id", store=True)
     garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample')
     samples = fields.Many2one(comodel_name="product.product", string="Samples")
@@ -151,6 +158,17 @@ class Picking(models.Model):
     # Functional Testing 8. Gate pass number
     customer_gate_pass_no = fields.Char(string="Customer Gate Pass No.")
     customer_manual_ref = fields.Char(string="Manual Ref")
+
+    # To bypass the Before QC
+    bypass_qc = fields.Boolean(string="Bypass Quality Check?", default=False)
+    bypass_comment = fields.Text(string="Comment")
+    bypassed_by = fields.Many2one(comodel_name='res.users', string="Bypassed By", readonly=True)
+
+    @api.onchange('bypass_qc')
+    def set_bypass_user(self):
+        """When user click to bypass the before QC, map the user who did the change"""
+        if self.bypass_qc:
+            self.bypassed_by = self.env.user
 
     def receive_logistic_update_datetime(self):
         """Update logistic order received date and time"""
@@ -321,6 +339,12 @@ class Picking(models.Model):
             'partner_id': self.receipts.partner_id.id,
             'invoice_line_ids': invoiced_list
         })
+
+    def write(self, vals):
+        if 'bypass_qc' in vals:
+            if vals['bypass_qc']:
+                vals['bypassed_by'] = self.env.user
+        return super(Picking, self).write(vals)
 
 
 class WashingOptions(models.Model):
