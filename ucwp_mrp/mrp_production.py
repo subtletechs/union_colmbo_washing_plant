@@ -167,16 +167,18 @@ class ManufactureOperationStages(models.Model):
                 }
 
     def calculate_job_quantity(self):
-        self.operation_lines = [(5)]
-        quantity_done = self.env.context.get('quantity_done')
-        jobs = int(quantity_done / self.lot_size) + 2
-        for job_no in range(1, jobs):
-            # if quantity_done != 0:
-            if quantity_done > self.lot_size:
-                self.operation_lines = [(0, 0, {'job_no': job_no, 'job_qty': self.lot_size})]
-                quantity_done -= self.lot_size
-            else:
-                self.operation_lines = [(0, 0, {'job_no': job_no, 'job_qty': quantity_done})]
+        if self.lot_size > 0:
+            self.operation_lines = [(5)]
+            quantity_done = self.env.context.get('quantity_done')
+            jobs = int(quantity_done / self.lot_size) + 2
+            for job_no in range(1, jobs):
+                if quantity_done > self.lot_size:
+                    self.operation_lines = [(0, 0, {'job_no': job_no, 'job_qty': self.lot_size})]
+                    quantity_done -= self.lot_size
+                else:
+                    self.operation_lines = [(0, 0, {'job_no': job_no, 'job_qty': quantity_done})]
+        else:
+            pass
 
 
 class OperationLines(models.Model):

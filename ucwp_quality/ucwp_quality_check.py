@@ -131,3 +131,23 @@ class QualityCheckLines(models.Model):
                 record.display_return_button = True
             else:
                 record.display_return_button = False
+
+    @api.onchange('product', 'lot_no')
+    def update_domain(self):
+        """Set demain to filter product and Lot No"""
+        product_ids = self.ucwp_quality_check_id.grn.move_ids_without_package.product_id.ids
+        split_lines = self.ucwp_quality_check_id.grn.move_ids_without_package.move_line_nosuggest_ids
+        lot_name_list = []
+        for split_line in split_lines:
+            if split_line.product_id.id == self.product.id:
+                lot_name_list.append(split_line.barcode)
+        lot_ids = self.env['stock.production.lot'].search([('name', 'in', lot_name_list)])
+        if lot_ids:
+            return {
+                'domain': {'lot_no': [('id', 'in', lot_ids.ids)]}
+            }
+        if product_ids:
+            return {
+                'domain': {'product': [('id', 'in', product_ids)]}
+            }
+
