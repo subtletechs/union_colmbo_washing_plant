@@ -155,8 +155,8 @@ class Picking(models.Model):
     # To Map the sale order
     sale_id = fields.Many2one(comodel_name='sale.order', string='Sale Order')
 
-    # Functional Testing 8. Gate pass number
-    customer_gate_pass_no = fields.Char(string="Customer Gate Pass No.")
+    # Gate pass number
+    customer_gate_pass_no = fields.Char(string="Customer Gate Pass")
     customer_manual_ref = fields.Char(string="Manual Ref")
 
     # To bypass the Before QC
@@ -267,7 +267,7 @@ class Picking(models.Model):
         else:
             tree_view = self.env.ref('union_colmbo_washing_plant.bulk_production_tree_view')
             return {
-                'name': _(self.name),
+                'name': _('Parent Manufacture Orders'),
                 'res_model': 'bulk.production',
                 'type': 'ir.actions.act_window',
                 'view_mode': 'list,form',

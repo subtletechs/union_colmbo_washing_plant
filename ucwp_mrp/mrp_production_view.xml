@@ -23,7 +23,7 @@
                     <button name="generate_mo"
                             string="Generate MO"
                             type="object" class="oe_highlight" groups="base.group_user"
-                            attrs="{'invisible': [('is_clicked','=',True)]}"/>
+                            attrs="{'invisible': ['|',('is_clicked','=',True), ('garment_select', '!=', 'bulk')]}"/>
                 </header>
                 <sheet>
                     <group>

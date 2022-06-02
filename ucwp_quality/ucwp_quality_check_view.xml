@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- quality check form view-->
+    <!-- quality check tree view-->
     <record id="ucwp_quality_check_tree_view" model="ir.ui.view">
         <field name="name">ucwp.quality.check.tree.view</field>
         <field name="model">ucwp.quality.check</field>
         <field name="arch" type="xml">
             <tree string="Quality">
+                <field name="name"/>
                 <field name="grn"/>
                 <field name="manufacture_order"/>
                 <field name="quality_point"/>
