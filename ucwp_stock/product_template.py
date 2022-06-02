@@ -180,7 +180,8 @@ class ChemicalStandards(models.Model):
     _description = "Chemical Standards"
 
     name = fields.Char(string="Name")
-    document = fields.Binary(string="Document")
+    # Attachment Field for Chemical Standards in Product
+    document = fields.Many2many(comodel_name="ir.attachment", attachment=True, string="Document")
     product_tmpl_id = fields.Many2one(comodel_name="product.product", string="Product Template ID")
 
 
@@ -189,7 +190,8 @@ class LabReports(models.Model):
     _description = "Lab Reports"
 
     name = fields.Char(string="Report Name")
-    document = fields.Binary(string="Report Files")
+    # Attachment Field for Test/Lab Reports in Product
+    document = fields.Many2many(comodel_name="ir.attachment", attachment=True, string="Report Files")
     product_template_id = fields.Many2one(comodel_name="product.product", string="Product Template ID")
 
 

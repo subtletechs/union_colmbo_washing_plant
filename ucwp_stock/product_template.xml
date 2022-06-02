@@ -78,7 +78,7 @@
                     <field name="chemical_standards">
                         <tree string="Chemical Standards" editable="bottom">
                             <field name="name" attrs="{'required': [('parent.is_chemical', '=', True)]}"/>
-                            <field name="document" attrs="{'required': [('parent.is_chemical', '=', True)]}"/>
+                            <field name="document" widget="many2many_binary" attrs="{'required': [('parent.is_chemical', '=', True)]}"/>
                         </tree>
                     </field>
                 </page>
@@ -91,7 +91,7 @@
                     <field name="lab_reports">
                         <tree string="Test/Lab Reports" editable="bottom">
                             <field name="name" attrs="{'required': [('parent.is_garment', '=', True)]}"/>
-                            <field name="document" attrs="{'required': [('parent.is_garment', '=', True)]}"/>
+                            <field name="document" widget="many2many_binary" attrs="{'required': [('parent.is_garment', '=', True)]}"/>
                         </tree>
                     </field>
                 </page>
@@ -246,7 +246,7 @@
         <field name="arch" type="xml">
             <tree string="Chemical Standards">
                 <field name="name"/>
-                <field name="document"/>
+                <field name="document" widget="many2many_binary"/>
             </tree>
         </field>
     </record>
@@ -263,7 +263,7 @@
                             <field name="name"/>
                         </group>
                         <group>
-                            <field name="document"/>
+                            <field name="document" widget="many2many_binary"/>
                         </group>
                     </group>
                 </sheet>
