@@ -99,6 +99,7 @@ class QualityCheckLines(models.Model):
     def dispose_garment(self):
         self.write({'state': 'disposed'})
         view = self.env.ref('stock.view_picking_form')
+        # TODO limit internal transfer operation to one operation
         internal_transfer_operation = self.env['stock.picking.type'].search([('code', '=', 'internal')])
         return {
             'res_model': 'stock.picking',

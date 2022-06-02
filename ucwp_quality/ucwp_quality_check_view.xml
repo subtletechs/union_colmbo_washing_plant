@@ -68,8 +68,8 @@
 
 
     <!-- Quality check lines form view-->
-    <record id="ucwp_quality_check_line_tree_view" model="ir.ui.view">
-        <field name="name">ucwp.quality.check.line.tree.view</field>
+    <record id="ucwp_quality_check_line_form_view" model="ir.ui.view">
+        <field name="name">ucwp.quality.check.line.form.view</field>
         <field name="model">quality.check.lines</field>
         <field name="arch" type="xml">
             <form string="Quality Lines">
@@ -81,31 +81,30 @@
                     <field name="display_dispose_button" invisible="1"/>
 
                     <button name="process_garment" type="object"
-                            class="oe_stat_button"
-                            icon="fa-forward"
+                            class="oe_highlight" groups="base.group_user"
+                            string="Process"
                             help="Process Garments"
                             attrs="{'invisible': [('display_process_button', '=', False)]}"
                     />
                     <button name="return_garment" type="object"
-                            class="oe_stat_button"
-                            icon="fa-backward"
+                            class="oe_highlight" groups="base.group_user"
+                            string="Return"
                             help="Return Garments"
                             attrs="{'invisible': [('display_return_button', '=', False)]}"
                     />
                     <button name="rewash_garment" type="object"
-                            class="oe_stat_button"
-                            icon="fa-retweet"
+                            class="oe_highlight" groups="base.group_user"
+                            string="Rewash"
                             help="Rewash Garments"
                             attrs="{'invisible': [('display_rewash_button', '=', False)]}"
                     />
                     <button name="dispose_garment" type="object"
-                            class="oe_stat_button"
-                            icon="fa-stop"
+                            class="oe_highlight" groups="base.group_user"
+                            string="Dispose"
                             help="Dispose Garments"
                             attrs="{'invisible': [('display_dispose_button', '=', False)]}"
                     />
                     <field name="state" widget="statusbar" statusbar_visible="processed,disposed,returned,rewashed, "/>
-
                 </header>
                 <sheet>
                     <group>
