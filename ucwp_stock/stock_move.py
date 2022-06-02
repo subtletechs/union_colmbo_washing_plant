@@ -123,8 +123,8 @@ class Picking(models.Model):
     samples = fields.Many2one(comodel_name="product.product", string="Samples")
 
     # UC-05
-    receive_logistic = fields.Datetime(string="Receive to Logistics", readonly=True)
-    receive_sample_room = fields.Datetime(string='Receive to Sample Room', readonly=True)
+    receive_logistic = fields.Datetime(string="Received to Logistics", readonly=True)
+    receive_sample_room = fields.Datetime(string='Received to Sample Room', readonly=True)
 
     # TODO add filters to stock.picking
     receipts = fields.Many2one(comodel_name="stock.picking", string="Receipts")
@@ -149,7 +149,7 @@ class Picking(models.Model):
 
     # [UC-30]
     po_availability = fields.Selection([('po', 'PO'), ('temp_po', 'TEMP PO'), ('no_po', 'No PO')],
-                                       string='PO Availability')
+                                       string='PO Availability', required=True)
     customer_ref = fields.Char(string='Customer Ref')
 
     # To Map the sale order

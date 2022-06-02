@@ -6,7 +6,7 @@
         <field name="model">product.name.change.log</field>
         <field name="arch" type="xml">
             <tree string="Product Name Change Log" create="false">
-                <field name="main_product" invisible="1"/>
+                <field name="main_product"/>
                 <field name="product_name"/>
                 <field name="previous_name"/>
                 <field name="type"/>

@@ -19,7 +19,7 @@ class SaleOrder(models.Model):
 
     # UC-30
     po_availability = fields.Selection([('po', 'PO'), ('temp_po', 'TEMP PO'), ('no_po', 'No PO')],
-                                       string='PO Availability')
+                                       string='PO Availability', required=True)
 
     # garment receipt info
     garment_receipt_count = fields.Integer(string='Invoice Count', compute='_get_garment_receipts')

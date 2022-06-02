@@ -49,8 +49,8 @@
                                     <field name="display_dispose_button" invisible="1"/>
                                     <field name="product"/>
                                     <field name="lot_no"/>
-                                    <field name="pass_fail"/>
                                     <field name="inspected_qty"/>
+                                    <field name="pass_fail"/>
                                     <field name="quantity"/>
                                     <field name="defects"
                                            attrs="{'invisible': ['|',('pass_fail', '=', 'pass'),('pass_fail', '=', False)]}"/>

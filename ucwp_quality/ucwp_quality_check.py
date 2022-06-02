@@ -31,7 +31,7 @@ class QualityCheckLines(models.Model):
     product = fields.Many2one(comodel_name="product.product", string="Product")
     lot_no = fields.Many2one(comodel_name="stock.production.lot", string="Lot No", required=True)
     pass_fail = fields.Selection([('pass', 'Pass'), ('fail', 'Fail')], string="Pass/Fail", required=True)
-    quantity = fields.Float(string="Quantity", required=True)
+    quantity = fields.Float(string="Pass/Fail Quantity", required=True)
     defects = fields.Many2one(comodel_name="defects", string="Defects")
     image = fields.Binary(string="Image")
     ucwp_quality_check_id = fields.Many2one(comodel_name="ucwp.quality.check", string="Quality Check")
