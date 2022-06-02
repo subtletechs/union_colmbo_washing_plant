@@ -11,7 +11,6 @@ from odoo.tools import float_is_zero, html_keep_url, is_html_empty
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    garment_type = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample', required=True)
     pre_costing = fields.Many2many(comodel_name="pre.costing", string="Pre Costing")
 
     need_to_approve = fields.Boolean(string="Need Pre Cost Approval", default=True, required=True,
