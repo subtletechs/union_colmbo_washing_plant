@@ -53,12 +53,12 @@
                         attrs="{'invisible': ['|',('garment_receipt', '=', False),('receive_sample_room','!=', False)]}"/>
                 <button name="before_quality_check" string="Before-wash QC" type="object" class="oe_highlight"
                         groups="base.group_user"
-                        attrs="{'invisible': ['|','|',('garment_receipt', '=', False),('state','!=', 'done'),('quality_check_count', '&gt;', 0)]}"/>
+                        attrs="{'invisible': ['|','|','|',('garment_receipt', '=', False),('state','!=', 'done'),('quality_check_count', '&gt;', 0), ('bypass_qc', '=', True)]}"/>
                 <!-- [UC-07] -->
                 <button name="generate_mo" string="Generate MO" type="object"
                         class="oe_highlight" groups="base.group_user"
-                        attrs="{'invisible': ['|','|','|',('garment_receipt', '=', False),('state','!=','done'),
-                        ('bulk_production_count','=',1), ('bypass_qc', '=', True)]}"/>
+                        attrs="{'invisible': ['|','|',('garment_receipt', '=', False),('state','!=','done'),
+                        ('bulk_production_count','=',1)]}"/>
                 <button name="create_invoice" string="Create Invoice" type="object"
                         class="oe_highlight" groups="base.group_user"
                         attrs="{'invisible': ['|',('picking_type_code', '!=', 'outgoing'),('state','!=','done')]}"/>
@@ -110,7 +110,7 @@
                 </group>
                 <group>
                     <group string="Garment Info" attrs="{'invisible': [('garment_receipt', '=', False)]}">
-                        <field name="garment_select"/>
+                        <field name="garment_select" attrs="{'required':[('garment_receipt', '=', True)]}"/>
                         <field name="samples"
                                attrs="{'invisible': ['|',('garment_select', '=', 'sample'),('garment_select', '=', False)]}"/>
                         <field name="receive_logistic"/>
