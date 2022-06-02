@@ -188,6 +188,8 @@ class Picking(models.Model):
                     record.garment_receipt = True
                 else:
                     record.garment_receipt = False
+            else:
+                record.garment_receipt = False
 
     @api.depends('picking_type_id')
     def _chemical_receipt(self):
