@@ -21,14 +21,20 @@
         <field name="arch" type="xml">
             <form string="Quality">
                 <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
                     <group>
                         <group>
                             <!-- [UC-11] -->
+                            <field name="quality_point"/>
                             <field name="grn"
                                    attrs="{'invisible': [('quality_point', '=', 'after_wash')], 'required': [('quality_point', '=', 'before_wash')]}"/>
                             <field name="manufacture_order"
                                    attrs="{'invisible': [('quality_point', '=', 'before_wash')], 'required': [('quality_point', '=', 'after_wash')]}"/>
-                            <field name="quality_point"/>
                         </group>
                     </group>
                     <notebook>
