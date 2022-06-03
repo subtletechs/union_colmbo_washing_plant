@@ -46,7 +46,7 @@ class QualityCheckLines(models.Model):
     display_process_button = fields.Boolean(compute="_display_button")
     display_return_button = fields.Boolean(compute="_display_button")
     display_rewash_button = fields.Boolean(compute="_display_button")
-    display_dispose_button = fields.Boolean(compute="_display_button")
+    # display_dispose_button = fields.Boolean(compute="_display_button")
 
     def process_garment(self):
         if self.quality_point == 'before_wash' and self.pass_fail == 'fail':
@@ -96,21 +96,21 @@ class QualityCheckLines(models.Model):
                 },
             }
 
-    def dispose_garment(self):
-        self.write({'state': 'disposed'})
-        view = self.env.ref('stock.view_picking_form')
-        # TODO limit internal transfer operation to one operation
-        internal_transfer_operation = self.env['stock.picking.type'].search([('code', '=', 'internal')])
-        return {
-            'res_model': 'stock.picking',
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'view_id': view.id,
-            'target': 'current',
-            'context': {
-                'default_picking_type_id': internal_transfer_operation.id,
-            },
-        }
+    # def dispose_garment(self):
+    #     self.write({'state': 'disposed'})
+    #     view = self.env.ref('stock.view_picking_form')
+    #     # TODO limit internal transfer operation to one operation
+    #     internal_transfer_operation = self.env['stock.picking.type'].search([('code', '=', 'internal')])
+    #     return {
+    #         'res_model': 'stock.picking',
+    #         'type': 'ir.actions.act_window',
+    #         'view_mode': 'form',
+    #         'view_id': view.id,
+    #         'target': 'current',
+    #         'context': {
+    #             'default_picking_type_id': internal_transfer_operation.id,
+    #         },
+    #     }
 
     @api.depends('quality_point', 'pass_fail')
     def _display_button(self):
@@ -124,10 +124,10 @@ class QualityCheckLines(models.Model):
                 record.display_process_button = False
 
             # Dispose Button visibility
-            if record.pass_fail == 'fail':
-                record.display_dispose_button = True
-            else:
-                record.display_dispose_button = False
+            # if record.pass_fail == 'fail':
+            #     record.display_dispose_button = True
+            # else:
+            #     record.display_dispose_button = False
 
             # Rewash Button visibility
             if record.quality_point == 'after_wash' and record.pass_fail == 'fail':

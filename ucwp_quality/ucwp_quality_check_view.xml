@@ -46,7 +46,7 @@
                                     <field name="display_process_button" invisible="1"/>
                                     <field name="display_return_button" invisible="1"/>
                                     <field name="display_rewash_button" invisible="1"/>
-                                    <field name="display_dispose_button" invisible="1"/>
+<!--                                    <field name="display_dispose_button" invisible="1"/>-->
                                     <field name="product"/>
                                     <field name="lot_no"/>
                                     <field name="inspected_qty"/>
@@ -78,7 +78,7 @@
                     <field name="display_process_button" invisible="1"/>
                     <field name="display_return_button" invisible="1"/>
                     <field name="display_rewash_button" invisible="1"/>
-                    <field name="display_dispose_button" invisible="1"/>
+<!--                    <field name="display_dispose_button" invisible="1"/>-->
 
                     <button name="process_garment" type="object"
                             class="oe_highlight" groups="base.group_user"
@@ -98,12 +98,12 @@
                             help="Rewash Garments"
                             attrs="{'invisible': [('display_rewash_button', '=', False)]}"
                     />
-                    <button name="dispose_garment" type="object"
-                            class="oe_highlight" groups="base.group_user"
-                            string="Dispose"
-                            help="Dispose Garments"
-                            attrs="{'invisible': [('display_dispose_button', '=', False)]}"
-                    />
+<!--                    <button name="dispose_garment" type="object"-->
+<!--                            class="oe_highlight" groups="base.group_user"-->
+<!--                            string="Dispose"-->
+<!--                            help="Dispose Garments"-->
+<!--                            attrs="{'invisible': [('display_dispose_button', '=', False)]}"-->
+<!--                    />-->
                     <field name="state" widget="statusbar" statusbar_visible="processed,disposed,returned,rewashed, "/>
                 </header>
                 <sheet>
