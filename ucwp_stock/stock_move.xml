@@ -33,7 +33,6 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
         </field>
-
     </record>
 
     <!-- stock picking form view -->
@@ -59,9 +58,9 @@
                         class="oe_highlight" groups="base.group_user"
                         attrs="{'invisible': ['|','|',('garment_receipt', '=', False),('state','!=','done'),
                         ('bulk_production_count','=',1)]}"/>
-<!--                <button name="create_invoice" string="Create Invoice" type="object"-->
-<!--                        class="oe_highlight" groups="base.group_user"-->
-<!--                        attrs="{'invisible': ['|',('picking_type_code', '!=', 'outgoing'),('state','!=','done')]}"/>-->
+                <!--                <button name="create_invoice" string="Create Invoice" type="object"-->
+                <!--                        class="oe_highlight" groups="base.group_user"-->
+                <!--                        attrs="{'invisible': ['|',('picking_type_code', '!=', 'outgoing'),('state','!=','done')]}"/>-->
                 <field name="sale_id" invisible="1"/>
             </xpath>
 
@@ -96,6 +95,12 @@
                 <field name="garment_receipt" invisible="1"/>
                 <field name="is_receipt_return" invisible="1"/>
             </xpath>
+
+
+            <xpath expr="//field[@name='move_line_nosuggest_ids']" position="attributes">
+                <attribute name="context">{'so_id':sale_id}</attribute>
+            </xpath>
+
             <xpath expr="//sheet/group[1]" position="after">
                 <group>
                     <group attrs="{'invisible': [('garment_receipt', '=', False)]}">
@@ -118,13 +123,24 @@
                     </group>
                     <group string="Before Wash QC Bypass" attrs="{'invisible': [('garment_receipt', '=', False)]}">
                         <field name="bypass_qc"/>
-                        <field name="bypass_comment" attrs="{'required': [('bypass_qc', '=', True)], 'invisible': [('bypass_qc', '=', False)]}"/>
-                        <field name="bypassed_by" attrs="{'required': [('bypass_qc', '=', True)], 'invisible': [('bypass_qc', '=', False)]}"/>
+                        <field name="bypass_comment"
+                               attrs="{'required': [('bypass_qc', '=', True)], 'invisible': [('bypass_qc', '=', False)]}"/>
+                        <field name="bypassed_by"
+                               attrs="{'required': [('bypass_qc', '=', True)], 'invisible': [('bypass_qc', '=', False)]}"/>
                         <field name="receipts" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                         <field name="manufacture_order"
                                attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                     </group>
                 </group>
+            </xpath>
+
+            <xpath expr="//field[@name='description_picking']" position="after">
+                <field name="op_name" invisible="1"/>
+                <field name="invoice_type" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
+                <field name="wash_type" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
+                <field name="fault_type" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
+                <field name="approval" invisible="1"/>
+                <field name="comment" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
             </xpath>
 
             <xpath expr="//field[@name='description_picking']" position="after">

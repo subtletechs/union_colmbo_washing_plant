@@ -9,7 +9,6 @@ from collections import defaultdict
 
 class StockMove(models.Model):
     _inherit = "stock.move"
-    # _order = "create_date asc, sequence, id"
 
     invoice_type = fields.Selection([('invoice', 'Invoiceable'), ('not_invoiceable', 'Non-Invoiceable')],
                                     string='Invoice Type')
@@ -69,19 +68,28 @@ class StockMove(models.Model):
 
     @api.onchange('product_id')
     def product_domain(self):
-        if self.picking_id.garment_select == 'sample':
-            sample_products = self.env['product.product'].search([('is_sample', '=', True)])
-            sample_products_ids = sample_products.ids
-            return {
-                'domain': {'product_id': [('id', 'in', sample_products_ids)]}
-            }
-        elif self.picking_id.garment_select == 'bulk':
-            bulk_products = self.env['product.product'].search([('is_bulk', '=', True)])
-            return {
-                'domain': {'product_id': [('id', 'in', bulk_products.ids)]}
-            }
+        so_id = self.env.context['params']['id']
+        if so_id:
+            records = self.env['sale.order.line'].search([('order_id', '=', so_id)])
+            if records:
+                product_ids = records.mapped('product_id').ids
+                return {
+                        'domain': {'product_id': [('id', 'in', product_ids)]}
+                    }
         else:
-            pass
+            if self.picking_id.garment_select == 'sample':
+                sample_products = self.env['product.product'].search([('is_sample', '=', True)])
+                sample_products_ids = sample_products.ids
+                return {
+                    'domain': {'product_id': [('id', 'in', sample_products_ids)]}
+                }
+            elif self.picking_id.garment_select == 'bulk':
+                bulk_products = self.env['product.product'].search([('is_bulk', '=', True)])
+                return {
+                    'domain': {'product_id': [('id', 'in', bulk_products.ids)]}
+                }
+            else:
+                pass
 
 
 class StockMoveLine(models.Model):
