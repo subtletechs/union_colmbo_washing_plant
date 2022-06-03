@@ -168,7 +168,7 @@ class Picking(models.Model):
 
     # [UC-30]
     po_availability = fields.Selection([('po', 'PO'), ('temp_po', 'TEMP PO'), ('no_po', 'No PO')],
-                                       string='PO Availability', required=True)
+                                       string='PO Availability')
     customer_ref = fields.Char(string='Customer Ref')
 
     # To Map the sale order

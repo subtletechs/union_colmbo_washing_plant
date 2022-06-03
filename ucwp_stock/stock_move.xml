@@ -59,9 +59,9 @@
                         class="oe_highlight" groups="base.group_user"
                         attrs="{'invisible': ['|','|',('garment_receipt', '=', False),('state','!=','done'),
                         ('bulk_production_count','=',1)]}"/>
-                <button name="create_invoice" string="Create Invoice" type="object"
-                        class="oe_highlight" groups="base.group_user"
-                        attrs="{'invisible': ['|',('picking_type_code', '!=', 'outgoing'),('state','!=','done')]}"/>
+<!--                <button name="create_invoice" string="Create Invoice" type="object"-->
+<!--                        class="oe_highlight" groups="base.group_user"-->
+<!--                        attrs="{'invisible': ['|',('picking_type_code', '!=', 'outgoing'),('state','!=','done')]}"/>-->
                 <field name="sale_id" invisible="1"/>
             </xpath>
 
@@ -99,7 +99,7 @@
             <xpath expr="//sheet/group[1]" position="after">
                 <group>
                     <group attrs="{'invisible': [('garment_receipt', '=', False)]}">
-                        <field name="po_availability"/>
+                        <field name="po_availability" attrs="{'required': [('garment_receipt', '=', True)]}"/>
                         <field name="customer_ref"
                                attrs="{'required': [('po_availability', 'in', ['po', 'temp_po'])]}"/>
                     </group>
