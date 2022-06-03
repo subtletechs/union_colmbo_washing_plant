@@ -136,5 +136,21 @@ class SaleOrderLine(models.Model):
             self.wash_type = self.product_id.wash_type
         if self.product_id.garment_type:
             self.garment_type = self.product_id.garment_type
-        if self.product_id.garment_select:
-            self.garment_select = self.product_id.garment_select
+
+    @api.onchange('garment_select')
+    def _product_domain(self):
+        # Filter Products based on Garment Type
+        if self.garment_select:
+            if self.garment_select == 'sample':
+                sample_products = self.env['product.product'].search([('is_sample', '=', True)])
+                sample_products_ids = sample_products.ids
+                return {
+                    'domain': {'product_id': [('id', 'in', sample_products_ids)]}
+                }
+            elif self.garment_select == 'bulk':
+                bulk_products = self.env['product.product'].search([('is_bulk', '=', True)])
+                return {
+                    'domain': {'product_id': [('id', 'in', bulk_products.ids)]}
+                }
+            else:
+                pass
