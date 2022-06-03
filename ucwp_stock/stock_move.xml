@@ -131,6 +131,7 @@
                 <field name="op_name" invisible="1"/>
                 <field name="invoice_type" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
                 <field name="wash_type" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
+                <field name="fault_type" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
                 <field name="approval" invisible="1"/>
                 <field name="comment" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
             </xpath>

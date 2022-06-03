@@ -20,6 +20,9 @@ class StockMove(models.Model):
     # [UC-12]
     op_type = fields.Many2one('stock.picking.type', 'Operation Type', related="picking_id.picking_type_id", store=True)
     op_name = fields.Char(string="Name")
+    # Add Fault Type
+    fault_type = fields.Selection([('customer_fault', "Customer Fault"), ('uc_fault', 'UC Fault')],
+                                  string="Fault")
 
     @api.onchange('op_type')
     def set_operator_name(self):
@@ -63,6 +66,22 @@ class StockMove(models.Model):
 
             # if data[0]['qty_done'] != self.product_uom_qty:
             #     raise UserError("Quantity mismatched!")
+
+    @api.onchange('product_id')
+    def product_domain(self):
+        if self.picking_id.garment_select == 'sample':
+            sample_products = self.env['product.product'].search([('is_sample', '=', True)])
+            sample_products_ids = sample_products.ids
+            return {
+                'domain': {'product_id': [('id', 'in', sample_products_ids)]}
+            }
+        elif self.picking_id.garment_select == 'bulk':
+            bulk_products = self.env['product.product'].search([('is_bulk', '=', True)])
+            return {
+                'domain': {'product_id': [('id', 'in', bulk_products.ids)]}
+            }
+        else:
+            pass
 
 
 class StockMoveLine(models.Model):
@@ -364,4 +383,3 @@ class StockPickingType(models.Model):
 
     # To Capture Chemical Receipt Operation Type
     chemical_receipt = fields.Boolean(string="Chemical Receipt", default=False)
-
