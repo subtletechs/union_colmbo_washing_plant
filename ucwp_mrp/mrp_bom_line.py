@@ -9,6 +9,7 @@ from collections import defaultdict
 class MrpBom(models.Model):
     _inherit = 'mrp.bom'
 
+    name = fields.Char(string="Bills of Materials Number", default="New")
     garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample')
     buyer = fields.Many2one(comodel_name="res.partner", string="Buyer")
     fabric_type = fields.Many2one(comodel_name="fabric.type", string="Fabric Type")
@@ -19,6 +20,13 @@ class MrpBom(models.Model):
     # [UC-10]
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')], string="State", default="draft")
     development_bom = fields.Boolean(string="Development BOM", default=False)
+
+    @api.model
+    # Generate sequence for BOM
+    def create(self, values):
+        sequence = self.env['ir.sequence'].next_by_code('bom.code') or _('New')
+        values['name'] = sequence
+        return super(MrpBom, self).create(values)
 
     def action_confirm(self):
         self.write({'state': 'confirm'})
