@@ -23,7 +23,13 @@ class SaleOrder(models.Model):
 
     # garment receipt info
     garment_receipt_count = fields.Integer(string='Invoice Count', compute='_get_garment_receipts')
-    garment_receipt_ids = fields.Many2many("stock.picking", string='Garment Receipt', compute="_get_garment_receipts", copy=False,)
+    garment_receipt_ids = fields.Many2many("stock.picking", string='Garment Receipt', compute="_get_garment_receipts",
+                                           copy=False, )
+
+    # Actually received product quantity
+    actually_received_product_qty = fields.One2many(comodel_name="actually.received.product.quantity",
+                                                    inverse_name="sale_order_id",
+                                                    string="Actually Received Product Quantity")
 
     def _get_garment_receipts(self):
         """To Get the related Garment Receipts count and IDs"""
@@ -43,7 +49,7 @@ class SaleOrder(models.Model):
             tree_view = self.env.ref('stock.vpicktree').id
             return {
                 'name': 'Garment Receipts',
-                'res_model' : 'stock.picking',
+                'res_model': 'stock.picking',
                 'type': 'ir.actions.act_window',
                 'view_mode': 'tree',
                 'view_id': tree_view,
@@ -51,10 +57,10 @@ class SaleOrder(models.Model):
                 'domain': [('id', 'in', garment_receipts.ids)],
 
             }
-        elif len(garment_receipts) ==1:
+        elif len(garment_receipts) == 1:
             form_view = self.env.ref('stock.view_picking_form').id
             return {
-                'res_model' : 'stock.picking',
+                'res_model': 'stock.picking',
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'view_id': form_view,
@@ -111,8 +117,7 @@ class SaleOrder(models.Model):
                 'default_sale_id': self.id,
                 'default_origin': self.name,
                 'default_po_availability': self.po_availability,
-                'default_customer_ref': self.client_order_ref
-
+                'default_customer_ref': self.client_order_ref,
             }
         }
 
@@ -154,3 +159,12 @@ class SaleOrderLine(models.Model):
                 }
             else:
                 pass
+
+
+class ActuallyReceivedProductQuantity(models.Model):
+    _name = "actually.received.product.quantity"
+    _description = "Actually Received Product Quantity"
+
+    product_id = fields.Many2one(comodel_name="product.product", string="Product")
+    actually_received = fields.Float(string="Actually Received qty", compute="_calculate_actually_received_qty")
+    sale_order_id = fields.Many2one(comodel_name="sale.order", string="Sale order ID")

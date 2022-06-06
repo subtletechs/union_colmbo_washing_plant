@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <!-- sale order tree view -->
-<!--    <record id="sale_order_tree_view_inherit_union_colombo" model="ir.ui.view">-->
-<!--        <field name="name">sale.order.tree.view.inherit</field>-->
-<!--        <field name="model">sale.order</field>-->
-<!--        <field name="inherit_id" ref="sale.view_order_tree"/>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <xpath expr="//field[@name='partner_id']" position="after">-->
-<!--                <field name="garment_type"/>-->
-<!--            </xpath>-->
-<!--        </field>-->
-<!--    </record>-->
+    <!--    <record id="sale_order_tree_view_inherit_union_colombo" model="ir.ui.view">-->
+    <!--        <field name="name">sale.order.tree.view.inherit</field>-->
+    <!--        <field name="model">sale.order</field>-->
+    <!--        <field name="inherit_id" ref="sale.view_order_tree"/>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <xpath expr="//field[@name='partner_id']" position="after">-->
+    <!--                <field name="garment_type"/>-->
+    <!--            </xpath>-->
+    <!--        </field>-->
+    <!--    </record>-->
 
     <!-- sale order form view -->
     <record id="sale_order_form_view_inherit_union_colombo" model="ir.ui.view">
@@ -50,6 +50,19 @@
                 <attribute name="attrs">{
                     'required': [('po_availability', 'in', ['po', 'temp_po'])]}
                 </attribute>
+            </xpath>
+
+
+            <!-- Actually Received Product Quantity Tab -->
+            <xpath expr="//page[@name='order_lines']" position="after">
+                <page string="Actually Received Product Quantity" name="actually_received_product_qty">
+                    <field name="actually_received_product_qty">
+                        <tree string="Actually Received Product Quantity" editable="bottom">
+                            <field name="product_id"/>
+                            <field name="actually_received"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
 
 
