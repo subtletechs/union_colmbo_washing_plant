@@ -96,9 +96,9 @@
                 <field name="is_receipt_return" invisible="1"/>
             </xpath>
 
-
-            <xpath expr="//field[@name='move_line_nosuggest_ids']" position="attributes">
-                <attribute name="context">{'so_id':sale_id}</attribute>
+            <!-- Pass sale_id to stock move -->
+            <xpath expr="//field[@name='move_ids_without_package']" position="attributes">
+                <attribute name="context">{'sale_id':sale_id}</attribute>
             </xpath>
 
             <xpath expr="//sheet/group[1]" position="after">

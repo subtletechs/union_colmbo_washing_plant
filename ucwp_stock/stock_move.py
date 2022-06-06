@@ -68,28 +68,29 @@ class StockMove(models.Model):
 
     @api.onchange('product_id')
     def product_domain(self):
-        so_id = self.env.context['params']['id']
-        if so_id:
-            records = self.env['sale.order.line'].search([('order_id', '=', so_id)])
-            if records:
-                product_ids = records.mapped('product_id').ids
-                return {
+        if 'sale_id' in self.env.context:
+            sale_id = self.env.context.get('sale_id')
+            if sale_id:
+                records = self.env['sale.order.line'].search([('order_id', '=', sale_id)])
+                if records:
+                    product_ids = records.mapped('product_id').ids
+                    return {
                         'domain': {'product_id': [('id', 'in', product_ids)]}
                     }
-        else:
-            if self.picking_id.garment_select == 'sample':
-                sample_products = self.env['product.product'].search([('is_sample', '=', True)])
-                sample_products_ids = sample_products.ids
-                return {
-                    'domain': {'product_id': [('id', 'in', sample_products_ids)]}
-                }
-            elif self.picking_id.garment_select == 'bulk':
-                bulk_products = self.env['product.product'].search([('is_bulk', '=', True)])
-                return {
-                    'domain': {'product_id': [('id', 'in', bulk_products.ids)]}
-                }
             else:
-                pass
+                if self.picking_id.garment_select == 'sample':
+                    sample_products = self.env['product.product'].search([('is_sample', '=', True)])
+                    sample_products_ids = sample_products.ids
+                    return {
+                        'domain': {'product_id': [('id', 'in', sample_products_ids)]}
+                    }
+                elif self.picking_id.garment_select == 'bulk':
+                    bulk_products = self.env['product.product'].search([('is_bulk', '=', True)])
+                    return {
+                        'domain': {'product_id': [('id', 'in', bulk_products.ids)]}
+                    }
+                else:
+                    raise UserError(_("Select Bulk/Sample Before Select Products"))
 
 
 class StockMoveLine(models.Model):
