@@ -1,5 +1,5 @@
 from odoo import api, fields, models, _
-
+from odoo.exceptions import UserError, ValidationError
 
 class UCWPQualityCheck(models.Model):
     _name = "ucwp.quality.check"
@@ -14,6 +14,32 @@ class UCWPQualityCheck(models.Model):
     quality_point = fields.Selection([('before_wash', 'Before Wash'), ('after_wash', 'After Wash')],
                                      string="Quality Point")
     manufacture_order = fields.Many2one(comodel_name="mrp.production", string="Manufacture Orders")
+    state = fields.Selection([('draft', 'Draft'), ('lock', 'Lock')], string='State', default='draft', readonly=True)
+
+    def set_to_draft(self):
+        self.write({'state': 'draft'})
+
+    def set_to_validate(self):
+        check_products = self.quality_check_lines.product
+        check_lines = self.quality_check_lines
+        product_list =[]
+        product_names = []
+        for product in check_products:
+            total_inspect = 0
+            total_process = 0
+            for line in check_lines:
+                if line.product.id == product.id:
+                    total_inspect += line.inspected_qty
+                    total_process += line.quantity
+            if total_inspect != total_process:
+                product_list.append(product.id)
+                product_names.append(product.name)
+        if len(product_list) > 0:
+            products = ' '.join([str(name)+',' for name in product_names])
+            error = "Product"+" - "+ products + " Inspected Quantity and Process Quantity Not matched "
+            raise ValidationError(error)
+        else:
+            self.write({'state': 'lock'})
 
     # Generate a Sequence for Quality Check
     @api.model
