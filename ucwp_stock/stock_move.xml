@@ -44,7 +44,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//button[@name='action_confirm']" position="after">
-                <button name="receive_logistic_update_datetime" string="Update Log Time" type="object"
+                <button name="receive_logistic_update_datetime" string="Receive to Logistics" type="object"
                         class="oe_highlight" groups="base.group_user"
                         attrs="{'invisible': ['|',('garment_receipt', '=', False),('receive_logistic','!=', False)]}"/>
                 <button name="receive_sample_update_datetime" string="Update Sample Room Time" type="object"
@@ -98,7 +98,12 @@
 
             <!-- Pass sale_id to stock move -->
             <xpath expr="//field[@name='move_ids_without_package']" position="attributes">
-                <attribute name="context">{'sale_id':sale_id}</attribute>
+                <attribute name="context">{'sale_id':sale_id, 'default_company_id': company_id, 'default_date':
+                    scheduled_date, 'default_date_deadline': date_deadline, 'picking_type_code': picking_type_code,
+                    'default_picking_id': id, 'form_view_ref':'stock.view_move_form', 'address_in_id': partner_id,
+                    'default_picking_type_id': picking_type_id, 'default_location_id': location_id,
+                    'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id}
+                </attribute>
             </xpath>
 
             <xpath expr="//sheet/group[1]" position="after">
@@ -132,15 +137,6 @@
                                attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                     </group>
                 </group>
-            </xpath>
-
-            <xpath expr="//field[@name='description_picking']" position="after">
-                <field name="op_name" invisible="1"/>
-                <field name="invoice_type" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
-                <field name="wash_type" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
-                <field name="fault_type" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
-                <field name="approval" invisible="1"/>
-                <field name="comment" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
             </xpath>
 
             <xpath expr="//field[@name='description_picking']" position="after">
