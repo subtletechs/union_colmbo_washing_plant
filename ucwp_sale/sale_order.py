@@ -118,8 +118,47 @@ class SaleOrder(models.Model):
                 'default_origin': self.name,
                 'default_po_availability': self.po_availability,
                 'default_customer_ref': self.client_order_ref,
+                'default_company_id': self.company_id.id,
             }
         }
+
+    @api.model
+    def create(self, vals):
+        """"Check the products available in order line and create new records in actual product quantity"""
+        res = super(SaleOrder, self).create(vals)
+        if 'order_line' in vals:
+            order_lines = vals['order_line']
+            for line in order_lines:
+                self.env['actually.received.product.quantity'].create(
+                    {'sale_order_id': res.id, 'product_id': line[2].get('product_id')})
+        return res
+
+    def write(self, values):
+        # TODO : Restrict Product removing from order line while having related records in GRN
+        # We are going to check add new product and remove product form order line
+        order_id = self.id
+        if 'order_line' in values:
+            lines = values['order_line']
+            for line in lines:
+                if line[0] == 0:
+                    # check product duplicate
+                    duplicate_product_record = self.env['actually.received.product.quantity'].search([
+                        ('sale_order_id', '=', order_id),
+                        ('product_id', '=', line[2].get('product_id'))
+                    ])
+                    if not duplicate_product_record:
+                        self.env['actually.received.product.quantity'].create({
+                            'sale_order_id': order_id,
+                            'product_id': line[2].get('product_id')
+                        })
+                if line[0] == 2:
+                    line_object = self.env['sale.order.line'].browse(line[1])
+                    product = line_object.product_id
+                    record = self.env['actually.received.product.quantity'].search([('sale_order_id', '=', order_id),
+                                                                                    ('product_id', '=', product.id)])
+                    if record:
+                        record.unlink()
+        return super(SaleOrder, self).write(values)
 
 
 class SaleOrderLine(models.Model):
@@ -166,5 +205,5 @@ class ActuallyReceivedProductQuantity(models.Model):
     _description = "Actually Received Product Quantity"
 
     product_id = fields.Many2one(comodel_name="product.product", string="Product")
-    actually_received = fields.Float(string="Actually Received qty", compute="_calculate_actually_received_qty")
+    actually_received = fields.Float(string="Actually Received qty")
     sale_order_id = fields.Many2one(comodel_name="sale.order", string="Sale order ID")

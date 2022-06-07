@@ -1,6 +1,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
+
 class UCWPQualityCheck(models.Model):
     _name = "ucwp.quality.check"
     _description = 'Quality Check'
@@ -22,7 +23,7 @@ class UCWPQualityCheck(models.Model):
     def set_to_validate(self):
         check_products = self.quality_check_lines.product
         check_lines = self.quality_check_lines
-        product_list =[]
+        product_list = []
         product_names = []
         for product in check_products:
             total_inspect = 0
@@ -36,7 +37,7 @@ class UCWPQualityCheck(models.Model):
                 product_names.append(product.name)
         if len(product_list) > 0:
             products = ' '.join([str(name)+',' for name in product_names])
-            error = "Product"+" - "+ products + " Inspected Quantity and Process Quantity Not matched "
+            error = "Product"+" - " + products + " Inspected Quantity and Process Quantity Not matched "
             raise ValidationError(error)
         else:
             self.write({'state': 'lock'})
@@ -62,7 +63,7 @@ class QualityCheckLines(models.Model):
     image = fields.Binary(string="Image")
     ucwp_quality_check_id = fields.Many2one(comodel_name="ucwp.quality.check", string="Quality Check")
     comment = fields.Char(string="Comment")
-    state = fields.Selection([('processed', 'Process'), ('disposed', 'Dispose'), ('returned', 'Returned'),
+    state = fields.Selection([('processed', 'Process'), ('returned', 'Returned'),
                               ('rewashed', 'Rewash')], string="State", readonly=True)
     quality_point = fields.Selection([('before_wash', 'Before Wash'), ('after_wash', 'After Wash')],
                                      string="Quality Point")

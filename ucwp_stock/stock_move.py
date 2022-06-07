@@ -68,29 +68,32 @@ class StockMove(models.Model):
 
     @api.onchange('product_id')
     def product_domain(self):
-        if 'sale_id' in self.env.context:
-            sale_id = self.env.context.get('sale_id')
-            if sale_id:
-                records = self.env['sale.order.line'].search([('order_id', '=', sale_id)])
-                if records:
-                    product_ids = records.mapped('product_id').ids
-                    return {
-                        'domain': {'product_id': [('id', 'in', product_ids)]}
-                    }
-            else:
-                if self.picking_id.garment_select == 'sample':
-                    sample_products = self.env['product.product'].search([('is_sample', '=', True)])
-                    sample_products_ids = sample_products.ids
-                    return {
-                        'domain': {'product_id': [('id', 'in', sample_products_ids)]}
-                    }
-                elif self.picking_id.garment_select == 'bulk':
-                    bulk_products = self.env['product.product'].search([('is_bulk', '=', True)])
-                    return {
-                        'domain': {'product_id': [('id', 'in', bulk_products.ids)]}
-                    }
+        if self.picking_id.garment_receipt:
+            if 'sale_id' in self.env.context:
+                sale_id = self.env.context.get('sale_id')
+                if sale_id:
+                    records = self.env['sale.order.line'].search([('order_id', '=', sale_id)])
+                    if records:
+                        product_ids = records.mapped('product_id').ids
+                        return {
+                            'domain': {'product_id': [('id', 'in', product_ids)]}
+                        }
                 else:
-                    raise UserError(_("Select Bulk/Sample Before Select Products"))
+                    if self.picking_id.garment_select == 'sample':
+                        sample_products = self.env['product.product'].search([('is_sample', '=', True)])
+                        sample_products_ids = sample_products.ids
+                        return {
+                            'domain': {'product_id': [('id', 'in', sample_products_ids)]}
+                        }
+                    elif self.picking_id.garment_select == 'bulk':
+                        bulk_products = self.env['product.product'].search([('is_bulk', '=', True)])
+                        return {
+                            'domain': {'product_id': [('id', 'in', bulk_products.ids)]}
+                        }
+                    else:
+                        raise UserError(_("Select Bulk/Sample Before Select Products"))
+        else:
+            pass
 
 
 class StockMoveLine(models.Model):
@@ -375,6 +378,24 @@ class Picking(models.Model):
             if vals['bypass_qc']:
                 vals['bypassed_by'] = self.env.user
         return super(Picking, self).write(vals)
+
+    def button_validate(self):
+        sale_id = self.sale_id.id
+        for move in self.move_ids_without_package:
+            done_qty = move.quantity_done
+            if sale_id and self.move_ids_without_package:
+                available_qty_records = self.env['actually.received.product.quantity'].search(
+                    [('sale_order_id', '=', sale_id), ('product_id', '=', move.product_id.id)])
+                if available_qty_records:
+                    actually_received = available_qty_records.actually_received
+                    if self.garment_receipt:
+                        actually_received += done_qty
+                    if self.is_receipt_return:
+                        actually_received -= done_qty
+                    available_qty_records.write({
+                        'actually_received': actually_received,
+                    })
+        return super(Picking, self).button_validate()
 
 
 class WashingOptions(models.Model):
