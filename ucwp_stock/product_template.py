@@ -12,6 +12,8 @@ class ProductTemplate(models.Model):
     is_bulk = fields.Boolean(string="Is Bulk Garment ?", default=False)
     is_chemical = fields.Boolean(string='Is Chemical ?', default=False)
 
+    name = fields.Char('Name', index=True, required=True, translate=True, tracking=True, track_visibility="onchange")
+
     # [UC-23]- Add chemical standards to product template
     chemical_standards = fields.One2many(comodel_name="chemical.standards", inverse_name="product_tmpl_id",
                                          string="Chemical Standards")
