@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Email template for extra quantity notification -->
+        <!--        <record id="extra_qty_notification_email" model="mail.message">-->
+        <!--            <field name="subject">Extra Quantity Received</field>-->
+        <!--            &lt;!&ndash; <field name="model_id" ref=""/>&ndash;&gt;-->
+        <!--            <field name="model">stock.picking</field>-->
+        <!--            <field name="res_id" ref="crm_case_1"/>-->
+        <!--            <field name="author_id" eval="False"/>-->
+        <!--            <field name="email_from">jdunagan@leclub.example.com</field>-->
+        <!--            <field name="body"></field>-->
+        <!--            <field name="message_type">email</field>-->
+        <!--            <field name="subtype_id" ref="mail.mt_comment"/>-->
+        <!--        </record>-->
+
+        <record id="extra_qty_notification_email" model="mail.template">
+            <field name="name">Extra Quantity Received: Send by email</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="subject">Extra Quantity Received</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <t t-set="doc_name" t-value="'quotation' if object.state in ('draft', 'sent') else 'order'"/>
+                        Hello,
+                        <br/>
+                        <br/>
+                        Your
+                        <t t-if="ctx.get('proforma')">
+                            Pro forma invoice for <t t-out="doc_name or ''">quotation</t>
+                            <strong t-out="object.name or ''">S00052</strong>
+                            <t t-if="object.origin">
+                                (with reference: <t t-out="object.origin or ''"></t> )
+                            </t>
+                            amounting in <strong
+                                t-out="format_amount(object.amount_total, object.pricelist_id.currency_id) or ''">$
+                            10.00
+                        </strong> is available.
+                        </t>
+                        <t t-else="">
+                            <t t-out="doc_name or ''">quotation</t>
+                            <strong t-out="object.name or ''"></strong>
+                            <t t-if="object.origin">
+                                (with reference: <t t-out="object.origin or ''">S00052</t> )
+                            </t>
+                            amounting in <strong
+                                t-out="format_amount(object.amount_total, object.pricelist_id.currency_id) or ''">$
+                            10.00
+                        </strong> is ready for review.
+                        </t>
+                        <br/>
+                        <br/>
+                        Do not hesitate to contact us if you have any questions.
+                        <br/>
+                    </p>
+                </div>
+            </field>
+<!--            <field name="report_template" ref="action_report_saleorder"/>-->
+<!--            <field name="report_name">{{ (object.name or '').replace('/','_') }}</field>-->
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

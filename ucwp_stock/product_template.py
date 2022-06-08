@@ -12,6 +12,7 @@ class ProductTemplate(models.Model):
     is_bulk = fields.Boolean(string="Is Bulk Garment ?", default=False)
     is_chemical = fields.Boolean(string='Is Chemical ?', default=False)
 
+    # Enable tracking for name field
     name = fields.Char('Name', index=True, required=True, translate=True, tracking=True, track_visibility="onchange")
 
     # [UC-23]- Add chemical standards to product template
