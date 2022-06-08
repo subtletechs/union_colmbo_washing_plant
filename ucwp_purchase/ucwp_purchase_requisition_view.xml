@@ -76,10 +76,10 @@
             action="ucwp_purchase_requisition_action" id="ucwp_purchase_requisition_menu" name="Purchase Requisition"
             parent="purchase.menu_procurement_management" sequence="20"/>
 
-        <!-- Purchase Requisition Lines tree view-->
-    <record id="ucwp_purchase_requisition_tree_view" model="ir.ui.view">
-        <field name="name">ucwp.purchase.requisition.tree.view</field>
-        <field name="model">ucwp.purchase.requisition</field>
+    <!-- Purchase Requisition Lines tree view-->
+    <record id="ucwp_purchase_requisition_line_tree_view" model="ir.ui.view">
+        <field name="name">ucwp.purchase.requisition.line.tree.view</field>
+        <field name="model">ucwp.purchase.requisition.line</field>
         <field name="arch" type="xml">
             <tree string="Purchase Requisition Lines">
                 <field name="product_id"/>
@@ -90,9 +90,9 @@
     </record>
 
     <!-- Purchase Requisition lines form view-->
-    <record id="ucwp_purchase_requisition_form_view" model="ir.ui.view">
-        <field name="name">ucwp.purchase.requisition.form.view</field>
-        <field name="model">ucwp.purchase.requisition</field>
+    <record id="ucwp_purchase_requisition_line_form_view" model="ir.ui.view">
+        <field name="name">ucwp.purchase.requisition.line.form.view</field>
+        <field name="model">ucwp.purchase.requisition.line</field>
         <field name="arch" type="xml">
             <form string="Purchase Requisition Lines">
                 <sheet>

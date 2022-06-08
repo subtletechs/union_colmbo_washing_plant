@@ -43,7 +43,8 @@
         'ucwp_stock/stock_picking_return_view.xml',
         'ucwp_pre_costing/ucwp_pre_costing_view.xml',
         'ucwp_pre_costing/ucwp_pre_costing_approval_view.xml',
-        'ucwp_purchase/ucwp_purchase._view.xml',
+        'ucwp_purchase/ucwp_purchase_requisition_view.xml',
+        'ucwp_purchase/purchase_views.xml',
     ],
 
     'installable': True,
