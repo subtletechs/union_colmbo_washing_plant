@@ -395,6 +395,14 @@ class Picking(models.Model):
                     available_qty_records.write({
                         'actually_received': actually_received,
                     })
+                    # Get sale order line qty for current product
+                    sale_order_qty = 0
+                    for line in self.sale_id.order_line:
+                        if line:
+                            if line.product_id.id == move.product_id.id:
+                                sale_order_qty += line.product_uom_qty
+                    if actually_received > sale_order_qty:
+                        pass
         return super(Picking, self).button_validate()
 
 

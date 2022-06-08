@@ -47,7 +47,7 @@
                 <button name="receive_logistic_update_datetime" string="Receive to Logistics" type="object"
                         class="oe_highlight" groups="base.group_user"
                         attrs="{'invisible': ['|',('garment_receipt', '=', False),('receive_logistic','!=', False)]}"/>
-                <button name="receive_sample_update_datetime" string="Update Sample Room Time" type="object"
+                <button name="receive_sample_update_datetime" string="Receive to Sample Room" type="object"
                         class="oe_highlight" groups="base.group_user"
                         attrs="{'invisible': ['|',('garment_receipt', '=', False),('receive_sample_room','!=', False)]}"/>
                 <button name="before_quality_check" string="Before-wash QC" type="object" class="oe_highlight"
