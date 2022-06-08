@@ -13,6 +13,8 @@
         'quality',
         'quality_control',
         'hr',
+        'sale',
+        'purchase',
     ],
     'data': [
         'data/receipts_data.xml',
@@ -41,6 +43,7 @@
         'ucwp_stock/stock_picking_return_view.xml',
         'ucwp_pre_costing/ucwp_pre_costing_view.xml',
         'ucwp_pre_costing/ucwp_pre_costing_approval_view.xml',
+        'ucwp_purchase_requisition/ucwp_purchase_requisition._view.xml',
     ],
 
     'installable': True,

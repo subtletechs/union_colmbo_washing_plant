@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Purchase Requisition tree view-->
+    <record id="ucwp_purchase_requisition_tree_view" model="ir.ui.view">
+        <field name="name">ucwp.purchase.requisition.tree.view</field>
+        <field name="model">ucwp.purchase.requisition</field>
+        <field name="arch" type="xml">
+            <tree string="Purchase Requisition">
+                <field name="name"/>
+                <field name="requested_by"/>
+                <field name="requested_date"/>
+                <field name="expected_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Purchase Requisition form view-->
+    <record id="ucwp_purchase_requisition_form_view" model="ir.ui.view">
+        <field name="name">ucwp.purchase.requisition.form.view</field>
+        <field name="model">ucwp.purchase.requisition</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Requisition">
+                <header>
+                    <button name="action_validate" type="object"
+                            string="Validate" class="oe_highlight"
+                            attrs="{'invisible': ['|', ('state', '=', 'validate'), ('state', '=', 'authorized')]}"/>
+                    <button name="action_authorized" type="object"
+                            string="Authorized" class="oe_highlight"
+                            attrs="{'invisible': ['|', ('state', '=', 'draft'), ('state', '=', 'authorized')]}"/>
+                    <button name="set_to_draft" type="object"
+                            string="Set to Draft"
+                            attrs="{'invisible': ['|', ('state', '=', 'draft'), ('state', '=', 'authorized')]}"/>
+
+                    <field name="state" widget="statusbar" statusbar_visible="draft,validate,authorized"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="requested_by" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="requested_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="expected_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Purchase Requisition Lines" name="requisition_line">
+                            <field name="requisition_line" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                <tree string="Purchase Requisition Lines" editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="product_uom"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- action for Purchase Requisition -->
+    <record id="ucwp_purchase_requisition_action" model="ir.actions.act_window">
+        <field name="name">Purchase Requisition</field>
+        <field name="res_model">ucwp.purchase.requisition</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="ucwp_purchase_requisition_action" id="ucwp_purchase_requisition_menu" name="Purchase Requisition"
+            parent="purchase.menu_procurement_management" sequence="20"/>
+
+        <!-- Purchase Requisition Lines tree view-->
+    <record id="ucwp_purchase_requisition_tree_view" model="ir.ui.view">
+        <field name="name">ucwp.purchase.requisition.tree.view</field>
+        <field name="model">ucwp.purchase.requisition</field>
+        <field name="arch" type="xml">
+            <tree string="Purchase Requisition Lines">
+                <field name="product_id"/>
+                <field name="quantity"/>
+                <field name="product_uom"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Purchase Requisition lines form view-->
+    <record id="ucwp_purchase_requisition_form_view" model="ir.ui.view">
+        <field name="name">ucwp.purchase.requisition.form.view</field>
+        <field name="model">ucwp.purchase.requisition</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Requisition Lines">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="product_uom"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>
