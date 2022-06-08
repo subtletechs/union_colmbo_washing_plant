@@ -29,7 +29,7 @@
                 <field name="garment_select" invisible="1"/>
                 <field name="washing_options" attrs="{'invisible': [('garment_select', '=', 'bulk')]}"/>
             </xpath>
-            <xpath expr="//field[@name='lot_name']" position="attributes">
+            <xpath expr="//field[@name='lot_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
         </field>
