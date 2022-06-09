@@ -68,6 +68,7 @@ class StockMove(models.Model):
 
     @api.onchange('product_id')
     def product_domain(self):
+        """ Filter Products in GRN"""
         if self.picking_id.garment_receipt:
             if 'sale_id' in self.env.context:
                 sale_id = self.env.context.get('sale_id')

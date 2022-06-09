@@ -45,6 +45,7 @@
         'ucwp_pre_costing/ucwp_pre_costing_approval_view.xml',
         'ucwp_purchase/ucwp_purchase_requisition_view.xml',
         'ucwp_purchase/purchase_views.xml',
+        'ucwp_purchase/res_partner_views.xml',
     ],
 
     'installable': True,

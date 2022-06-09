@@ -14,3 +14,19 @@ class PurchaseOrder(models.Model):
                 [('chemical_receipt', '=', True)])
             if picking_type:
                 self.picking_type_id = picking_type.id
+        # else:
+        #     company_id = self.env.company.id
+        #     picking_type = self.env['stock.picking.type'].search(
+        #         [('code', '=', 'incoming'),
+        #          ('warehouse_id.company_id', '=', company_id),
+        #          ('chemical_receipt', '!=', True),
+        #          ('garment_receipt', '!=', True)])
+        #     if not picking_type:
+        #         picking_type = self.env['stock.picking.type'].search(
+        #             [('code', '=', 'incoming'),
+        #              ('warehouse_id', '=', False),
+        #              ('chemical_receipt', '!=', True),
+        #              ('garment_receipt', '!=', True)
+        #              ])
+            self.picking_type_id = picking_type.id
+

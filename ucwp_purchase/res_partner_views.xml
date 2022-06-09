@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Res Partner Form view -->
+    <record id="view_partner_form_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">res.partner.form.view.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='internal_notes']" position="before">
+                <page string="Vendor Certifications" name="vendor_certification">
+                    <field name="vendor_certification">
+                        <tree string="Vendor Certifications">
+                            <field name="product_id"/>
+                            <field name="certifications"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Vendor Certifications list view-->
+    <record id="vendor_certifications_tree_view" model="ir.ui.view">
+        <field name="name">vendor.certifications.tree.view</field>
+        <field name="model">vendor.certifications</field>
+        <field name="arch" type="xml">
+            <tree string="Vendor Certifications">
+                <field name="product_id"/>
+                <field name="certifications"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vendor Certifications form view-->
+    <record id="vendor_certifications_form_view" model="ir.ui.view">
+        <field name="name">vendor.certifications.form.view</field>
+        <field name="model">vendor.certifications</field>
+        <field name="arch" type="xml">
+            <form string="Vendor Certifications">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Certifications" name="certifications">
+                            <field name="certifications">
+                                <tree string="Certifications" editable="bottom">
+                                    <field name="certification_type"/>
+                                    <field name="certification" widget="many2many_binary"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for Vendor Certifications -->
+    <record id="vendor_certifications_action" model="ir.actions.act_window">
+        <field name="name">Vendor Certifications</field>
+        <field name="res_model">vendor.certifications</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- Vendor Certification Lines list view-->
+    <record id="vendor_certification_lines_tree_view" model="ir.ui.view">
+        <field name="name">vendor.certification.lines.tree.view</field>
+        <field name="model">vendor.certification.lines</field>
+        <field name="arch" type="xml">
+            <tree string="Vendor Certification Lines">
+                <field name="certification_type"/>
+                <field name="certification" widget="many2many_binary"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vendor Certification Lines form view-->
+    <record id="vendor_certification_lines_form_view" model="ir.ui.view">
+        <field name="name">vendor.certification.lines.form.view</field>
+        <field name="model">vendor.certification.lines</field>
+        <field name="arch" type="xml">
+            <form string="Vendor Certification Lines">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="certification_type"/>
+                        </group>
+                        <group>
+                            <field name="certification" widget="many2many_binary"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for Vendor Certification Lines -->
+    <record id="vendor_certification_lines_action" model="ir.actions.act_window">
+        <field name="name">Vendor Certification Lines</field>
+        <field name="res_model">vendor.certification.lines</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- Chemical Certification Type list view-->
+    <record id="chemical_certification_type_tree_view" model="ir.ui.view">
+        <field name="name">chemical.certification.type.tree.view</field>
+        <field name="model">chemical.certification.type</field>
+        <field name="arch" type="xml">
+            <tree string="Chemical Certification Type">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Chemical Certification Type form view-->
+    <record id="chemical_certification_type_form_view" model="ir.ui.view">
+        <field name="name">chemical.certification.type.form.view</field>
+        <field name="model">chemical.certification.type</field>
+        <field name="arch" type="xml">
+            <form string="Chemical Certification Type">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for Chemical Certification Type -->
+    <record id="chemical_certification_type_action" model="ir.actions.act_window">
+        <field name="name">Chemical Certification Type</field>
+        <field name="res_model">chemical.certification.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+</odoo>
