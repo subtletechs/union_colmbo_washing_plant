@@ -21,6 +21,7 @@
             <xpath expr="//button[@name='payment_action_void']" position="before">
                 <button name="generate_garment_receipt" type="object" class="btn-primary"
                         string="Garment Receipt"
+                        attrs="{'invisible': [('garment_sales', '=', False)]}"
                 />
             </xpath>
 
@@ -30,13 +31,18 @@
                         type="object"
                         class="oe_stat_button"
                         icon="fa-plane icon"
-                        attrs="{'invisible': [('garment_receipt_count', '=', 0)]}">
+                        attrs="{'invisible': ['|', ('garment_receipt_count', '=', 0), ('garment_sales', '=', False)]}">
                     <field name="garment_receipt_count" widget="statinfo" string="Garment Receipts"/>
                 </button>
             </xpath>
 
+            <!-- [UC-47] -->
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                <field name="garment_sales"/>
+            </xpath>
+
             <xpath expr="//group[@name='order_details']" position="after">
-                <group string="Pre Costing">
+                <group string="Pre Costing" attrs="{'invisible': [('garment_sales', '=', False)]}">
                     <field name="pre_costing" widget="many2many_tags"/>
                     <field name="need_to_approve" invisible="1"/>
                     <field name="is_approved" invisible="1"/>
@@ -55,7 +61,7 @@
 
             <!-- Actually Received Product Quantity Tab -->
             <xpath expr="//page[@name='order_lines']" position="after">
-                <page string="Actually Received Product Quantity" name="actually_received_product_qty">
+                <page string="Actually Received Product Quantity" name="actually_received_product_qty" invisible="1">
                     <field name="actually_received_product_qty">
                         <tree string="Actually Received Product Quantity" editable="bottom">
                             <field name="product_id"/>
@@ -68,13 +74,13 @@
 
             <!-- Sale order lines -->
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="before">
-                <field name="garment_select"/>
+                <field name="garment_select" attrs="{'column_invisible': [('parent.garment_sales', '=', False)]}"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
-                <field name="buyer"/>
-                <field name="fabric_type"/>
-                <field name="wash_type"/>
-                <field name="garment_type"/>
+                <field name="buyer" attrs="{'column_invisible': [('parent.garment_sales', '=', False)]}"/>
+                <field name="fabric_type" attrs="{'column_invisible': [('parent.garment_sales', '=', False)]}"/>
+                <field name="wash_type" attrs="{'column_invisible': [('parent.garment_sales', '=', False)]}"/>
+                <field name="garment_type" attrs="{'column_invisible': [('parent.garment_sales', '=', False)]}"/>
             </xpath>
         </field>
     </record>

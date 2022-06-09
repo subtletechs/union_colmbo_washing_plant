@@ -31,6 +31,9 @@ class SaleOrder(models.Model):
                                                     inverse_name="sale_order_id",
                                                     string="Actually Received Product Quantity")
 
+    # [UC-47]
+    garment_sales = fields.Boolean(string="Garment Sales", default=True)
+
     def _get_garment_receipts(self):
         """To Get the related Garment Receipts count and IDs"""
         for record in self:
@@ -86,15 +89,18 @@ class SaleOrder(models.Model):
 
     def _compute_need_to_approve(self):
         """Compute need_to_approve value"""
-        if self.pre_costing:
-            for record in self.pre_costing:
-                for sale_order_line in self.order_line:
-                    if record.product_id == sale_order_line.product_id:
-                        if record.total_line_costs > sale_order_line.price_subtotal:
-                            self.need_to_approve = True
-                        else:
-                            self.need_to_approve = False
-                    break
+        if self.garment_sales:
+            if self.pre_costing:
+                for record in self.pre_costing:
+                    for sale_order_line in self.order_line:
+                        if record.product_id == sale_order_line.product_id:
+                            if record.total_line_costs > sale_order_line.price_subtotal:
+                                self.need_to_approve = True
+                            else:
+                                self.need_to_approve = False
+                        break
+            else:
+                self.need_to_approve = False
         else:
             self.need_to_approve = False
 
@@ -126,38 +132,40 @@ class SaleOrder(models.Model):
     def create(self, vals):
         """"Check the products available in order line and create new records in actual product quantity"""
         res = super(SaleOrder, self).create(vals)
-        if 'order_line' in vals:
-            order_lines = vals['order_line']
-            for line in order_lines:
-                self.env['actually.received.product.quantity'].create(
-                    {'sale_order_id': res.id, 'product_id': line[2].get('product_id')})
+        if self.garment_sales:
+            if 'order_line' in vals:
+                order_lines = vals['order_line']
+                for line in order_lines:
+                    self.env['actually.received.product.quantity'].create(
+                        {'sale_order_id': res.id, 'product_id': line[2].get('product_id')})
         return res
 
     def write(self, values):
         # TODO : Restrict Product removing from order line while having related records in GRN
         # We are going to check add new product and remove product form order line
-        order_id = self.id
-        if 'order_line' in values:
-            lines = values['order_line']
-            for line in lines:
-                if line[0] == 0:
-                    # check product duplicate
-                    duplicate_product_record = self.env['actually.received.product.quantity'].search([
-                        ('sale_order_id', '=', order_id),
-                        ('product_id', '=', line[2].get('product_id'))
-                    ])
-                    if not duplicate_product_record:
-                        self.env['actually.received.product.quantity'].create({
-                            'sale_order_id': order_id,
-                            'product_id': line[2].get('product_id')
-                        })
-                if line[0] == 2:
-                    line_object = self.env['sale.order.line'].browse(line[1])
-                    product = line_object.product_id
-                    record = self.env['actually.received.product.quantity'].search([('sale_order_id', '=', order_id),
-                                                                                    ('product_id', '=', product.id)])
-                    if record:
-                        record.unlink()
+        if self.garment_sales:
+            order_id = self.id
+            if 'order_line' in values:
+                lines = values['order_line']
+                for line in lines:
+                    if line[0] == 0:
+                        # check product duplicate
+                        duplicate_product_record = self.env['actually.received.product.quantity'].search([
+                            ('sale_order_id', '=', order_id),
+                            ('product_id', '=', line[2].get('product_id'))
+                        ])
+                        if not duplicate_product_record:
+                            self.env['actually.received.product.quantity'].create({
+                                'sale_order_id': order_id,
+                                'product_id': line[2].get('product_id')
+                            })
+                    if line[0] == 2:
+                        line_object = self.env['sale.order.line'].browse(line[1])
+                        product = line_object.product_id
+                        record = self.env['actually.received.product.quantity'].search([('sale_order_id', '=', order_id),
+                                                                                        ('product_id', '=', product.id)])
+                        if record:
+                            record.unlink()
         return super(SaleOrder, self).write(values)
 
 
