@@ -6,7 +6,7 @@ class PurchaseRequisition(models.Model):
     _name = "ucwp.purchase.requisition"
     _description = "Purchase Requisition"
 
-    name = fields.Char(string="Name", default="New")
+    name = fields.Char(string="Purchase Requisition", default="New")
     # TODO :  groups should need to be added according to the credentials
     state = fields.Selection([('draft', 'Draft'), ('validate', 'Validate'), ('authorized', 'Authorized')],
                              string="Status", default="draft")
@@ -39,6 +39,6 @@ class PurchaseRequisitionLine(models.Model):
 
     product_id = fields.Many2one(comodel_name="product.product", string="Product", required=True)
     quantity = fields.Float(string="Quantity", required=True)
-    product_uom = fields.Many2one(comodel_name="uom.uom", string="UoM")
+    product_uom = fields.Many2one(comodel_name="uom.uom", string="UoM", related="product_id.uom_id", store=True)
     purchase_requisition_id = fields.Many2one(comodel_name="ucwp.purchase.requisition",
                                               string="Purchase Requisition ID")
