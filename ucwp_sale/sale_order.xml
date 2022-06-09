@@ -39,6 +39,7 @@
             <!-- [UC-47] -->
             <xpath expr="//field[@name='partner_shipping_id']" position="after">
                 <field name="garment_sales"/>
+                <field name="local_export"/>
             </xpath>
 
             <xpath expr="//group[@name='order_details']" position="after">

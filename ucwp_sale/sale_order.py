@@ -34,6 +34,9 @@ class SaleOrder(models.Model):
     # [UC-47]
     garment_sales = fields.Boolean(string="Garment Sales", default=True)
 
+    # Sale order type
+    local_export = fields.Selection([('local', 'Local'), ('export', 'Export')], string="Local/Export")
+
     def _get_garment_receipts(self):
         """To Get the related Garment Receipts count and IDs"""
         for record in self:
