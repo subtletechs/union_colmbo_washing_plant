@@ -47,7 +47,7 @@
                             <field name="garment_select" widget="radio" invisible="1"
                                    attrs="{'required': [('is_garment', '=', True)]}"/>
                             <field name="samples"
-                                   attrs="{'invisible': ['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
+                                   attrs="{'invisible': ['|','|',('garment_select', '=', 'bulk'),('garment_select', '=', False),('is_sample', '=', False)]}"/>
                         </group>
                     </group>
                     <!-- [UC-24] -->

@@ -47,12 +47,16 @@ class ProductTemplate(models.Model):
         if self.is_sample:
             self.is_bulk = False
             self.garment_select = 'sample'
+        else:
+            self.samples = None
 
     @api.onchange('is_bulk')
     def update_is_bulk(self):
         if self.is_bulk:
             self.is_sample = False
             self.garment_select = 'bulk'
+        else:
+            self.garment_select = None
 
     @api.onchange('is_garment')
     def update_bulk_sample(self):
