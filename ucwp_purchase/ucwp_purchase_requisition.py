@@ -17,6 +17,14 @@ class PurchaseRequisition(models.Model):
                                        inverse_name="purchase_requisition_id", string="Purchase Requisition Lines")
 
     @api.model
+    def fields_get(self, fields=requisition_line):
+        fields_to_hide = ['requisition_line']
+        res = super(PurchaseRequisition, self).fields_get()
+        for field in fields_to_hide:
+            res[field]['searchable'] = False
+        return res
+
+    @api.model
     # Generate sequence for Purchase Requisition
     def create(self, values):
         sequence = self.env['ir.sequence'].next_by_code('purchase.requisition') or _('New')
