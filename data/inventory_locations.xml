@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Location for Logistic -->
+        <record id="stock_location_logistic" model="stock.location">
+            <field name="name">Logistic</field>
+            <field name="usage">internal</field>
+            <field name="posz">1</field>
+            <field name="locations_category">logistic</field>
+        </record>
+
+        <!-- Location for Sample Room -->
+        <record id="stock_location_sample" model="stock.location">
+            <field name="name">Sample Room</field>
+            <field name="usage">internal</field>
+            <field name="posz">1</field>
+            <field name="locations_category">sample</field>
+        </record>
+    </data>
+</odoo>

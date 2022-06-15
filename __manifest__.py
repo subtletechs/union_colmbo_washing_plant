@@ -23,6 +23,7 @@
         'data/pre_costing_data.xml',
         'data/style_expire_cron.xml',
         'data/extra_qty_email_template.xml',
+        'data/inventory_locations.xml',
         'security/ir.model.access.csv',
         'ucwp_stock/product_template.xml',
         'ucwp_stock/stock_move.xml',
