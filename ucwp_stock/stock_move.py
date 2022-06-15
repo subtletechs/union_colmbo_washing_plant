@@ -130,7 +130,7 @@ class StockMove(models.Model):
                 self.env.context,
                 show_owner=self.picking_type_id.code != 'incoming',
                 show_lots_m2o=self.has_tracking != 'none' and (
-                            self.picking_type_id.use_existing_lots or self.state == 'done' or self.origin_returned_move_id.id),
+                        self.picking_type_id.use_existing_lots or self.state == 'done' or self.origin_returned_move_id.id),
                 # able to create lots, whatever the value of ` use_create_lots`.
                 show_lots_text=self.has_tracking != 'none' and self.picking_type_id.use_create_lots and not self.picking_type_id.use_existing_lots and self.state != 'done' and not self.origin_returned_move_id.id,
                 show_source_location=self.picking_type_id.code != 'incoming',
@@ -254,7 +254,57 @@ class Picking(models.Model):
         self.write({'receive_logistic': datetime.datetime.now()})
 
     def receive_sample_update_datetime(self):
-        """Update Sample room order received date and time"""
+        """Update Sample room order received date time and trasnfer stock from Logistic to Sample room"""
+        if self.move_ids_without_package:
+
+            picking_id = self.env['stock.picking.type'].search(
+                [('code', '=', 'internal'), ('barcode', '=', 'WH-INTERNAL')])
+            source = self.env['stock.location'].search([('locations_category', '=', 'logistic')])
+            destination = self.env['stock.location'].search([('locations_category', '=', 'sample')])
+            transfer = self.env['stock.picking'].create({
+                'picking_type_id': picking_id.id,
+                'location_id': source.id,
+                'location_dest_id': destination.id,
+                'move_ids_without_package': False
+            })
+
+            move_list = []
+            for move in self.move_ids_without_package:
+                product_id = move.product_id
+                if move.move_line_nosuggest_ids:
+                    split_lines = []
+                    for move_line in move.move_line_nosuggest_ids:
+                        done_qty = move_line.qty_done
+                        lot_id = move_line.lot_id
+                        # TODO get available qty for qty_done
+                        split_lines.append(
+                            (0, 0, {'product_id': product_id.id,
+                                    'location_id': source.id,
+                                    'location_dest_id': destination.id,
+                                    'lot_id': lot_id.id,
+                                    'qty_done': done_qty,
+                                    'product_uom_id': move_line.product_uom_id.id,
+                                    'picking_id': transfer.id
+                                    }))
+                move_list.append(
+                    (0, 0, {'product_id': product_id.id,
+                            'name': product_id.display_name,
+                            'product_uom': product_id.uom_id.id,
+                            'location_id': source.id,
+                            'location_dest_id': destination.id,
+                            'move_line_ids': split_lines,
+                            }))
+            # picking_id = self.env['stock.picking.type'].search(
+            #     [('code', '=', 'internal'), ('barcode', '=', 'WH-INTERNAL')])
+            # transfer = self.env['stock.picking'].create({
+            #     'picking_type_id': picking_id.id,
+            #     'location_id': source.id,
+            #     'location_dest_id': destination.id,
+            #     'move_ids_without_package': move_list
+            # })
+            transfer.write({'move_ids_without_package': move_list})
+            transfer.button_validate()
+
         self.write({'receive_sample_room': datetime.datetime.now()})
 
     @api.depends("picking_type_id")
