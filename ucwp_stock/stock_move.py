@@ -274,9 +274,30 @@ class Picking(models.Model):
                 if move.move_line_nosuggest_ids:
                     split_lines = []
                     for move_line in move.move_line_nosuggest_ids:
-                        done_qty = move_line.qty_done
                         lot_id = move_line.lot_id
                         # TODO get available qty for qty_done
+                        # Calculate available qty for lot
+                        product_in_records = self.env['stock.move.line'].search(
+                            [('product_id', '=', product_id.id),
+                             ('lot_id', '=', lot_id.id),
+                             ('location_dest_id', '=', source.id)])
+                        product_in_qty = 0
+                        if product_in_records:
+                            for product_in_record in product_in_records:
+                                product_in_qty += product_in_record.qty_done
+
+                        product_out_records = self.env['stock.move.line'].search(
+                            [('product_id', '=', product_id.id),
+                             ('lot_id', '=', lot_id.id),
+                             ('location_dest_id', '=', destination.id)])
+                        product_out_qty = 0
+                        if product_out_records:
+                            product_out_qty = 0
+                            for product_out_record in product_out_records:
+                                product_out_qty += product_out_record.qty_done
+
+                        done_qty = product_in_qty - product_out_qty
+
                         split_lines.append(
                             (0, 0, {'product_id': product_id.id,
                                     'location_id': source.id,
