@@ -114,6 +114,8 @@ class SaleOrder(models.Model):
         if not garment_inventory_operation:
             pass
         view = self.env.ref('stock.view_picking_form')
+        ctx = dict(self.env.context)
+        ctx.pop('default_immediate_transfer', None)
         return {
             'res_model': 'stock.picking',
             'type': 'ir.actions.act_window',
