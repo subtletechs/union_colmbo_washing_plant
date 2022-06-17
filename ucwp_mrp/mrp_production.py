@@ -68,6 +68,9 @@ class MrpProduction(models.Model):
     quality_check_count = fields.Integer(string='Quality Check Count', compute='_get_quality_checks')
     quality_check_id = fields.Many2one(comodel_name='ucwp.quality.check', string="Quality Check ID",
                                        compute='_get_quality_checks', copy=False)
+    # [UC-47]- MO Type
+    mo_type = fields.Selection([('sub', 'Sub Store Manufacture Order'), ('garment', 'Garment Manufacture Order')],
+                               string="Manufacture Order Type", required=True)
 
     def _get_quality_checks(self):
         """Calculate the number of quality checks available for the MO and those IDs"""

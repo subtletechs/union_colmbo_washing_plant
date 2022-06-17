@@ -87,7 +87,7 @@
             </xpath>
             <!-- </header> -->
 
-            <!-- [UC-11] -->
+            <!-- [UC-11]- Quality check view stat button -->
             <xpath expr="//sheet/div[1]/button[@name='action_view_mrp_production_childs']" position="before">
                 <button name="action_view_quality_check"
                         type="object"
@@ -99,6 +99,7 @@
             </xpath>
 
             <xpath expr="//field[@name='bom_id']" position="after">
+                <field name="mo_type"/>
                 <field name="mo_barcode"/>
                 <field name="job_no"/>
                 <field name="machine_no"/>
