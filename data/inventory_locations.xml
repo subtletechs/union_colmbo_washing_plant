@@ -17,5 +17,24 @@
             <field name="posz">1</field>
             <field name="locations_category">sample</field>
         </record>
+
+        <!-- Location for Main stores -->
+        <record id="stock_location_main_stores" model="stock.location">
+            <field name="name">Main Stores</field>
+            <field name="usage">internal</field>
+            <field name="posz">1</field>
+            <field name="location_id" model="stock.location"
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+
+        <!-- Location for sub stores -->
+        <record id="stock_location_sub_stores" model="stock.location">
+            <field name="name">Sub Stores</field>
+            <field name="usage">internal</field>
+            <field name="posz">1</field>
+            <field name="location_id" model="stock.location"
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+
     </data>
 </odoo>
