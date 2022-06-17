@@ -108,6 +108,69 @@
         </field>
     </record>
 
+    <!-- [UC-47]- Add MO menu items -->
+    <!-- Menu item for MOs -->
+    <menuitem id="menu_mrp_production_main"
+              name="Manufacture Orders"
+              parent="mrp.menu_mrp_manufacturing"
+              sequence="2"/>
+
+    <!--Action for Sub Store MOs -->
+    <record id="mrp_production_sub_store_action" model="ir.actions.act_window">
+        <field name="name">Sub Store Manufacturing Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="mrp.view_mrp_production_filter"/>
+        <field name="context">{'default_mo_type': 'sub'}</field>
+        <field name="domain">[('mo_type', '=', 'sub')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No manufacturing order found. Let's create one.
+            </p>
+            <p>
+                Consume <a name="%(product.product_template_action)d" type='action' tabindex="-1">components</a> and
+                build finished products using
+                <a name="%(mrp.mrp_bom_form_action)d" type='action' tabindex="-1">bills of materials</a>
+            </p>
+        </field>
+    </record>
+    <!-- Sub menu item for Sub Store MOs -->
+    <menuitem id="sub_menu_mrp_production_sub_store"
+              name="Sub Store MOs"
+              action="mrp_production_sub_store_action"
+              parent="menu_mrp_production_main"
+              sequence="1"/>
+
+    <!-- Action for Garment MOs -->
+    <record id="mrp_production_garment_action" model="ir.actions.act_window">
+        <field name="name">Garment Manufacturing Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="mrp.view_mrp_production_filter"/>
+        <field name="context">{'default_mo_type': 'garment'}</field>
+        <field name="domain">[('mo_type', '=', 'garment')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No garment manufacturing order found. Let's create one.
+            </p>
+            <p>
+                Consume <a name="%(product.product_template_action)d" type='action' tabindex="-1">components</a> and
+                build finished products using
+                <a name="%(mrp.mrp_bom_form_action)d" type='action' tabindex="-1">bills of materials</a>
+            </p>
+        </field>
+    </record>
+    <!-- Sub menu item for Garment MOs -->
+    <menuitem id="sub_menu_mrp_production_garment"
+              name="Garment MOs"
+              action="mrp_production_garment_action"
+              parent="menu_mrp_production_main"
+              sequence="2"/>
+
     <!--    Manufacture operation stages list view-->
     <record id="manufacture_operation_stages_tree_view" model="ir.ui.view">
         <field name="name">manufacture.operation.stages.tree.view</field>
