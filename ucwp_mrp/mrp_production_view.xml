@@ -123,7 +123,7 @@
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="mrp.view_mrp_production_filter"/>
-        <field name="context">{'default_mo_type': 'sub'}</field>
+        <field name="context">{'default_mo_type': 'sub', 'default_company_id': allowed_company_ids[0]}</field>
         <field name="domain">[('mo_type', '=', 'sub')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -151,7 +151,7 @@
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="mrp.view_mrp_production_filter"/>
-        <field name="context">{'default_mo_type': 'garment'}</field>
+        <field name="context">{'default_mo_type': 'garment', 'default_company_id': allowed_company_ids[0]}</field>
         <field name="domain">[('mo_type', '=', 'garment')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
