@@ -47,6 +47,11 @@
                     </h1>
                 </div>
             </xpath>
+            <!-- [UC-47]- Add BoM Category and check is development BoM -->
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="development_bom"/>
+                <field name="bom_category"/>
+            </xpath>
             <xpath expr="//sheet/group[1]" position="after">
                 <group>
                     <group string="Style Info">

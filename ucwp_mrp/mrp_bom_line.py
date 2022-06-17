@@ -20,6 +20,9 @@ class MrpBom(models.Model):
     # [UC-10]
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')], string="State", default="draft")
     development_bom = fields.Boolean(string="Development BOM", default=False)
+    # [UC-47]- Identify BoM category
+    bom_category = fields.Selection([('sub', 'Sub Store BOM'), ('garment', 'Garment BOM')], string="BoM Category",
+                                    required=True)
 
     @api.model
     # Generate sequence for BOM
