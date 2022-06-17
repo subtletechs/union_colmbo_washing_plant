@@ -58,7 +58,7 @@ class PreCostingLines(models.Model):
     margin = fields.Float(string="Margin(%)", required=True)
     pieces_for_hour_actual = fields.Integer(string="Actual No of Pieces for Hour")
     pieces_for_hour_target = fields.Integer(string="Target No of Pieces for Hour")
-    price = fields.Monetary(currency_field='res_currency', string="Price", required=True, store=True,
+    price = fields.Monetary(currency_field='res_currency', string="Price", store=True,
                             compute="_calculate_cost")
     pre_costing_id = fields.Many2one(comodel_name="pre.costing", string="Pre Costing ID")
 
