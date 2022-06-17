@@ -70,6 +70,91 @@
         </field>
     </record>
 
+    <!-- [UC-47]- Add menu items -->
+    <!-- BOMs menu item -->
+    <menuitem id="menu_mrp_bom_main"
+              name="Bill of Materials"
+              parent="mrp.menu_mrp_bom" sequence="14"/>
+
+    <!-- Development BOMs action -->
+    <record id="mrp_bom_form_development_action" model="ir.actions.act_window">
+            <field name="name">Development Bills of Materials</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.bom</field>
+            <field name="domain">[('development_bom', '=', True)]</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="mrp.view_mrp_bom_filter"/>
+            <field name="context">{'default_company_id': allowed_company_ids[0], 'default_development_bom': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No development bill of materials found. Let's create one!
+              </p><p>
+                Bills of materials allow you to define the list of required raw
+                materials used to make a finished product; through a manufacturing
+                order or a pack of products.
+              </p>
+            </field>
+        </record>
+    <!-- Development BOMs menu item -->
+    <menuitem id="menu_development_bom"
+              name="Development BoM"
+              action="mrp_bom_form_development_action"
+              parent="menu_mrp_bom_main"
+              sequence="1"/>
+
+    <!-- Sub Store BOMs action -->
+    <record id="mrp_bom_form_sub_store_action" model="ir.actions.act_window">
+            <field name="name">Sub Store Bills of Materials</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.bom</field>
+            <field name="domain">[('bom_category', '=', 'sub')]</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="mrp.view_mrp_bom_filter"/>
+            <field name="context">{'default_company_id': allowed_company_ids[0], 'default_bom_category': 'sub'}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No sub-store bill of materials found. Let's create one!
+              </p><p>
+                Bills of materials allow you to define the list of required raw
+                materials used to make a finished product; through a manufacturing
+                order or a pack of products.
+              </p>
+            </field>
+        </record>
+    <!-- Sub Store BOMs menu item -->
+    <menuitem id="sub_menu_sub_store_bom"
+              name="Sub Store BOMs"
+              action="mrp_bom_form_sub_store_action"
+              parent="menu_mrp_bom_main"
+              sequence="2"/>
+
+    <!-- Garment BOMs action -->
+    <record id="mrp_bom_form_garment_action" model="ir.actions.act_window">
+            <field name="name">Garment Bills of Materials</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.bom</field>
+            <field name="domain">[('bom_category', '=', 'garment')]</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="mrp.view_mrp_bom_filter"/>
+            <field name="context">{'default_company_id': allowed_company_ids[0], 'default_bom_category': 'garment'}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No garment bill of materials found. Let's create one!
+              </p><p>
+                Bills of materials allow you to define the list of required raw
+                materials used to make a finished product; through a manufacturing
+                order or a pack of products.
+              </p>
+            </field>
+        </record>
+    <!-- Garment BOMs menu item -->
+    <menuitem id="sub_menu_garment_bom"
+              name="Garment BOMs"
+              action="mrp_bom_form_garment_action"
+              parent="menu_mrp_bom_main"
+              sequence="3"/>
+
+
     <!--    Routing Sub Process Tree View -->
     <record id="routing_sub_process_tree_view" model="ir.ui.view">
         <field name="name">routing.sub.process.tree.view</field>
