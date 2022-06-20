@@ -275,7 +275,6 @@ class Picking(models.Model):
                     split_lines = []
                     for move_line in move.move_line_nosuggest_ids:
                         lot_id = move_line.lot_id
-                        # TODO get available qty for qty_done
                         # Calculate available qty for lot
                         product_in_records = self.env['stock.move.line'].search(
                             [('product_id', '=', product_id.id),
@@ -315,14 +314,6 @@ class Picking(models.Model):
                             'location_dest_id': destination.id,
                             'move_line_ids': split_lines,
                             }))
-            # picking_id = self.env['stock.picking.type'].search(
-            #     [('code', '=', 'internal'), ('barcode', '=', 'WH-INTERNAL')])
-            # transfer = self.env['stock.picking'].create({
-            #     'picking_type_id': picking_id.id,
-            #     'location_id': source.id,
-            #     'location_dest_id': destination.id,
-            #     'move_ids_without_package': move_list
-            # })
             transfer.write({'move_ids_without_package': move_list})
             transfer.button_validate()
 
@@ -577,4 +568,5 @@ class Location(models.Model):
 
     # [UC-46] - Update Inventory Locations for Sample room receive
     locations_category = fields.Selection(
-        [('logistic', 'Logistic'), ('sample', 'Sample Room'), ('qc', 'Quality Check')], string="Locations Category")
+        [('logistic', 'Logistic'), ('sample', 'Sample Room'), ('qc', 'Quality Check'), ('main', 'Main Store'),
+         ('sub', 'Sub Store')], string="Locations Category")
