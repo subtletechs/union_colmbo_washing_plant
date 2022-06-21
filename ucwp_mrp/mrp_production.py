@@ -141,6 +141,14 @@ class MrpProduction(models.Model):
             raise ValidationError(_('BoM should need to be validated first'))
         return super(MrpProduction, self).action_confirm()
 
+    @api.onchange('bom_id')
+    def _get_mo_type(self):
+        bom_type = self.bom_id.bom_category
+        if bom_type == 'sub':
+            self.mo_type = 'sub'
+        if bom_type == 'garment':
+            self.mo_type = 'garment'
+
 
 # [UC-07]
 class ManufactureOperationStages(models.Model):
