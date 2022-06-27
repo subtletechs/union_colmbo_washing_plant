@@ -263,4 +263,21 @@
         </field>
     </record>
 
+
+    <!-- Warning for chemical issue expire validation -->
+    <record id="view_chemical_issue_expire_validation_warning" model="ir.ui.view">
+            <field name="name">chemical.issue.expire.validation</field>
+            <field name="model">stock.move.wizard</field>
+            <field name="arch" type="xml">
+            <form string="Chemical expire">
+                <group>
+                    <field name="message" />
+                </group>
+                <footer>
+                    <button string="OK" special="cancel" class="oe_highlight"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+
 </odoo>
