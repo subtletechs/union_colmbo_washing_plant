@@ -146,46 +146,54 @@ class StockMove(models.Model):
         if self.picking_id.picking_type_code == 'internal' and self.product_id.is_chemical:
             product_id = self.product_id.id
             rest_quantity_done = self.quantity_done  # update done qty
-            for move_line in self.move_line_ids:
-                source_location = move_line.location_id
-                if move_line.lot_id and move_line.qty_done:
-                    quant_records = self.env['stock.quant'].search(
-                        [('product_id', '=', product_id),
-                         ('location_id', '=', source_location.id),
-                         ('quantity', '>', 0)], order='removal_date ASC')
-                    if quant_records:
-                        for quant_record in quant_records:
-                            # 1. check stock quant record lot id available in the stock move lines
-                            # TODO : get other move line (3 lines in self.move_line_ids but show only 2)
-                            move_line_records = self.move_line_ids.filtered(
-                                lambda move_lines: move_lines.lot_id.id == quant_record.lot_id.id)
-                            # 2. If available, get the sum of done qty of all available lines
-                            if move_line_records:
-                                done_qty = sum(record_line.qty_done for record_line in move_line_records)
-                                # 3. done_qty from 2 < stock.move quantity_done
-                                if done_qty < rest_quantity_done:
-                                    # 4. if 3 is true , done qty from 2 < quant_record.quantity
-                                    if done_qty < quant_record.quantity:
-                                        rest_quant_quantity = quant_record.quantity - done_qty
-                                        message = str(
-                                            rest_quant_quantity) + ' quantities of ' + self.product_id.name + ' can be allocated from ' + quant_record.lot_id.name
-                                        raise ValidationError(_(message))
+            if self.move_line_ids:
+                for move_line in self.move_line_ids:
+                    source_location = move_line.location_id
+                    if move_line.lot_id and move_line.qty_done:
+                        quant_records = self.env['stock.quant'].search(
+                            [('product_id', '=', product_id),
+                             ('location_id', '=', source_location.id),
+                             ('quantity', '>', 0)], order='removal_date ASC')
+                        if quant_records:
+                            for quant_record in quant_records:
+                                # 1. check stock quant record lot id available in the stock move lines
+                                move_line_records = self.move_line_ids.filtered(
+                                    lambda move_lines: move_lines.lot_id.id == quant_record.lot_id.id)
+                                # 2. If available, get the sum of done qty of all available lines
+                                if move_line_records:
+                                    done_qty = sum(record_line.qty_done for record_line in move_line_records)
+                                    # 3. done_qty from 2 < stock.move quantity_done
+                                    if done_qty < rest_quantity_done:
+                                        # 4. if 3 is true , done qty from 2 < quant_record.quantity
+                                        if done_qty < quant_record.quantity:
+                                            rest_quant_quantity = quant_record.quantity - done_qty
+                                            message = str(
+                                                rest_quant_quantity) + ' quantities of ' + self.product_id.name + ' can be allocated from ' + quant_record.lot_id.name
+                                            raise ValidationError(_(message))
 
-                                        # return {
-                                        #     'type': 'ir.actions.act_window',
-                                        #     'name': _('Warning'),
-                                        #     'res_model': 'stock.move.wizard',
-                                        #     'target': 'new',
-                                        #     'view_id': self.env.ref(
-                                        #         'union_colmbo_washing_plant.view_chemical_issue_expire_validation_warning').id,
-                                        #     'view_mode': 'form',
-                                        #     'context': {'default_message': message}
-                                        # }
-                                    # 5. quan_record.quantity <= stock.move done qty
-                                    # 6. pop up : from this lot , x can allocate
-                                    # x = quant_record.quantity - done qty from 2
+                                            # return {
+                                            #     'type': 'ir.actions.act_window',
+                                            #     'name': _('Warning'),
+                                            #     'res_model': 'stock.move.wizard',
+                                            #     'target': 'new',
+                                            #     'view_id': self.env.ref(
+                                            #         'union_colmbo_washing_plant.view_chemical_issue_expire_validation_warning').id,
+                                            #     'view_mode': 'form',
+                                            #     'context': {'default_message': message}
+                                            # }
+                                        # 5. quan_record.quantity <= stock.move done qty
+                                        # 6. pop up : from this lot , x can allocate
+                                        # x = quant_record.quantity - done qty from 2
+                                        else:
+                                            rest_quantity_done -= done_qty
+                                else:
+                                    if rest_quantity_done <= quant_record.quantity:
+                                        message = str(
+                                                rest_quantity_done) + ' quantities of ' + self.product_id.name + ' can be allocated from ' + quant_record.lot_id.name
                                     else:
-                                        rest_quantity_done -= done_qty
+                                        message = str(
+                                            quant_record.quantity) + ' quantities of ' + self.product_id.name + ' can be allocated from ' + quant_record.lot_id.name
+                                    raise ValidationError(_(message))
         return res
 
 
