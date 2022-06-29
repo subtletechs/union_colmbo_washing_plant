@@ -31,7 +31,8 @@ class UCWPQualityCheck(models.Model):
             for line in check_lines:
                 if line.product.id == product.id:
                     total_inspect += line.inspected_qty
-                    total_process += line.quantity
+                    for line_info in line.quality_check_line_info:
+                        total_process += line_info.quantity
             if total_inspect != total_process:
                 product_list.append(product.id)
                 product_names.append(product.name)
