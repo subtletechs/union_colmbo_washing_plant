@@ -50,6 +50,40 @@ class UCWPQualityCheck(models.Model):
         values['name'] = qc_sequence
         return super(UCWPQualityCheck, self).create(values)
 
+    def action_send_quality_email(self):
+        ir_model_data = self.env['ir.model.data']
+        try:
+            template_id = ir_model_data._xmlid_lookup('union_colmbo_washing_plant.quality_check_report_email_template')[2]
+        except ValueError:
+            template_id = False
+
+        try:
+            compose_form_id = ir_model_data._xmlid_lookup('mail.email_compose_message_wizard_form')[2]
+        except ValueError:
+            compose_form_id = False
+        ctx = dict(self.env.context or {})
+        ctx.update({
+            'default_model': 'ucwp.quality.check',
+            'active_model': 'ucwp.quality.check',
+            'active_id': self.ids[0],
+            'default_res_id': self.ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'custom_layout': "mail.mail_notification_paynow",
+            'force_email': True,
+        })
+        return {
+            'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
+        }
+
 
 # [UC-11]
 class QualityCheckLines(models.Model):

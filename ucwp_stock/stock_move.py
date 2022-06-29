@@ -576,7 +576,7 @@ class Picking(models.Model):
                     if actually_received > sale_order_qty:
                         # TODO: Need to be checked correct email template
                         template_id = self.env['ir.model.data']._xmlid_to_res_id(
-                            'union_colmbo_washing_plant.extra_qty_email_template.xml',
+                            'union_colmbo_washing_plant.extra_qty_notification_email.xml',
                             raise_if_not_found=False)
                         lang = self.env.context.get('lang')
                         template = self.env['mail.template'].browse(template_id)
