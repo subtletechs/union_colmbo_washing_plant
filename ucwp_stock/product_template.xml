@@ -198,7 +198,7 @@
                 </page>
             </xpath>
 
-            <xpath expr="//page[@name='general_information']" position="after">
+            <xpath expr="//page[@name='sales']" position="before">
                 <!-- MSDS Information Tab -->
                 <page string="MSDS Information" name="msds_information"
                       attrs="{'invisible': [('is_chemical', '=', False)]}">
