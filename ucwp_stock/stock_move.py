@@ -241,10 +241,9 @@ class StockMoveLine(models.Model):
 
     @api.onchange('qty_done')
     def _validate_done_qty(self):
-        demand = self.product_uom_qty
-        done_qty = self.qty_done
-        if done_qty > demand:
-            raise ValidationError(_("Done quantity cannot be larger than reserved quantity"))
+        if self.picking_id.picking_type_code == 'internal' and self.picking_id.immediate_transfer is not True:
+            if self.qty_done > self.product_uom_qty:
+                raise ValidationError(_("Done quantity cannot be larger than reserved quantity"))
 
 
 class ProductionLot(models.Model):
