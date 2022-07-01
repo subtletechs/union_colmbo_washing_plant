@@ -225,7 +225,8 @@ class StockMoveLine(models.Model):
                     'name': sequence,
                     'product_id': stock_move.product_id.id,
                     'barcode': sequence,
-                    'product_type': 'material'
+                    'product_type': 'material',
+                    'company_id': self.env.company.id
                 })
                 if lot_id:
                     vals['lot_id'] = lot_id.id
@@ -237,6 +238,13 @@ class StockMoveLine(models.Model):
             'barcode': self.barcode,
         }
         return self.env.ref('union_colmbo_washing_plant.stock_move_line_barcode_action').report_action(self, data=data)
+
+    @api.onchange('qty_done')
+    def _validate_done_qty(self):
+        demand = self.product_uom_qty
+        done_qty = self.qty_done
+        if done_qty > demand:
+            raise ValidationError(_("Done quantity cannot be larger than reserved quantity"))
 
 
 class ProductionLot(models.Model):
@@ -368,6 +376,8 @@ class Picking(models.Model):
                                     'product_uom_id': move_line.product_uom_id.id,
                                     'picking_id': transfer.id
                                     }))
+                else:
+                    split_lines = None
                 move_list.append(
                     (0, 0, {'product_id': product_id.id,
                             'name': product_id.display_name,

@@ -70,9 +70,18 @@ class UCWPQualityCheck(models.Model):
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
-            'custom_layout': "mail.mail_notification_paynow",
             'force_email': True,
         })
+
+        lang = self.env.context.get('lang')
+        if {'default_template_id', 'default_model', 'default_res_id'} <= ctx.keys():
+            template = self.env['mail.template'].browse(ctx['default_template_id'])
+            if template and template.lang:
+                lang = template._render_lang([ctx['default_res_id']])[ctx['default_res_id']]
+
+        self = self.with_context(lang=lang)
+        ctx['model_description'] = _('Quality Check Report')
+
         return {
             'name': _('Compose Email'),
             'type': 'ir.actions.act_window',

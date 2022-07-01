@@ -17,6 +17,7 @@
         'purchase',
     ],
     'data': [
+        'report/quality_check_report.xml',
         'data/inventory_locations.xml',
         'data/receipts_data.xml',
         'data/stock_data.xml',
@@ -24,7 +25,6 @@
         'data/pre_costing_data.xml',
         'data/style_expire_cron.xml',
         'data/email_templates.xml',
-        'report/quality_check_report.xml',
         'security/ir.model.access.csv',
         'ucwp_stock/product_template.xml',
         'ucwp_stock/stock_move.xml',
