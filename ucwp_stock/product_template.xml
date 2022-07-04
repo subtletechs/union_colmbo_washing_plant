@@ -102,7 +102,10 @@
             </xpath>
 
             <xpath expr="//field[@name='default_code']" position="attributes">
-                <attribute name="string">UC Number</attribute>
+                <attribute name="attrs">{'invisible':[('is_chemical', '!=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='default_code']" position="before">
+                <field name="default_code" string="UC Number" attrs="{'invisible':[('is_chemical', '=', True)]}"/>
             </xpath>
         </field>
     </record>
@@ -212,8 +215,12 @@
                     </group>
                 </page>
             </xpath>
+
             <xpath expr="//field[@name='default_code']" position="attributes">
-                <attribute name="string">UC Number</attribute>
+                <attribute name="attrs">{'invisible':[('is_chemical', '!=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='default_code']" position="before">
+                <field name="default_code" string="UC Number" attrs="{'invisible':[('is_chemical', '=', True)]}"/>
             </xpath>
         </field>
     </record>
