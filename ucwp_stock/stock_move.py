@@ -167,8 +167,8 @@ class StockMove(models.Model):
                                         # 4. if 3 is true , done qty from 2 < quant_record.quantity
                                         if done_qty < quant_record.quantity:
                                             rest_quant_quantity = quant_record.quantity - done_qty
-                                            message = str(
-                                                rest_quant_quantity) + ' quantities of ' + self.product_id.name + ' can be allocated from ' + quant_record.lot_id.name
+                                            message = "There are lots/batches with closer expiry date!\n" + str(
+                                                rest_quant_quantity) + ' quantities of ' + self.product_id.name + ' must be allocated from ' + quant_record.lot_id.name
                                             raise ValidationError(_(message))
 
                                             # return {
@@ -186,14 +186,17 @@ class StockMove(models.Model):
                                         # x = quant_record.quantity - done qty from 2
                                         else:
                                             rest_quantity_done -= done_qty
-                                else:
-                                    if rest_quantity_done <= quant_record.quantity:
-                                        message = str(
-                                            rest_quantity_done) + ' quantities of ' + self.product_id.name + ' can be allocated from ' + quant_record.lot_id.name
                                     else:
-                                        message = str(
-                                            quant_record.quantity) + ' quantities of ' + self.product_id.name + ' can be allocated from ' + quant_record.lot_id.name
-                                    raise ValidationError(_(message))
+                                        break
+                                else:
+                                    if rest_quantity_done is not 0:
+                                        if rest_quantity_done <= quant_record.quantity:
+                                            message = "There are lots/batches with closer expiry date!\n" + str(
+                                                rest_quantity_done) + ' quantities of ' + self.product_id.name + ' must be allocated from ' + quant_record.lot_id.name
+                                        else:
+                                            message = "There are lots/batches with closer expiry date!\n" + str(
+                                                quant_record.quantity) + ' quantities of ' + self.product_id.name + ' must be allocated from ' + quant_record.lot_id.name
+                                        raise ValidationError(_(message))
         return res
 
     @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done',
