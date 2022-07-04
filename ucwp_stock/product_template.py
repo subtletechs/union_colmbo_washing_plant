@@ -73,7 +73,10 @@ class ProductTemplate(models.Model):
 
     @api.model
     def create(self, values):
-        sequence = self.env['ir.sequence'].next_by_code('product.uc.number') or _('New')
+        if values['is_chemical']:
+            sequence = self.env['ir.sequence'].next_by_code('product.internal.reference') or _('New')
+        else:
+            sequence = self.env['ir.sequence'].next_by_code('product.uc.number') or _('New')
         values['default_code'] = sequence
 
         if 'is_sample' or 'is_bulk' in values:

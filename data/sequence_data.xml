@@ -12,6 +12,17 @@
             <field name="number_next_actual">1</field>
         </record>
 
+        <!-- Sequence for Chemical -->
+        <record id="internal_reference_chemical_sequence" model="ir.sequence">
+            <field name="name">Internal Reference Sequence</field>
+            <field name="code">product.internal.reference</field>
+            <field name="implementation">standard</field>
+            <field name="prefix">CHEM</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+        </record>
+
         <!-- Sequence for Lot Number -->
         <record id="garment_receipt_lot_sequence" model="ir.sequence">
             <field name="name">Garment Receipt Lot Sequence</field>
