@@ -189,12 +189,61 @@ class StockMove(models.Model):
                                 else:
                                     if rest_quantity_done <= quant_record.quantity:
                                         message = str(
-                                                rest_quantity_done) + ' quantities of ' + self.product_id.name + ' can be allocated from ' + quant_record.lot_id.name
+                                            rest_quantity_done) + ' quantities of ' + self.product_id.name + ' can be allocated from ' + quant_record.lot_id.name
                                     else:
                                         message = str(
                                             quant_record.quantity) + ' quantities of ' + self.product_id.name + ' can be allocated from ' + quant_record.lot_id.name
                                     raise ValidationError(_(message))
         return res
+
+    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done',
+                 'picking_type_id.show_reserved')
+    def _quantity_done_compute(self):
+        """ This field represents the sum of the move lines `qty_done`. It allows the user to know
+        if there is still work to do.
+
+        We take care of rounding this value at the general decimal precision and not the rounding
+        of the move's UOM to make sure this value is really close to the real sum, because this
+        field will be used in `_action_done` in order to know if the move will need a backorder or
+        an extra move.
+        """
+        if not any(self._ids):
+            # onchange
+            for move in self:
+                quantity_done = 0
+                for move_line in move._get_move_lines():
+                    quantity_done += move_line.product_uom_id._compute_quantity(
+                        move_line.qty_done, move.product_uom, round=False)
+                if quantity_done > move.product_uom_qty and self.picking_id.immediate_transfer is not True:
+                    raise ValidationError(_("Done quantity cannot be larger than demand"))
+                else:
+                    move.quantity_done = quantity_done
+        else:
+            # compute
+            move_lines_ids = set()
+            for move in self:
+                move_lines_ids |= set(move._get_move_lines().ids)
+
+            data = self.env['stock.move.line'].read_group(
+                [('id', 'in', list(move_lines_ids))],
+                ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
+                lazy=False
+            )
+
+            rec = defaultdict(list)
+            for d in data:
+                rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
+
+            for move in self:
+                uom = move.product_uom
+                quantity_done = sum(
+                    self.env['uom.uom'].browse(line_uom_id)._compute_quantity(qty, uom, round=False)
+                    for line_uom_id, qty in rec.get(move.ids[0] if move.ids else move.id, [])
+                )
+                if quantity_done > move.product_uom_qty and self.picking_id.immediate_transfer is not True:
+                    raise ValidationError(_("Done quantity cannot be larger than demand"))
+                else:
+                    move.quantity_done = quantity_done
 
 
 class StockMoveWizard(models.TransientModel):
@@ -241,7 +290,8 @@ class StockMoveLine(models.Model):
 
     @api.onchange('qty_done')
     def _validate_done_qty(self):
-        if self.picking_id.picking_type_code == 'internal' and self.picking_id.immediate_transfer is not True:
+        if self.picking_id.picking_type_code in ['internal',
+                                                 'outgoing'] and self.picking_id.immediate_transfer is not True:
             if self.qty_done > self.product_uom_qty:
                 raise ValidationError(_("Done quantity cannot be larger than reserved quantity"))
 
