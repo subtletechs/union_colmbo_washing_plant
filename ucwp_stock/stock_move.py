@@ -26,18 +26,6 @@ class StockMove(models.Model):
     # GRN Operation Type
     is_garment = fields.Boolean(string="Is Garment")
 
-    # TODO calculate done qty
-    # def write(self, vals):
-    #     record_id = self.id
-    #     stock_move = self.browse(record_id)
-    #     move_lines = stock_move.move_line_nosuggest_ids
-    #     if move_lines:
-    #         existing_done_qty = sum(line.qty_done for line in move_lines)
-    #     val_qty = self.quantity_done
-    #     # if self.product_uom_qty != self.quantity_done:
-    #     #     raise UserError('Quantity mismatched!')
-    #     return super(StockMove, self).write(vals)
-
     @api.depends('move_line_nosuggest_ids.qty_done')
     def _compute_done(self):
         if not any(self._ids):
@@ -614,58 +602,113 @@ class Picking(models.Model):
         return super(Picking, self).write(vals)
 
     def button_validate(self):
-        sale_id = self.sale_id.id
-        for move in self.move_ids_without_package:
-            done_qty = move.quantity_done
-            if sale_id and self.move_ids_without_package:
-                available_qty_records = self.env['actually.received.product.quantity'].search(
-                    [('sale_order_id', '=', sale_id), ('product_id', '=', move.product_id.id)])
-                if available_qty_records:
-                    actually_received = available_qty_records.actually_received
-                    if self.garment_receipt:
-                        actually_received += done_qty
-                    if self.is_receipt_return:
-                        actually_received -= done_qty
-                    available_qty_records.write({
-                        'actually_received': actually_received,
-                    })
-                    # Get sale order line qty for current product
-                    sale_order_qty = 0
-                    for line in self.sale_id.order_line:
-                        if line:
-                            if line.product_id.id == move.product_id.id:
-                                sale_order_qty += line.product_uom_qty
-                    if actually_received > sale_order_qty:
-                        # TODO: Need to be checked correct email template
-                        template_id = self.env['ir.model.data']._xmlid_to_res_id(
-                            'union_colmbo_washing_plant.extra_qty_notification_email.xml',
-                            raise_if_not_found=False)
-                        lang = self.env.context.get('lang')
-                        template = self.env['mail.template'].browse(template_id)
-                        if template.lang:
-                            lang = template._render_lang(self.ids)[self.id]
-                        ctx = {
-                            'default_model': 'stock.picking',
-                            # 'default_res_id': self.ids[0],
-                            'default_use_template': bool(template_id),
-                            'default_template_id': template_id,
-                            'default_composition_mode': 'comment',
-                            'mark_so_as_sent': True,
-                            # 'custom_layout': "mail.mail_notification_paynow",
-                            'proforma': self.env.context.get('proforma', False),
-                            'force_email': True,
-                            # 'model_description': self.with_context(lang=lang).type_name,
-                        }
+        """In here We will check negative quantities and block it for specific inventory operations
+        and send an email when validate more quantity than sale order quantity"""
+        # Delivery orders/  Internal Transfers
+        if self.picking_type_code in ['outgoing', 'internal']:
+            stock_moves = self.move_ids_without_package
+            for stock_move in stock_moves:
+                product_id = stock_move.product_id
+                done_qty = stock_move.quantity_done
+                # check tracking method
+                tracking_method = product_id.tracking
+                if tracking_method in ['lot', 'serial']:
+                    if stock_move.move_line_ids:
+                        move_lines = stock_move.move_line_ids
+                        for move_line in move_lines:
+                            location_id = move_line.location_id
+                            lot = move_line.lot_id
+                            qty_done = move_line.qty_done
+                            # check the availability of quantity
+                            stock_quant = self.env['stock.quant'].search(
+                                [('location_id', '=', location_id.id),
+                                 ('product_id', '=', product_id.id),
+                                 ('lot_id', '=', lot.id)])
+                            if stock_quant:
+                                quantity = stock_quant.quantity
+                                if quantity < qty_done:
+                                    error = "Product " + str(product_id.name) + ", Lot " + str(
+                                        lot.name) + " Dose not have enough quantities at " + str(location_id.name)
+                                    raise ValidationError(error)
+                            else:
+                                error = "Product " + str(product_id.name) + ", Lot " + str(
+                                    lot.name) + " Dose not have enough quantities at " + str(location_id.name)
+                                raise ValidationError(error)
 
-                        return {
-                            'type': 'ir.actions.act_window',
-                            'view_mode': 'form',
-                            'res_model': 'mail.compose.message',
-                            'views': [(False, 'form')],
-                            'view_id': False,
-                            'target': 'new',
-                            # 'context': ctx,
-                        }
+                elif tracking_method == 'none':
+                    if stock_move.move_line_ids:
+                        move_lines = stock_move.move_line_ids
+                        for move_line in move_lines:
+                            location_id = move_line.location_id
+                            qty_done = move_line.qty_done
+                            stock_quant = self.env['stock.quant'].search(
+                                [('location_id', '=', location_id.id),
+                                 ('product_id', '=', product_id.id)])
+                            if stock_quant:
+                                quantity = stock_quant.quantity
+                                if quantity < qty_done:
+                                    error = "Product " + str(
+                                        product_id.name) + " Dose not have enough quantities at " + str(
+                                        location_id.name)
+                                    raise ValidationError(error)
+                            else:
+                                error = "Product " + str(
+                                    product_id.name) + " Dose not have enough quantities at " + str(location_id.name)
+                                raise ValidationError(error)
+        # When validate more quantity than sale order quantity
+        if self.sale_id:
+            sale_id = self.sale_id.id
+            for move in self.move_ids_without_package:
+                done_qty = move.quantity_done
+                if sale_id and self.move_ids_without_package:
+                    available_qty_records = self.env['actually.received.product.quantity'].search(
+                        [('sale_order_id', '=', sale_id), ('product_id', '=', move.product_id.id)])
+                    if available_qty_records:
+                        actually_received = available_qty_records.actually_received
+                        if self.garment_receipt:
+                            actually_received += done_qty
+                        if self.is_receipt_return:
+                            actually_received -= done_qty
+                        available_qty_records.write({
+                            'actually_received': actually_received,
+                        })
+                        # Get sale order line qty for current product
+                        sale_order_qty = 0
+                        for line in self.sale_id.order_line:
+                            if line:
+                                if line.product_id.id == move.product_id.id:
+                                    sale_order_qty += line.product_uom_qty
+                        if actually_received > sale_order_qty:
+                            # TODO: Need to be checked correct email template
+                            template_id = self.env['ir.model.data']._xmlid_to_res_id(
+                                'union_colmbo_washing_plant.extra_qty_notification_email.xml',
+                                raise_if_not_found=False)
+                            lang = self.env.context.get('lang')
+                            template = self.env['mail.template'].browse(template_id)
+                            if template.lang:
+                                lang = template._render_lang(self.ids)[self.id]
+                            ctx = {
+                                'default_model': 'stock.picking',
+                                # 'default_res_id': self.ids[0],
+                                'default_use_template': bool(template_id),
+                                'default_template_id': template_id,
+                                'default_composition_mode': 'comment',
+                                'mark_so_as_sent': True,
+                                # 'custom_layout': "mail.mail_notification_paynow",
+                                'proforma': self.env.context.get('proforma', False),
+                                'force_email': True,
+                                # 'model_description': self.with_context(lang=lang).type_name,
+                            }
+
+                            return {
+                                'type': 'ir.actions.act_window',
+                                'view_mode': 'form',
+                                'res_model': 'mail.compose.message',
+                                'views': [(False, 'form')],
+                                'view_id': False,
+                                'target': 'new',
+                                # 'context': ctx,
+                            }
 
         return super(Picking, self).button_validate()
 
