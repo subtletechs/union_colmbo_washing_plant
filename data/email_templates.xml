@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="0">
+    <data noupdate="1">
         <!-- Extra quantity email template -->
         <record id="extra_qty_notification_email" model="mail.template">
             <field name="name">Extra Quantity Received: Send by email</field>
@@ -11,7 +11,6 @@
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
-                        <t t-set="doc_name" t-value="'quotation' if object.state in ('draft', 'sent') else 'order'"/>
                         Hello,
                         <br/>
                         <br/>

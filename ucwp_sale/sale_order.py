@@ -137,7 +137,7 @@ class SaleOrder(models.Model):
     def create(self, vals):
         """"Check the products available in order line and create new records in actual product quantity"""
         res = super(SaleOrder, self).create(vals)
-        if self.garment_sales:
+        if vals['garment_sales']:
             if 'order_line' in vals:
                 order_lines = vals['order_line']
                 for line in order_lines:

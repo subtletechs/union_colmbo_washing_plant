@@ -688,53 +688,33 @@ class Picking(models.Model):
                                 if line.product_id.id == move.product_id.id:
                                     sale_order_qty += line.product_uom_qty
                         if actually_received > sale_order_qty:
-                            self.extra_qty_email()
+                            ir_model_data = self.env['ir.model.data']
+                            template_id = ir_model_data._xmlid_lookup('union_colmbo_washing_plant.extra_qty_notification_email')[2]
+                            compose_form_id = ir_model_data._xmlid_lookup('mail.email_compose_message_wizard_form')[2]
+                            ctx = dict(self.env.context or {})
+                            ctx.update({
+                                'default_model': 'stock.picking',
+                                'active_model': 'stock.picking',
+                                'active_id': self.ids[0],
+                                'default_res_id': self.ids[0],
+                                'default_use_template': bool(template_id),
+                                'default_template_id': template_id,
+                                'default_composition_mode': 'comment',
+                                'force_email': True,
+                            })
+
+                            return {
+                                'name': _('Compose Email'),
+                                'type': 'ir.actions.act_window',
+                                'view_mode': 'form',
+                                'res_model': 'mail.compose.message',
+                                'views': [(compose_form_id, 'form')],
+                                'view_id': compose_form_id,
+                                'target': 'new',
+                                'context': ctx,
+                            }
 
         return super(Picking, self).button_validate()
-
-    def extra_qty_email(self):
-        ir_model_data = self.env['ir.model.data']
-        try:
-            template_id = ir_model_data._xmlid_lookup('union_colmbo_washing_plant.extra_qty_notification_email')[2]
-        except ValueError:
-            template_id = False
-
-        try:
-            compose_form_id = ir_model_data._xmlid_lookup('mail.email_compose_message_wizard_form')[2]
-        except ValueError:
-            compose_form_id = False
-
-        ctx = dict(self.env.context or {})
-        ctx.update({
-            'default_model': 'stock.picking',
-            'active_model': 'stock.picking',
-            'active_id': self.ids[0],
-            'default_res_id': self.ids[0],
-            'default_use_template': bool(template_id),
-            'default_template_id': template_id,
-            'default_composition_mode': 'comment',
-            'force_email': True,
-        })
-
-        lang = self.env.context.get('lang')
-        if {'default_template_id', 'default_model', 'default_res_id'} <= ctx.keys():
-            template = self.env['mail.template'].browse(ctx['default_template_id'])
-            if template and template.lang:
-                lang = template._render_lang([ctx['default_res_id']])[ctx['default_res_id']]
-
-        self = self.with_context(lang=lang)
-        ctx['model_description'] = _('Extra Quantity')
-
-        return {
-            'name': _('Compose Email'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'views': [(compose_form_id, 'form')],
-            'view_id': compose_form_id,
-            'target': 'new',
-            'context': ctx,
-        }
 
 
 class WashingOptions(models.Model):
