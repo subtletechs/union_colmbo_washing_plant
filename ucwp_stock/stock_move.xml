@@ -27,7 +27,7 @@
                         attrs="{'invisible': ['|',('garment_receipt', '=', False),('receive_logistic','!=', False)]}"/>
                 <button name="receive_sample_update_datetime" string="Receive to Sample Room" type="object"
                         class="oe_highlight" groups="base.group_user"
-                        attrs="{'invisible': ['|',('garment_receipt', '=', False),('receive_sample_room','!=', False)]}"/>
+                        attrs="{'invisible': ['|', '|', '|', ('garment_receipt', '=', False),('receive_sample_room','!=', False),('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
                 <button name="before_quality_check" string="Before-wash QC" type="object" class="oe_highlight"
                         groups="base.group_user"
                         attrs="{'invisible': ['|','|','|',('garment_receipt', '=', False),('state','!=', 'done'),('quality_check_count', '&gt;', 0), ('bypass_qc', '=', True)]}"/>
@@ -103,7 +103,7 @@
                         <field name="samples"
                                attrs="{'invisible': ['|',('garment_select', '=', 'sample'),('garment_select', '=', False)]}"/>
                         <field name="receive_logistic"/>
-                        <field name="receive_sample_room"/>
+                        <field name="receive_sample_room" attrs="{'invisible':['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
                     </group>
                     <group string="Before Wash QC Bypass" attrs="{'invisible': [('garment_receipt', '=', False)]}">
                         <field name="bypass_qc"/>

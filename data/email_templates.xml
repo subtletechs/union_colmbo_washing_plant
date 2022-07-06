@@ -4,10 +4,10 @@
         <!-- Extra quantity email template -->
         <record id="extra_qty_notification_email" model="mail.template">
             <field name="name">Extra Quantity Received: Send by email</field>
-            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="model_id" ref="union_colmbo_washing_plant.model_stock_picking"/>
             <field name="subject">Extra Quantity Received</field>
-            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
-            <field name="partner_to">{{ object.partner_id.id }}</field>
+<!--            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>-->
+<!--            <field name="partner_to">{{ object.partner_id.id }}</field>-->
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -15,40 +15,15 @@
                         Hello,
                         <br/>
                         <br/>
-                        Your
-                        <t t-if="ctx.get('proforma')">
-                            Pro forma invoice for <t t-out="doc_name or ''">quotation</t>
-                            <strong t-out="object.name or ''">S00052</strong>
-                            <t t-if="object.origin">
-                                (with reference: <t t-out="object.origin or ''"></t> )
-                            </t>
-                            amounting in <strong
-                                t-out="format_amount(object.amount_total, object.pricelist_id.currency_id) or ''">$
-                            10.00
-                        </strong> is available.
-                        </t>
-                        <t t-else="">
-                            <t t-out="doc_name or ''">quotation</t>
-                            <strong t-out="object.name or ''"></strong>
-                            <t t-if="object.origin">
-                                (with reference: <t t-out="object.origin or ''">S00052</t> )
-                            </t>
-                            amounting in <strong
-                                t-out="format_amount(object.amount_total, object.pricelist_id.currency_id) or ''">$
-                            10.00
-                        </strong> is ready for review.
-                        </t>
-                        <br/>
-                        <br/>
-                        Do not hesitate to contact us if you have any questions.
+                        Received extra quantity
                         <br/>
                     </p>
                 </div>
             </field>
 <!--            <field name="report_template" ref="action_report_saleorder"/>-->
 <!--            <field name="report_name">{{ (object.name or '').replace('/','_') }}</field>-->
-            <field name="lang">{{ object.partner_id.lang }}</field>
-            <field name="auto_delete" eval="True"/>
+<!--            <field name="lang">{{ object.partner_id.lang }}</field>-->
+<!--            <field name="auto_delete" eval="True"/>-->
         </record>
 
         <!-- Quality Check Email Template -->

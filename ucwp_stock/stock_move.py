@@ -286,6 +286,15 @@ class StockMoveLine(models.Model):
             if self.qty_done > self.product_uom_qty:
                 raise ValidationError(_("Done quantity cannot be larger than reserved quantity"))
 
+    @api.onchange('location_dest_id')
+    def _set_destination(self):
+        if self.picking_id.garment_select == 'sample' and self.picking_id.garment_receipt:
+            location_dest_id = self.env['stock.location'].search([('locations_category', '=', 'sample')])
+            self.location_dest_id = location_dest_id
+        if self.picking_id.garment_select == 'bulk' and self.picking_id.garment_receipt:
+            location_dest_id = self.env['stock.location'].search([('locations_category', '=', 'logistic')])
+            self.location_dest_id = location_dest_id
+
 
 class ProductionLot(models.Model):
     _inherit = 'stock.production.lot'
@@ -364,70 +373,70 @@ class Picking(models.Model):
         self.write({'receive_logistic': datetime.datetime.now()})
 
     def receive_sample_update_datetime(self):
-        """Update Sample room order received date time and trasnfer stock from Logistic to Sample room"""
-        if self.move_ids_without_package:
-
-            picking_id = self.env['stock.picking.type'].search(
-                [('code', '=', 'internal'), ('barcode', '=', 'WH-INTERNAL')])
-            source = self.env['stock.location'].search([('locations_category', '=', 'logistic')])
-            destination = self.env['stock.location'].search([('locations_category', '=', 'sample')])
-            transfer = self.env['stock.picking'].create({
-                'picking_type_id': picking_id.id,
-                'location_id': source.id,
-                'location_dest_id': destination.id,
-                'move_ids_without_package': False
-            })
-
-            move_list = []
-            for move in self.move_ids_without_package:
-                product_id = move.product_id
-                if move.move_line_nosuggest_ids:
-                    split_lines = []
-                    for move_line in move.move_line_nosuggest_ids:
-                        lot_id = move_line.lot_id
-                        # Calculate available qty for lot
-                        product_in_records = self.env['stock.move.line'].search(
-                            [('product_id', '=', product_id.id),
-                             ('lot_id', '=', lot_id.id),
-                             ('location_dest_id', '=', source.id)])
-                        product_in_qty = 0
-                        if product_in_records:
-                            for product_in_record in product_in_records:
-                                product_in_qty += product_in_record.qty_done
-
-                        product_out_records = self.env['stock.move.line'].search(
-                            [('product_id', '=', product_id.id),
-                             ('lot_id', '=', lot_id.id),
-                             ('location_dest_id', '=', destination.id)])
-                        product_out_qty = 0
-                        if product_out_records:
-                            product_out_qty = 0
-                            for product_out_record in product_out_records:
-                                product_out_qty += product_out_record.qty_done
-
-                        done_qty = product_in_qty - product_out_qty
-
-                        split_lines.append(
-                            (0, 0, {'product_id': product_id.id,
-                                    'location_id': source.id,
-                                    'location_dest_id': destination.id,
-                                    'lot_id': lot_id.id,
-                                    'qty_done': done_qty,
-                                    'product_uom_id': move_line.product_uom_id.id,
-                                    'picking_id': transfer.id
-                                    }))
-                else:
-                    split_lines = None
-                move_list.append(
-                    (0, 0, {'product_id': product_id.id,
-                            'name': product_id.display_name,
-                            'product_uom': product_id.uom_id.id,
-                            'location_id': source.id,
-                            'location_dest_id': destination.id,
-                            'move_line_ids': split_lines,
-                            }))
-            transfer.write({'move_ids_without_package': move_list})
-            transfer.button_validate()
+        """Update Sample room order received date time and transfer stock from Logistic to Sample room"""
+        # if self.move_ids_without_package:
+        #
+        #     picking_id = self.env['stock.picking.type'].search(
+        #         [('code', '=', 'internal'), ('barcode', '=', 'WH-INTERNAL')])
+        #     source = self.env['stock.location'].search([('locations_category', '=', 'logistic')])
+        #     destination = self.env['stock.location'].search([('locations_category', '=', 'sample')])
+        #     transfer = self.env['stock.picking'].create({
+        #         'picking_type_id': picking_id.id,
+        #         'location_id': source.id,
+        #         'location_dest_id': destination.id,
+        #         'move_ids_without_package': False
+        #     })
+        #
+        #     move_list = []
+        #     for move in self.move_ids_without_package:
+        #         product_id = move.product_id
+        #         if move.move_line_nosuggest_ids:
+        #             split_lines = []
+        #             for move_line in move.move_line_nosuggest_ids:
+        #                 lot_id = move_line.lot_id
+        #                 # Calculate available qty for lot
+        #                 product_in_records = self.env['stock.move.line'].search(
+        #                     [('product_id', '=', product_id.id),
+        #                      ('lot_id', '=', lot_id.id),
+        #                      ('location_dest_id', '=', source.id)])
+        #                 product_in_qty = 0
+        #                 if product_in_records:
+        #                     for product_in_record in product_in_records:
+        #                         product_in_qty += product_in_record.qty_done
+        #
+        #                 product_out_records = self.env['stock.move.line'].search(
+        #                     [('product_id', '=', product_id.id),
+        #                      ('lot_id', '=', lot_id.id),
+        #                      ('location_dest_id', '=', destination.id)])
+        #                 product_out_qty = 0
+        #                 if product_out_records:
+        #                     product_out_qty = 0
+        #                     for product_out_record in product_out_records:
+        #                         product_out_qty += product_out_record.qty_done
+        #
+        #                 done_qty = product_in_qty - product_out_qty
+        #
+        #                 split_lines.append(
+        #                     (0, 0, {'product_id': product_id.id,
+        #                             'location_id': source.id,
+        #                             'location_dest_id': destination.id,
+        #                             'lot_id': lot_id.id,
+        #                             'qty_done': done_qty,
+        #                             'product_uom_id': move_line.product_uom_id.id,
+        #                             'picking_id': transfer.id
+        #                             }))
+        #         else:
+        #             split_lines = None
+        #         move_list.append(
+        #             (0, 0, {'product_id': product_id.id,
+        #                     'name': product_id.display_name,
+        #                     'product_uom': product_id.uom_id.id,
+        #                     'location_id': source.id,
+        #                     'location_dest_id': destination.id,
+        #                     'move_line_ids': split_lines,
+        #                     }))
+        #     transfer.write({'move_ids_without_package': move_list})
+        #     transfer.button_validate()
 
         self.write({'receive_sample_room': datetime.datetime.now()})
 
@@ -660,7 +669,7 @@ class Picking(models.Model):
             sale_id = self.sale_id.id
             for move in self.move_ids_without_package:
                 done_qty = move.quantity_done
-                if sale_id and self.move_ids_without_package:
+                if self.move_ids_without_package:
                     available_qty_records = self.env['actually.received.product.quantity'].search(
                         [('sale_order_id', '=', sale_id), ('product_id', '=', move.product_id.id)])
                     if available_qty_records:
@@ -679,38 +688,53 @@ class Picking(models.Model):
                                 if line.product_id.id == move.product_id.id:
                                     sale_order_qty += line.product_uom_qty
                         if actually_received > sale_order_qty:
-                            # TODO: Need to be checked correct email template
-                            template_id = self.env['ir.model.data']._xmlid_to_res_id(
-                                'union_colmbo_washing_plant.extra_qty_notification_email.xml',
-                                raise_if_not_found=False)
-                            lang = self.env.context.get('lang')
-                            template = self.env['mail.template'].browse(template_id)
-                            if template.lang:
-                                lang = template._render_lang(self.ids)[self.id]
-                            ctx = {
-                                'default_model': 'stock.picking',
-                                # 'default_res_id': self.ids[0],
-                                'default_use_template': bool(template_id),
-                                'default_template_id': template_id,
-                                'default_composition_mode': 'comment',
-                                'mark_so_as_sent': True,
-                                # 'custom_layout': "mail.mail_notification_paynow",
-                                'proforma': self.env.context.get('proforma', False),
-                                'force_email': True,
-                                # 'model_description': self.with_context(lang=lang).type_name,
-                            }
-
-                            return {
-                                'type': 'ir.actions.act_window',
-                                'view_mode': 'form',
-                                'res_model': 'mail.compose.message',
-                                'views': [(False, 'form')],
-                                'view_id': False,
-                                'target': 'new',
-                                # 'context': ctx,
-                            }
+                            self.extra_qty_email()
 
         return super(Picking, self).button_validate()
+
+    def extra_qty_email(self):
+        ir_model_data = self.env['ir.model.data']
+        try:
+            template_id = ir_model_data._xmlid_lookup('union_colmbo_washing_plant.extra_qty_notification_email')[2]
+        except ValueError:
+            template_id = False
+
+        try:
+            compose_form_id = ir_model_data._xmlid_lookup('mail.email_compose_message_wizard_form')[2]
+        except ValueError:
+            compose_form_id = False
+
+        ctx = dict(self.env.context or {})
+        ctx.update({
+            'default_model': 'stock.picking',
+            'active_model': 'stock.picking',
+            'active_id': self.ids[0],
+            'default_res_id': self.ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'force_email': True,
+        })
+
+        lang = self.env.context.get('lang')
+        if {'default_template_id', 'default_model', 'default_res_id'} <= ctx.keys():
+            template = self.env['mail.template'].browse(ctx['default_template_id'])
+            if template and template.lang:
+                lang = template._render_lang([ctx['default_res_id']])[ctx['default_res_id']]
+
+        self = self.with_context(lang=lang)
+        ctx['model_description'] = _('Extra Quantity')
+
+        return {
+            'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
+        }
 
 
 class WashingOptions(models.Model):
