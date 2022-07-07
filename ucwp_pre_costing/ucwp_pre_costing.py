@@ -44,7 +44,7 @@ class PreCosting(models.Model):
     def action_draft(self):
         self.write({'state': 'draft'})
 
-    @api.depends('pre_costing_wet_process_lines.price')
+    @api.depends('pre_costing_wet_process_lines.price', 'pre_costing_dry_process_lines.price')
     def _calculate_total_line_costs(self):
         """Calculate Total for Wet process, Dry process and Total cost of wet & dry processes"""
         for record in self:

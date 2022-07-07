@@ -44,7 +44,7 @@
                             <field name="res_currency"/>
                             <br/>
                             <br/>
-                            <field name="total_cost_of_wet_and_dry" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            <field name="total_cost_of_wet_and_dry"/>
                         </group>
                     </group>
                     <notebook>
@@ -62,7 +62,7 @@
                                 </tree>
                             </field>
                             <group  class="oe_subtotal_footer oe_right">
-                                <field name="total_wet_line_costs" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="total_wet_line_costs" class="oe_subtotal_footer_separator"/>
                             </group>
                         </page>
                         <page string="Dry Process" name="pre_costing_dry_process_lines">
@@ -79,7 +79,7 @@
                                 </tree>
                             </field>
                             <group  class="oe_subtotal_footer oe_right">
-                                <field name="total_dry_line_costs" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="total_dry_line_costs" class="oe_subtotal_footer_separator"/>
                             </group>
                         </page>
                         <page string="Style Info">
