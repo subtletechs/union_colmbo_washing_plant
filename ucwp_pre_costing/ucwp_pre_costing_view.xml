@@ -8,7 +8,7 @@
             <tree string="Pre Costing">
                 <field name="name"/>
                 <field name="product_id"/>
-                <field name="total_line_costs"/>
+<!--                <field name="total_line_costs"/>-->
             </tree>
         </field>
     </record>
@@ -39,16 +39,20 @@
                             <field name="product_id"/>
                             <field name="gsn"/>
                             <field name="fabric_composition"/>
-                            <field name="res_currency" invisible="1"/>
                         </group>
-                        <group></group>
+                        <group>
+                            <field name="res_currency"/>
+                            <br/>
+                            <br/>
+                            <field name="total_cost_of_wet_and_dry" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                        </group>
                     </group>
                     <notebook>
-                        <page string="Pre Costing Lines" name="pre_costing_lines">
-                            <field name="pre_costing_lines">
-                                <tree string="Pre Costing Lines" editable="bottom">
+                        <page string="Wet Process" name="pre_costing_wet_process_lines">
+                            <field name="pre_costing_wet_process_lines" context="{'default_process_type':'wet'}">
+                                <tree string="Wet Process" editable="bottom">
                                     <field name="res_currency" invisible="1"/>
-                                    <field name="process_type"/>
+                                    <field name="process_type" invisible="1"/>
                                     <field name="operation"/>
                                     <field name="cost" widget="monetary"/>
                                     <field name="margin"/>
@@ -58,7 +62,24 @@
                                 </tree>
                             </field>
                             <group  class="oe_subtotal_footer oe_right">
-                                <field name="total_line_costs" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="total_wet_line_costs" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            </group>
+                        </page>
+                        <page string="Dry Process" name="pre_costing_dry_process_lines">
+                            <field name="pre_costing_dry_process_lines" context="{'default_process_type':'dry'}">
+                                <tree string="Dry Process" editable="bottom">
+                                    <field name="res_currency" invisible="1"/>
+                                    <field name="process_type" invisible="1"/>
+                                    <field name="operation"/>
+                                    <field name="cost" widget="monetary"/>
+                                    <field name="margin"/>
+                                    <field name="pieces_for_hour_actual"/>
+                                    <field name="pieces_for_hour_target"/>
+                                    <field name="price" widget="monetary"/>
+                                </tree>
+                            </field>
+                            <group  class="oe_subtotal_footer oe_right">
+                                <field name="total_dry_line_costs" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                             </group>
                         </page>
                         <page string="Style Info">
