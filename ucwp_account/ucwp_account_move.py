@@ -25,6 +25,33 @@ class AccountMove(models.Model):
             }
         }
 
+        # confirm invoice
+        def action_post(self):
+            customer = self.partner_id
+            if customer.payment_method == "credit" and customer.credit_limit_available == True:
+            # calculate available_credit_limit and total due
+                total_due = 0
+                for aml in customer.unreconciled_aml_ids:
+                    if aml.company_id == self.env.company and not aml.blocked:
+                        amount = aml.amount_residual
+                        total_due += amount
+                customer.available_credit_limit = customer.credit_limit - total_due
+                customer.total_pending_payments = total_due
+
+            return super(AccountMove, self).action_post()
+
+        # Register payment
+        def action_register_payment(self):
+
+            customer = self.partner_id
+
+            # calculate available_credit_limit and total due after payment
+            invoice_payment = self.amount_total - self.amount_residual
+            customer.total_pending_payments -= invoice_payment
+            customer.available_credit_limit += invoice_payment
+
+            return super(AccountMove, self).action_register_payment()
+
 
 class AccountMoveWizard(models.TransientModel):
     _name = "account.move.wizard"

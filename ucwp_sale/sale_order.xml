@@ -18,6 +18,19 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+
+            <!-- Credit Limit override button-->
+            <xpath expr="//button[@name='action_cancel']" position="after">
+                <button name="action_credit_override" type="object" string="Credit Limit Override" attrs="{'invisible': [('credit_limit_exceeded', '=', False)]}"/>
+            </xpath>
+             <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="credit_limit_exceeded" invisible="1"/>
+            </xpath>
+            <!--      Credit Limit warning ribbon-->
+            <xpath expr="//field[@name='name']" position="before">
+                <widget name="web_ribbon" title="Credit Limit Exceeded" bg_color="bg-danger" attrs="{'invisible': [('credit_limit_exceeded', '=', False)]}"/>
+            </xpath>
+
             <xpath expr="//button[@name='payment_action_void']" position="before">
                 <button name="generate_garment_receipt" type="object" class="btn-primary"
                         string="Garment Receipt"
