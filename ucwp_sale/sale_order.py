@@ -128,7 +128,8 @@ class SaleOrder(models.Model):
                                     break
                                 else:
                                     sale_record.need_to_approve = False
-                            break
+                            else:
+                                sale_record.need_to_approve = False
                 else:
                     sale_record.need_to_approve = False
             else:
