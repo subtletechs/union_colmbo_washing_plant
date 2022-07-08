@@ -13,9 +13,34 @@ class Partner(models.Model):
                                              compute='compute_available_credit_limit')
     total_pending_payments = fields.Monetary(currency_field='currency_id', string="Total Pending Payments",
                                              compute='compute_total_pending')
+    total_due = fields.Monetary(compute='_compute_total_due')
+
+    # # @api.depends_context('company', 'allowed_company_ids')
+    # def _compute_total_due(self):
+    #     """
+    #     Compute the fields 'total_due'
+    #     """
+    #     today = fields.Date.context_today(self)
+    #     for record in self:
+    #         total_due = 0
+    #         total_overdue = 0
+    #         for aml in record.unreconciled_aml_ids:
+    #             if aml.company_id == self.env.company and not aml.blocked:
+    #                 amount = aml.amount_residual
+    #                 total_due += amount
+    #                 is_overdue = today > aml.date_maturity if aml.date_maturity else today > aml.date
+    #                 if is_overdue:
+    #                     total_overdue += amount
+    #         record.total_due = total_due
 
     def compute_total_pending(self):
-        self.total_pending_payments = self.total_due
+        for record in self:
+            if record.credit_limit_available:
+                record.total_pending_payments = record.total_due
 
     def compute_available_credit_limit(self):
-        self.available_credit_limit = self.credit_limit - self.total_due
+        for record in self:
+            if record.credit_limit_available:
+                record.available_credit_limit = record.credit_limit - record.total_due
+
+

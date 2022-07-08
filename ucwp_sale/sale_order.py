@@ -37,30 +37,30 @@ class SaleOrder(models.Model):
     # Sale order type
     local_export = fields.Selection([('local', 'Local'), ('export', 'Export')], string="Local/Export")
 
-    credit_limit_exceeded = fields.Boolean(string="Credit Limit Exceeded", compute='check_credit_block')
-    credit_limit_override = fields.Boolean(string="Credit Limit Override", default=False)
+    # credit_limit_exceeded = fields.Boolean(string="Credit Limit Exceeded", compute='check_credit_block')
+    # credit_limit_override = fields.Boolean(string="Credit Limit Override", default=False)
 
-    @api.depends('partner_id', 'amount_total', 'order_line')
-    def check_credit_block(self):
-        for order in self:
-            if order.credit_limit_override == False:
-                partner = order.partner_id
-                payment_method = partner.payment_method
-                credit_limit_available = partner.credit_limit_available
-                credit_limit = partner.credit_limit
-                if payment_method == 'credit' and credit_limit_available == True:
-                    if self.amount_total > partner.available_credit_limit:
-                        order.credit_limit_exceeded = True
-                    else:
-                        order.credit_limit_exceeded = False
-                else:
-                    order.credit_limit_exceeded = False
-            else:
-                order.credit_limit_exceeded = False
+    # @api.depends('partner_id', 'amount_total', 'order_line')
+    # def check_credit_block(self):
+    #     for order in self:
+    #         if order.credit_limit_override == False:
+    #             partner = order.partner_id
+    #             payment_method = partner.payment_method
+    #             credit_limit_available = partner.credit_limit_available
+    #             credit_limit = partner.credit_limit
+    #             if payment_method == 'credit' and credit_limit_available == True:
+    #                 if self.amount_total > partner.available_credit_limit:
+    #                     order.credit_limit_exceeded = True
+    #                 else:
+    #                     order.credit_limit_exceeded = False
+    #             else:
+    #                 order.credit_limit_exceeded = False
+    #         else:
+    #             order.credit_limit_exceeded = False
 
-    def action_credit_override(self):
-        """Override credit limit"""
-        return self.write({'credit_limit_override': True, 'credit_limit_exceeded': False})
+    # def action_credit_override(self):
+    #     """Override credit limit"""
+    #     return self.write({'credit_limit_override': True, 'credit_limit_exceeded': False})
 
     def _get_garment_receipts(self):
         """To Get the related Garment Receipts count and IDs"""
