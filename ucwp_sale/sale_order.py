@@ -117,20 +117,22 @@ class SaleOrder(models.Model):
 
     def _compute_need_to_approve(self):
         """Compute need_to_approve value"""
-        if self.garment_sales:
-            if self.pre_costing:
-                for record in self.pre_costing:
-                    for sale_order_line in self.order_line:
-                        if record.product_id == sale_order_line.product_id:
-                            if record.total_line_costs > sale_order_line.price_subtotal:
-                                self.need_to_approve = True
-                            else:
-                                self.need_to_approve = False
-                        break
+        for sale_record in self:
+            if sale_record.garment_sales:
+                if sale_record.pre_costing:
+                    for record in sale_record.pre_costing:
+                        for sale_order_line in sale_record.order_line:
+                            if record.product_id == sale_order_line.product_id:
+                                if record.total_cost_of_wet_and_dry > sale_order_line.price_unit:
+                                    sale_record.need_to_approve = True
+                                    break
+                                else:
+                                    sale_record.need_to_approve = False
+                            break
+                else:
+                    sale_record.need_to_approve = False
             else:
-                self.need_to_approve = False
-        else:
-            self.need_to_approve = False
+                sale_record.need_to_approve = False
 
     def generate_garment_receipt(self):
         """Generate the Garment Receipt from Sale Order"""
