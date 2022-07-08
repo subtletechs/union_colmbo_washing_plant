@@ -37,8 +37,8 @@ class SaleOrder(models.Model):
     # Sale order type
     local_export = fields.Selection([('local', 'Local'), ('export', 'Export')], string="Local/Export")
 
-    # credit_limit_exceeded = fields.Boolean(string="Credit Limit Exceeded", compute='check_credit_block')
-    # credit_limit_override = fields.Boolean(string="Credit Limit Override", default=False)
+    credit_limit_exceeded = fields.Boolean(string="Credit Limit Exceeded", default=False)
+    credit_limit_override = fields.Boolean(string="Credit Limit Override", default=False)
 
     # @api.depends('partner_id', 'amount_total', 'order_line')
     # def check_credit_block(self):
