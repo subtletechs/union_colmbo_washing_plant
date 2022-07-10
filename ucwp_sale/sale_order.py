@@ -11,7 +11,8 @@ from odoo.tools import float_is_zero, html_keep_url, is_html_empty
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    pre_costing = fields.Many2many(comodel_name="pre.costing", string="Pre Costing")
+    pre_costing = fields.Many2many(comodel_name="pre.costing", string="Pre Costing",
+                                   domain="[('state', '=', 'confirm')]")
 
     need_to_approve = fields.Boolean(string="Need Pre Cost Approval", default=True, required=True,
                                      compute="_compute_need_to_approve")
@@ -24,7 +25,7 @@ class SaleOrder(models.Model):
     # garment receipt info
     garment_receipt_count = fields.Integer(string='Invoice Count', compute='_get_garment_receipts')
     garment_receipt_ids = fields.Many2many("stock.picking", string='Garment Receipt', compute="_get_garment_receipts",
-                                           copy=False, )
+                                           copy=False)
 
     # Actually received product quantity
     actually_received_product_qty = fields.One2many(comodel_name="actually.received.product.quantity",
@@ -172,7 +173,6 @@ class SaleOrder(models.Model):
                     self.env['actually.received.product.quantity'].create(
                         {'sale_order_id': res.id, 'product_id': line[2].get('product_id')})
 
-
         return res
 
     def write(self, values):
@@ -197,8 +197,9 @@ class SaleOrder(models.Model):
                     if line[0] == 2:
                         line_object = self.env['sale.order.line'].browse(line[1])
                         product = line_object.product_id
-                        record = self.env['actually.received.product.quantity'].search([('sale_order_id', '=', order_id),
-                                                                                        ('product_id', '=', product.id)])
+                        record = self.env['actually.received.product.quantity'].search(
+                            [('sale_order_id', '=', order_id),
+                             ('product_id', '=', product.id)])
                         if record:
                             record.unlink()
         return super(SaleOrder, self).write(values)
