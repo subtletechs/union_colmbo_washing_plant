@@ -41,6 +41,10 @@ class SaleOrder(models.Model):
     credit_limit_exceeded = fields.Boolean(string="Credit Limit Exceeded", default=False)
     credit_limit_override = fields.Boolean(string="Credit Limit Override", default=False)
 
+    # UCWP|FUN|-008 - Add Delivery Requirement tab
+    expected_delivery_date = fields.Date(string="Expected Delivery Date")
+    expected_quantity = fields.Integer(string="Expected Quantity")
+
     # @api.depends('partner_id', 'amount_total', 'order_line')
     # def check_credit_block(self):
     #     for order in self:
