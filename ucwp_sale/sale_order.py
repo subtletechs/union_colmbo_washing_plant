@@ -82,13 +82,14 @@ class SaleOrder(models.Model):
         """Preview Garment Receipts"""
         garment_receipts = self.mapped('garment_receipt_ids')
         if len(garment_receipts) > 1:
+            form_view = self.env.ref('stock.view_picking_form').id
             tree_view = self.env.ref('stock.vpicktree').id
             return {
                 'name': 'Garment Receipts',
                 'res_model': 'stock.picking',
                 'type': 'ir.actions.act_window',
-                'view_mode': 'tree',
-                'view_id': tree_view,
+                'view_mode': 'list,form',
+                'views': [[tree_view, 'list'], [form_view, 'form']],
                 'target': 'current',
                 'domain': [('id', 'in', garment_receipts.ids)],
 
