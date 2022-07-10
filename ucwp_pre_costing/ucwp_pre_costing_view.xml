@@ -8,7 +8,7 @@
             <tree string="Pre Costing">
                 <field name="name"/>
                 <field name="product_id"/>
-<!--                <field name="total_line_costs"/>-->
+                <field name="state"/>
             </tree>
         </field>
     </record>

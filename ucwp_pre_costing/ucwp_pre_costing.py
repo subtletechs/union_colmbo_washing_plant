@@ -36,10 +36,16 @@ class PreCosting(models.Model):
                                    related="product_id.garment_type", store=True)
     garment_select = fields.Selection([('bulk', 'Bulk'), ('sample', 'Sample')], string='Bulk/Sample', readonly=True)
 
-    def action_confirm(self):
-        """Set sequence and change state to Confirm"""
+    @api.model
+    def create(self, vals):
+        """Set sequence"""
         sequence = self.env['ir.sequence'].next_by_code('pre.costing') or _('New')
-        self.write({'state': 'confirm', 'name': sequence})
+        vals['name'] = sequence
+        return super(PreCosting, self).create(vals)
+
+    def action_confirm(self):
+        """Change state to Confirm"""
+        self.write({'state': 'confirm'})
 
     def action_draft(self):
         self.write({'state': 'draft'})
