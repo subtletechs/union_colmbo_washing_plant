@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     pre_costing = fields.Many2many(comodel_name="pre.costing", string="Pre Costing",
-                                   domain="[('state', '=', 'confirm')]")
+                                   domain="[('state', '=', 'confirm')]", required=True)
 
     need_to_approve = fields.Boolean(string="Need Pre Cost Approval", default=True, required=True,
                                      compute="_compute_need_to_approve")
@@ -71,7 +71,9 @@ class SaleOrder(models.Model):
     def _get_garment_receipts(self):
         """To Get the related Garment Receipts count and IDs"""
         for record in self:
-            stock_picking = self.env['stock.picking'].search([('sale_id', '=', record.id)])
+            stock_picking = self.env['stock.picking'].search([
+                ('sale_id', '=', record.id),
+                ('garment_receipt', '=', True)])
             if stock_picking:
                 picking_ids = stock_picking.ids
                 record.garment_receipt_ids = picking_ids
@@ -126,17 +128,26 @@ class SaleOrder(models.Model):
         """Compute need_to_approve value"""
         for sale_record in self:
             if sale_record.garment_sales:
-                if sale_record.pre_costing:
-                    for record in sale_record.pre_costing:
+                if sale_record.order_line:
+                    if sale_record.pre_costing:
+                        # Get pre costing product ids
+                        pre_cost_product_ids = []
+                        for record in sale_record.pre_costing:
+                            pre_cost_product_ids.append(record.product_id.id)
                         for sale_order_line in sale_record.order_line:
-                            if record.product_id == sale_order_line.product_id:
-                                if record.total_cost_of_wet_and_dry > sale_order_line.price_unit:
-                                    sale_record.need_to_approve = True
-                                    break
-                                else:
-                                    sale_record.need_to_approve = False
+                            if sale_order_line.product_id.id in pre_cost_product_ids:
+                                for pre_cost_record in sale_record.pre_costing:
+                                    if pre_cost_record.product_id == sale_order_line.product_id:
+                                        if pre_cost_record.total_cost_of_wet_and_dry > sale_order_line.price_unit:
+                                            sale_record.need_to_approve = True
+                                            break
+                                        else:
+                                            sale_record.need_to_approve = False
                             else:
-                                sale_record.need_to_approve = False
+                                raise ValidationError(
+                                    _("Select a pre costing for " + sale_order_line.product_id.name))
+                    else:
+                        raise ValidationError(_("Select pre costing records"))
                 else:
                     sale_record.need_to_approve = False
             else:
