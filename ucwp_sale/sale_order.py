@@ -221,6 +221,20 @@ class SaleOrder(models.Model):
                             record.unlink()
         return super(SaleOrder, self).write(values)
 
+    def action_view_delivery(self):
+        stock_picking = self.env['stock.picking'].search([
+            ('sale_id', '=', self.id),
+            ('garment_receipt', '!=', True)])
+        return self._get_action_view_picking(stock_picking)
+
+    @api.depends('picking_ids')
+    def _compute_picking_ids(self):
+        for order in self:
+            stock_picking = self.env['stock.picking'].search([
+                ('sale_id', '=', self.id),
+                ('garment_receipt', '!=', True)]).ids
+            order.delivery_count = len(stock_picking)
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"

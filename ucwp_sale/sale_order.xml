@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <!-- sale order tree view -->
-    <!--    <record id="sale_order_tree_view_inherit_union_colombo" model="ir.ui.view">-->
-    <!--        <field name="name">sale.order.tree.view.inherit</field>-->
-    <!--        <field name="model">sale.order</field>-->
-    <!--        <field name="inherit_id" ref="sale.view_order_tree"/>-->
-    <!--        <field name="arch" type="xml">-->
-    <!--            <xpath expr="//field[@name='partner_id']" position="after">-->
-    <!--                <field name="garment_type"/>-->
-    <!--            </xpath>-->
-    <!--        </field>-->
-    <!--    </record>-->
 
     <!-- sale order form view -->
     <record id="sale_order_form_view_inherit_union_colombo" model="ir.ui.view">
