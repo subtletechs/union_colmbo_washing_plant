@@ -62,8 +62,8 @@
             </xpath>
 
             <xpath expr="//page[@name='variants']" position="after">
-                <!-- MSDS Information Tab -->
-                <page string="MSDS Information" name="msds_information"
+                <!-- MSDS I Information Tab -->
+                <page string="MSDS I Information" name="msds_information"
                       attrs="{'invisible': [('is_chemical', '=', False)]}">
                     <group name="group_chemical">
                         <group>
@@ -72,6 +72,185 @@
                         <group>
                             <field name="msds_in_sinhala"/>
                         </group>
+                    </group>
+                </page>
+                <!-- MSDS II Information Tab -->
+                <page string="MSDS II Information" name="msds_ii_information"
+                      attrs="{'invisible': [('is_chemical', '=', False)]}">
+                    <group>
+                        <group>
+                            <field name="other_name"/>
+                            <field name="chemical_formulator_type"/>
+                        </group>
+                        <group>
+                            <field name="manufacturer_formulator"/>
+                            <field name="local_agent"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="EIM Rating">
+                            <field name="environment"/>
+                            <field name="worker_health"/>
+                            <field name="location"/>
+                        </group>
+                        <group string="GOTS">
+                            <field name="category"/>
+                            <field name="chemical_type"/>
+                            <field name="used_for"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="MSDD">
+                            <field name="available"/>
+                            <field name="issue_date"/>
+                            <field name="version"/>
+                            <field name="revision_date"/>
+                        </group>
+                        <group string="Sign(Label)">
+                            <field name="explosive"/>
+                            <field name="health_hazard"/>
+                            <field name="flammable"/>
+                            <field name="environmental_hazard"/>
+                            <field name="toxic"/>
+                            <field name="corrosive"/>
+                            <field name="oxidizing"/>
+                            <field name="compressed_gas"/>
+                            <field name="warning_irritant"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Personal Protection">
+                            <field name="respirator"/>
+                            <field name="gloves"/>
+                            <field name="footwear"/>
+                            <field name="eye_wear"/>
+                            <field name="apron"/>
+                            <field name="dust_mask"/>
+                            <field name="overalls"/>
+                            <field name="face_shield"/>
+                            <field name="safety_helmet"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <group string="Measures for Cleaning">
+                        <group>
+                            <field name="measures_for_cleaning_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="measures_for_cleaning_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Storage Condition">
+                        <group>
+                            <field name="storage_condition_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="storage_condition_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Hazard Identification">
+                        <group>
+                            <field name="hazard_identification_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="hazard_identification_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Ratings">
+                            <field name="health"/>
+                            <field name="flammability"/>
+                            <field name="reactivity_level"/>
+                            <field name="contact"/>
+                        </group>
+                        <group string="Risk">
+                            <field name="severity"/>
+                            <field name="likelihood"/>
+                            <field name="risk_rating"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="storage_class"/>
+                        </group>
+                        <group string="Fire Extinguishers">
+                            <field name="water"/>
+                            <field name="foom"/>
+                            <field name="dry_powder"/>
+                            <field name="carbon_dioxide"/>
+                        </group>
+                    </group>
+                    <div class="oe_title">
+                        <p class="o_form_label">
+                            <u>First Aid</u>
+                        </p>
+                    </div>
+                    <group string="Inhalation">
+                        <group>
+                            <field name="inhalation_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="inhalation_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Eye Contact">
+                        <group>
+                            <field name="eye_contact_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="eye_contact_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Skin Contact">
+                        <group>
+                            <field name="skin_contact_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="skin_contact_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Ingestion">
+                        <group>
+                            <field name="ingestion_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="ingestion_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="General">
+                        <group>
+                            <field name="general_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="general_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Physical and Chemical properties">
+                        <group>
+                            <field name="appearance"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="chemical_color"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="odor"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="stability"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="incompatible_materials" widget="many2many_tags"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="reactivity"/>
+                        </group>
+                        <group></group>
                     </group>
                 </page>
                 <!-- Chemical Standards Tab -->
@@ -202,8 +381,8 @@
             </xpath>
 
             <xpath expr="//page[@name='sales']" position="before">
-                <!-- MSDS Information Tab -->
-                <page string="MSDS Information" name="msds_information"
+                <!-- MSDS I Information Tab -->
+                <page string="MSDS I Information" name="msds_information"
                       attrs="{'invisible': [('is_chemical', '=', False)]}">
                     <group name="group_chemical">
                         <group>

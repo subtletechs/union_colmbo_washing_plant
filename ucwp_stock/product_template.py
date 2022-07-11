@@ -42,6 +42,87 @@ class ProductTemplate(models.Model):
     msds_in_english = fields.Text(string='In English')
     msds_in_sinhala = fields.Text(string='In Sinhala')
 
+    # UCWP|IMP|-00050 MSDS II tab
+    other_name = fields.Many2one(comodel_name="other.name", string="Other Name")
+    manufacturer_formulator = fields.Many2one(comodel_name="formulator", string="Manufacturer / Formulator(SDS)")
+    chemical_formulator_type = fields.Many2one(comodel_name="chemical.formulator.type",
+                                               string="Chemical Formulator type")
+    local_agent = fields.Many2one(comodel_name="res.partner", string="Local Agent")
+    environment = fields.Selection([('low', 'Low'), ('medium', 'Medium'), ('high', 'High')], string="Environment")
+    worker_health = fields.Selection([('low', 'Low'), ('medium', 'Medium'), ('high', 'High')], string="Worker Health")
+    location = fields.Many2one(comodel_name="location", string="Location")
+    category = fields.Many2one(comodel_name="chemical.category", string="Category")
+    chemical_type = fields.Many2one(comodel_name="chemical.type", string="Chemical Type")
+    used_for = fields.Many2one(comodel_name="chemical.used.for", string="Used for")
+    available = fields.Boolean(string="Available")
+    issue_date = fields.Date(string="Issue Date")
+    version = fields.Float(string="Version")
+    revision_date = fields.Date(string="Revision Date")
+    explosive = fields.Boolean(string="Explosive")
+    health_hazard = fields.Boolean(string="health Hazard")
+    flammable = fields.Boolean(string="Flammable")
+    environmental_hazard = fields.Boolean(string="Environmental Hazard")
+    toxic = fields.Boolean(string="Toxic")
+    corrosive = fields.Boolean(string="Corrosive")
+    oxidizing = fields.Boolean(string="Oxidizing")
+    compressed_gas = fields.Boolean(string="Compressed Gas")
+    warning_irritant = fields.Boolean(string="Warning/ Irritant")
+    respirator = fields.Boolean(string="Respirator")
+    gloves = fields.Boolean(string="Gloves")
+    footwear = fields.Boolean(string="Footwear")
+    eye_wear = fields.Boolean(string="Eye Wear")
+    apron = fields.Boolean(string="Apron")
+    dust_mask = fields.Boolean(string="Dust mask")
+    overalls = fields.Boolean(string="Overalls")
+    face_shield = fields.Boolean(string="Face Shield")
+    safety_helmet = fields.Boolean(string="Safety Helmet")
+    measures_for_cleaning_english = fields.Text(string="Measures for Cleaning (English)")
+    measures_for_cleaning_sinhala = fields.Text(string="Measures for Cleaning (Sinhala)")
+    storage_condition_english = fields.Text(string="Storage Condition (English)")
+    storage_condition_sinhala = fields.Text(string="Storage Condition (Sinhala)")
+    hazard_identification_english = fields.Text(string="Hazard Identification (English)")
+    hazard_identification_sinhala = fields.Text(string="Hazard Identification (Sinhala)")
+    health = fields.Selection(
+        [('not_available', 'N/A'), ('health0', '0'), ('health1', '1'), ('health2', '2'), ('health3', '3'),
+         ('health4', '4'), ('health5', '5')], string="Health")
+    flammability = fields.Selection(
+        [('not_available', 'N/A'), ('flammability0', '0'), ('flammability1', '1'), ('flammability2', '2'),
+         ('flammability3', '3'), ('flammability4', '4'), ('flammability5', '5')], string="Flammability")
+    reactivity_level = fields.Selection(
+        [('not_available', 'N/A'), ('reactivity0', '0'), ('reactivity1', '1'), ('reactivity2', '2'),
+         ('reactivity3', '3'), ('reactivity4', '4'), ('reactivity5', '5')], string="Reactivity")
+    contact = fields.Selection(
+        [('not_available', 'N/A'), ('contact0', '0'), ('contact1', '1'), ('contact2', '2'),
+         ('contact3', '3'), ('contact4', '4'), ('contact5', '5')], string="Contact")
+    severity = fields.Selection(
+        [('0', '0'), ('1', '1'), ('2', '2'),
+         ('3', '3'), ('4', '4'), ('5', '5')], string="Severity")
+    likelihood = fields.Selection(
+        [('0', '0'), ('1', '1'), ('2', '2'),
+         ('3', '3'), ('4', '4'), ('5', '5')], string="Likelihood")
+    risk_rating = fields.Integer(string="Risk Rating")
+    storage_class = fields.Many2one(comodel_name="storage.class", string="Storage Class")
+    water = fields.Float(string="Water")
+    foom = fields.Float(string="Foom")
+    dry_powder = fields.Float(string="Dry Powder")
+    carbon_dioxide = fields.Float(string="Carbon Dioxide")
+    inhalation_english = fields.Text(string="Inhalation (English)")
+    inhalation_sinhala = fields.Text(string="Inhalation (Sinhala)")
+    eye_contact_english = fields.Text(string="Eye Contact (English)")
+    eye_contact_sinhala = fields.Text(string="Eye Contact (Sinhala)")
+    skin_contact_english = fields.Text(string="Skin Contact (English)")
+    skin_contact_sinhala = fields.Text(string="Skin Contact (Sinhala)")
+    ingestion_english = fields.Text(string="Ingestion (English)")
+    ingestion_sinhala = fields.Text(string="Ingestion (Sinhala)")
+    general_english = fields.Text(string="General (English)")
+    general_sinhala = fields.Text(string="General (Sinhala)")
+    appearance = fields.Many2one(comodel_name="appearance", string="Appearance")
+    chemical_color = fields.Many2one(comodel_name="chemical.color", string="Color")
+    odor = fields.Many2one(comodel_name="odor", string="Odor")
+    stability = fields.Many2one(comodel_name="stability", string="Stability")
+    incompatible_materials = fields.Many2many(comodel_name="incompatible.materials", string="Incompatible Materials")
+    reactivity = fields.Many2one(comodel_name="reactivity", string="Reactivity")
+
     @api.onchange('is_sample')
     def update_is_sample(self):
         if self.is_sample:
@@ -105,6 +186,13 @@ class ProductTemplate(models.Model):
                 vals['garment_select'] = 'sample'
                 vals['name'] = product_name.replace('Bulk', 'Sample')
         return super(ProductTemplate, self).write(vals)
+
+    @api.onchange('severity', 'likelihood')
+    def _set_risk_rating(self):
+        if self.severity and self.likelihood:
+            self.risk_rating = int(self.severity) * int(self.likelihood)
+        else:
+            self.risk_rating = 0
 
 
 class ProductProduct(models.Model):
@@ -223,3 +311,88 @@ class StyleArchiveApproval(models.Model):
         """Approve record and set product active"""
         self.write({'state': 'draft'})
         self.product_id.active = True
+
+
+# UCWP|IMP|-00050 MSDS New fields
+class OtherName(models.Model):
+    _name = "other.name"
+
+    name = fields.Text(string="Name")
+
+
+class ChemicalFormulatorType(models.Model):
+    _name = "chemical.formulator.type"
+
+    name = fields.Text(string="Chemical Formulator type")
+
+
+class Formulator(models.Model):
+    _name = "formulator"
+
+    name = fields.Text(string="Name")
+
+
+class Location(models.Model):
+    _name = "location"
+
+    name = fields.Text(string="Location")
+
+
+class ChemicalCategory(models.Model):
+    _name = "chemical.category"
+
+    name = fields.Text(string="Chemical Category")
+
+
+class ChemicalType(models.Model):
+    _name = "chemical.type"
+
+    name = fields.Text(string="Chemical Type")
+
+
+class ChemicalUsedFor(models.Model):
+    _name = "chemical.used.for"
+
+    name = fields.Text(string="Chemical Used for")
+
+
+class StorageClass(models.Model):
+    _name = "storage.class"
+
+    name = fields.Text(string="Name")
+
+
+class Appearance(models.Model):
+    _name = "appearance"
+
+    name = fields.Text(string="Appearance")
+
+
+class ChemicalColor(models.Model):
+    _name = "chemical.color"
+
+    name = fields.Text(string="Color")
+
+
+class Odor(models.Model):
+    _name = "odor"
+
+    name = fields.Text(string="Odor")
+
+
+class Stability(models.Model):
+    _name = "stability"
+
+    name = fields.Text(string="Stability")
+
+
+class IncompatibleMaterials(models.Model):
+    _name = "incompatible.materials"
+
+    name = fields.Text(string="Materials")
+
+
+class Reactivity(models.Model):
+    _name = "reactivity"
+
+    name = fields.Text(string="Reactivity")
