@@ -76,10 +76,12 @@
             <!-- UCWP|FUN|-008 - Add Delivery Requirement tab-->
             <xpath expr="//page[@name='order_lines']" position="after">
                 <page string="Delivery Requirement">
-                    <group>
+                    <field name="delivery_requirement">
+                        <tree editable="bottom">
                         <field name="expected_delivery_date"/>
                         <field name="expected_quantity"/>
-                    </group>
+                        </tree>
+                    </field>
                 </page>
                 <!-- Actually Received Product Quantity Tab -->
                 <page string="Actually Received Product Quantity" name="actually_received_product_qty" invisible="1">

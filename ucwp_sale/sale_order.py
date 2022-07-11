@@ -42,8 +42,9 @@ class SaleOrder(models.Model):
     credit_limit_override = fields.Boolean(string="Credit Limit Override", default=False)
 
     # UCWP|FUN|-008 - Add Delivery Requirement tab
-    expected_delivery_date = fields.Date(string="Expected Delivery Date")
-    expected_quantity = fields.Integer(string="Expected Quantity")
+    delivery_requirement = fields.One2many(comodel_name="delivery.requirement",
+                                           inverse_name="delivery_requirement_sale_order_id",
+                                           string="Delivery Requirement")
 
     # @api.depends('partner_id', 'amount_total', 'order_line')
     # def check_credit_block(self):
@@ -256,3 +257,13 @@ class ActuallyReceivedProductQuantity(models.Model):
     product_id = fields.Many2one(comodel_name="product.product", string="Product")
     actually_received = fields.Float(string="Actually Received qty")
     sale_order_id = fields.Many2one(comodel_name="sale.order", string="Sale order ID")
+
+
+class DeliveryRequirement(models.Model):
+    _name = "delivery.requirement"
+    _rec_name = "expected_delivery_date"
+
+    # UCWP|FUN|-008 - Add Delivery Requirement tab
+    expected_delivery_date = fields.Date(string="Expected Delivery Date")
+    expected_quantity = fields.Integer(string="Expected Quantity")
+    delivery_requirement_sale_order_id = fields.Many2one(comodel_name="sale.order", string="Sale order ID")
