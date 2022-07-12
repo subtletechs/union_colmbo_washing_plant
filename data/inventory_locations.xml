@@ -36,5 +36,14 @@
                 eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
 
+        <!-- Location for Re-wash -->
+        <record id="stock_location_re_wash" model="stock.location">
+            <field name="name">Re-wash</field>
+            <field name="usage">internal</field>
+            <field name="posz">1</field>
+            <field name="location_id" model="stock.location"
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+
     </data>
 </odoo>
