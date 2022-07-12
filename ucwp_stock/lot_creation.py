@@ -14,6 +14,13 @@ class RewashLotCreation(models.Model):
     fail_lot_quantity_lines = fields.One2many(comodel_name="fail.lot.quantity.lines", inverse_name="rewash_lot_id",
                                               string="Fail Lots")
 
+    # Create sequence for main lot
+    @api.model
+    def create(self, values):
+        sequence = self.env['ir.sequence'].next_by_code('rewash.lot.creation') or _('New')
+        values['name'] = sequence
+        return super(RewashLotCreation, self).create(values)
+
 
 class FailLotQuantityLines(models.Model):
     _name = "fail.lot.quantity.lines"

@@ -94,5 +94,17 @@
         </record>
 
 
+        <!-- Sequence for Re-wash Lot Creation -->
+        <record id="rewash_lot_creation_sequence" model="ir.sequence">
+            <field name="name">Re-wash Lot Creation</field>
+            <field name="code">rewash.lot.creation</field>
+            <field name="implementation">standard</field>
+            <field name="prefix">RE/LOT/</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+        </record>
+
+
     </data>
 </odoo>
