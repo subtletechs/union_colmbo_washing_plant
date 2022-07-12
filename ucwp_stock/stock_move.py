@@ -25,6 +25,7 @@ class StockMove(models.Model):
 
     # GRN Operation Type
     is_garment = fields.Boolean(string="Is Garment")
+    is_chemical = fields.Boolean(string="Is Chemical")
 
     @api.depends('move_line_nosuggest_ids.qty_done')
     def _compute_done(self):
@@ -99,6 +100,8 @@ class StockMove(models.Model):
             view = self.env.ref('stock.view_stock_move_operations')
         elif self.is_garment:
             view = self.env.ref('union_colmbo_washing_plant.view_stock_move_nosuggest_operations_garment_receipt')
+        elif self.is_chemical:
+            view = self.env.ref('union_colmbo_washing_plant.view_stock_move_nosuggest_operations_chemical_receipt')
         else:
             view = self.env.ref('stock.view_stock_move_nosuggest_operations')
 
@@ -253,6 +256,7 @@ class StockMoveLine(models.Model):
 
     # GRN Operation Type
     is_garment = fields.Boolean(string="Is Garment", related="move_id.is_garment", store=True)
+    is_chemical = fields.Boolean(string="Is Chemical", related="move_id.is_chemical", store=True)
 
     @api.model
     def create(self, vals):
@@ -330,7 +334,7 @@ class Picking(models.Model):
 
     # To capture garment receipts
     garment_receipt = fields.Boolean(string="Garment Receipt", compute="_garment_receipt", store=True)
-    chemical_receipt = fields.Boolean(string="Chemical Receipt", compute="_chemical_receipt")
+    chemical_receipt = fields.Boolean(string="Chemical Receipt", compute="_chemical_receipt", store=True)
 
     # [UC-11] - To calculate stock moves
     quality_check_count = fields.Integer(string="Quality Check", compute="_get_quality_checks")
@@ -462,6 +466,8 @@ class Picking(models.Model):
                     record.chemical_receipt = True
                 else:
                     record.chemical_receipt = False
+            else:
+                record.chemical_receipt = False
 
     # quality check button
     def before_quality_check(self):

@@ -71,6 +71,7 @@
 
             <xpath expr="//field[@name='use_create_lots']" position="after">
                 <field name="garment_receipt" invisible="1"/>
+                <field name="chemical_receipt" invisible="1"/>
                 <field name="is_receipt_return" invisible="1"/>
             </xpath>
 
@@ -81,7 +82,7 @@
                     'default_picking_id': id, 'form_view_ref':'stock.view_move_form', 'address_in_id': partner_id,
                     'default_picking_type_id': picking_type_id, 'default_location_id': location_id,
                     'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id,
-                    'default_is_garment': garment_receipt}
+                    'default_is_garment': garment_receipt, 'default_is_chemical': chemical_receipt}
                 </attribute>
             </xpath>
 
@@ -103,7 +104,8 @@
                         <field name="samples"
                                attrs="{'invisible': ['|',('garment_select', '=', 'sample'),('garment_select', '=', False)]}"/>
                         <field name="receive_logistic"/>
-                        <field name="receive_sample_room" attrs="{'invisible':['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
+                        <field name="receive_sample_room"
+                               attrs="{'invisible':['|',('garment_select', '=', 'bulk'),('garment_select', '=', False)]}"/>
                     </group>
                     <group string="Before Wash QC Bypass" attrs="{'invisible': [('garment_receipt', '=', False)]}">
                         <field name="bypass_qc"/>
@@ -121,6 +123,7 @@
             <xpath expr="//field[@name='description_picking']" position="after">
                 <field name="op_name" invisible="1"/>
                 <field name="is_garment" invisible="1"/>
+                <field name="is_chemical" invisible="1"/>
                 <field name="invoice_type" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
                 <field name="wash_type" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
                 <field name="fault_type" attrs="{'column_invisible': [('parent.garment_receipt', '=', False)]}"/>
@@ -176,7 +179,6 @@
             </field>
         </field>
     </record>
-
     <record id="view_stock_move_line_operation_garment_receipt_tree" model="ir.ui.view">
         <field name="name">stock.move.line.operations.garment.receipt.tree</field>
         <field name="model">stock.move.line</field>
@@ -250,6 +252,88 @@
         </field>
     </record>
 
+    <!-- Split lines for Chemical receipt -->
+    <record id="view_stock_move_nosuggest_operations_chemical_receipt" model="ir.ui.view">
+        <field name="name">stock.move.operations.nosuggest.chemical.receipt.form</field>
+        <field name="model">stock.move</field>
+        <field name="priority">1000</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="stock.view_stock_move_operations"/>
+        <field name="arch" type="xml">
+            <field name="move_line_ids" position="replace">
+                <field name="move_line_nosuggest_ids"
+                       attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"
+                       context="{'tree_view_ref': 'union_colmbo_washing_plant.view_stock_move_line_operation_chemical_receipt_tree','default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
+            </field>
+        </field>
+    </record>
+    <record id="view_stock_move_line_operation_chemical_receipt_tree" model="ir.ui.view">
+        <field name="name">stock.move.line.operations.chemical.receipt.tree</field>
+        <field name="model">stock.move.line</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" decoration-muted="state == 'done' and is_locked == True"
+                  decoration-success="product_uom_qty==qty_done"
+                  decoration-danger="qty_done &gt; product_uom_qty and state != 'done' and picking_code != 'incoming'">
+                <field name="company_id" invisible="1" force_save="1"/>
+                <field name="picking_id" invisible="1" force_save="1"/>
+                <field name="move_id" invisible="1" force_save="1"/>
+                <field name="product_uom_category_id" invisible="1"/>
+                <field name="product_id" invisible="1"/>
+                <field name="package_level_id" invisible="1"/>
+                <field name="location_id" options="{'no_create': True}"
+                       attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"
+                       invisible="not context.get('show_source_location')"
+                       domain="[('id', 'child_of', parent.location_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"
+                       groups="stock.group_stock_multi_locations"/>
+                <field name="location_dest_id" width="0.75"
+                       attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"
+                       invisible="not context.get('show_destination_location')"
+                       domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"
+                       groups="stock.group_stock_multi_locations"/>
+                <field name="lot_id" groups="stock.group_production_lot"
+                       attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"
+                       invisible="1"
+                       domain="[('product_id', '=', parent.product_id), ('company_id', '=', company_id)]"
+                       context="{
+                            'active_picking_id': picking_id,
+                            'default_company_id': parent.company_id,
+                            'default_product_id': parent.product_id,
+                        }"
+                />
+                <field name="lot_name" widget="text" groups="stock.group_production_lot"
+                       placeholder="Write your SN/BN/LN one by one or copy paste a list."
+                       string="Lot/Batch/Serial Number"
+                       attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"/>
+                <field name="package_id"
+                       attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"
+                       invisible="not context.get('show_package')" groups="stock.group_tracking_lot"/>
+                <field name="result_package_id"
+                       attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"
+                       groups="stock.group_tracking_lot"/>
+                <field name="owner_id"
+                       attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"
+                       invisible="not context.get('show_owner')" groups="stock.group_tracking_owner"/>
+                <field name="product_uom_qty" invisible="not context.get('show_reserved_quantity')" readonly="1"/>
+                <field name="state" invisible="1"/>
+                <field name="is_locked" invisible="1"/>
+                <field name="picking_code" invisible="1"/>
+                <!--  -->
+                <field name="garment_select" invisible="1"/>
+                <field name="is_garment" invisible="1"/>
+                <field name="is_chemical" invisible="1"/>
+                <!--  -->
+                <field name="qty_done"
+                       attrs="{'readonly': ['|', '&amp;', ('state', '=', 'done'), ('is_locked', '=', True), '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"/>
+                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure"
+                       groups="uom.group_uom"
+                       attrs="{'readonly': ['|', '|', ('product_uom_qty', '!=', 0.0),
+                                                '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True),
+                                                '&amp;', ('state', '=', 'done'), ('id', '!=', False)]}"/>
+            </tree>
+        </field>
+    </record>
+
     <!-- stock location-->
     <!-- [UC-46] - Update Inventory Locations for Sample room receive -->
     <record id="view_location_form_inherit_union_colombo" model="ir.ui.view">
@@ -266,18 +350,18 @@
 
     <!-- Warning for chemical issue expire validation -->
     <record id="view_chemical_issue_expire_validation_warning" model="ir.ui.view">
-            <field name="name">chemical.issue.expire.validation</field>
-            <field name="model">stock.move.wizard</field>
-            <field name="arch" type="xml">
+        <field name="name">chemical.issue.expire.validation</field>
+        <field name="model">stock.move.wizard</field>
+        <field name="arch" type="xml">
             <form string="Chemical expire">
                 <group>
-                    <field name="message" />
+                    <field name="message"/>
                 </group>
                 <footer>
                     <button string="OK" special="cancel" class="oe_highlight"/>
                 </footer>
             </form>
-            </field>
-        </record>
+        </field>
+    </record>
 
 </odoo>
