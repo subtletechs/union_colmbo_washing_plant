@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- rewash lot creation list view -->
+    <record id="rewash_lot_creation_tree_view" model="ir.ui.view">
+        <field name="name">rewash.lot.creation.tree.view</field>
+        <field name="model">rewash.lot.creation</field>
+        <field name="arch" type="xml">
+            <tree string="Re-wash Lot Numbers">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="location_src_id"/>
+                <field name="location_dest_id"/>
+                <field name="quantity"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- rewash lot creation form view -->
+    <record id="rewash_lot_creation_form_view" model="ir.ui.view">
+        <field name="name">rewash.lot.creation.form.view</field>
+        <field name="model">rewash.lot.creation</field>
+        <field name="arch" type="xml">
+            <form string="Re-wash Lot Numbers">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="location_src_id"/>
+                            <field name="location_dest_id"/>
+                            <field name="quantity"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="fail_lot_quantity_lines" string="Fail Lots">
+                            <field name="fail_lot_quantity_lines">
+                                <tree string="Fail Lots" editable="bottom">
+                                    <field name="lot_id"/>
+                                    <field name="available_qty"/>
+                                    <field name="allocate_qty"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for rewash lot creation-->
+    <record id="rewash_lot_creation_action" model="ir.actions.act_window">
+        <field name="name">Re-wash Lot Creation</field>
+        <field name="res_model">rewash.lot.creation</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="rewash_lot_creation_action" id="rewash_lot_creation_menu"
+            parent="mrp.menu_mrp_manufacturing" sequence="3"/>
+
+</odoo>

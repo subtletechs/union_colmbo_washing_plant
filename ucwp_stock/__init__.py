@@ -7,3 +7,4 @@ from . import stock_move
 from . import stock_picking_return
 from . import res_config_settings
 from . import product_name_change_log
+from . import lot_creation
