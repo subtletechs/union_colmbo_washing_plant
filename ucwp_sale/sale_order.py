@@ -145,7 +145,7 @@ class SaleOrder(models.Model):
                                             sale_record.need_to_approve = False
                             else:
                                 raise ValidationError(
-                                    _("Select a pre costing for " + sale_order_line.product_id.name))
+                                    _("Select a pre costing for " + sale_order_line.product_id.display_name))
                     else:
                         raise ValidationError(_("Select pre costing records"))
                 else:
