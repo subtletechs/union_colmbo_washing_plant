@@ -74,15 +74,18 @@ class Partner(models.Model):
 
     """------------------End - From Core Account Followups----------------------"""
 
-
     def compute_total_pending(self):
         for record in self:
             if record.credit_limit_available:
                 record.total_pending_payments = record.total_due
+            else:
+                record.total_pending_payments = 0
 
     def compute_available_credit_limit(self):
         for record in self:
             if record.credit_limit_available:
                 record.available_credit_limit = record.credit_limit - record.total_due
+            else:
+                record.available_credit_limit = 0
 
 
