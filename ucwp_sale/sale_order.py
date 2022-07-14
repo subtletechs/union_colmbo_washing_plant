@@ -14,9 +14,8 @@ class SaleOrder(models.Model):
     pre_costing = fields.Many2many(comodel_name="pre.costing", string="Pre Costing",
                                    domain="[('state', '=', 'confirm')]", required=True)
 
-    need_to_approve = fields.Boolean(string="Need Pre Cost Approval", default=True, required=True,
-                                     compute="_compute_need_to_approve")
-    is_approved = fields.Boolean(string="Approved", default=False)
+    need_to_approve = fields.Boolean(string="Need Pre Cost Approval", default=True, required=True)
+    is_approved = fields.Boolean(string="Approved", default=False, store=True)
 
     # UC-30
     po_availability = fields.Selection([('po', 'PO'), ('temp_po', 'TEMP PO'), ('no_po', 'No PO')],
@@ -108,51 +107,6 @@ class SaleOrder(models.Model):
                 'target': 'current',
             }
 
-    def action_confirm(self):
-        """Popup Pre Costing Approval wizard and  send quotation id"""
-        if self.need_to_approve is True and self.is_approved is False:
-            view = self.env.ref('union_colmbo_washing_plant.pre_costing_approval_wizard_form_view')
-            return {
-                'res_model': 'pre.costing.approval.wizard',
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'view_id': view.id,
-                'target': 'new',
-                'context': {
-                    'default_quotation': self.id
-                }
-            }
-        return super(SaleOrder, self).action_confirm()
-
-    def _compute_need_to_approve(self):
-        """Compute need_to_approve value"""
-        for sale_record in self:
-            if sale_record.garment_sales:
-                if sale_record.order_line:
-                    if sale_record.pre_costing:
-                        # Get pre costing product ids
-                        pre_cost_product_ids = []
-                        for record in sale_record.pre_costing:
-                            pre_cost_product_ids.append(record.product_id.id)
-                        for sale_order_line in sale_record.order_line:
-                            if sale_order_line.product_id.id in pre_cost_product_ids:
-                                for pre_cost_record in sale_record.pre_costing:
-                                    if pre_cost_record.product_id == sale_order_line.product_id:
-                                        if pre_cost_record.total_cost_of_wet_and_dry > sale_order_line.price_unit:
-                                            sale_record.need_to_approve = True
-                                            break
-                                        else:
-                                            sale_record.need_to_approve = False
-                            else:
-                                raise ValidationError(
-                                    _("Select a pre costing for " + sale_order_line.product_id.display_name))
-                    else:
-                        raise ValidationError(_("Select pre costing records"))
-                else:
-                    sale_record.need_to_approve = False
-            else:
-                sale_record.need_to_approve = False
-
     def generate_garment_receipt(self):
         """Generate the Garment Receipt from Sale Order"""
         # TODO : Complete the code
@@ -234,6 +188,48 @@ class SaleOrder(models.Model):
                 ('sale_id', '=', self.id),
                 ('garment_receipt', '!=', True)]).ids
             order.delivery_count = len(stock_picking)
+
+    def pre_costing_confirm(self):
+        """ Check Pre costing totals and sale order lines """
+        if self.garment_sales:
+            if self.order_line:
+                if self.pre_costing:
+                    # Get pre costing product ids
+                    pre_cost_product_ids = []
+                    for record in self.pre_costing:
+                        pre_cost_product_ids.append(record.product_id.id)
+                    for sale_order_line in self.order_line:
+                        if sale_order_line.product_id.id in pre_cost_product_ids:
+                            for pre_cost_record in self.pre_costing:
+                                if pre_cost_record.product_id == sale_order_line.product_id:
+                                    if pre_cost_record.total_cost_of_wet_and_dry > sale_order_line.price_unit:
+                                        self.need_to_approve = True
+                                        break
+                                    else:
+                                        self.need_to_approve = False
+                        else:
+                            raise ValidationError(
+                                _("Select a pre costing for " + sale_order_line.product_id.display_name))
+                else:
+                    raise ValidationError(_("Select pre costing records"))
+            else:
+                self.need_to_approve = False
+        else:
+            self.need_to_approve = False
+
+        # Check approve status and pop-up warning
+        if self.need_to_approve is True and self.is_approved is False:
+            view = self.env.ref('union_colmbo_washing_plant.pre_costing_approval_wizard_form_view')
+            return {
+                'res_model': 'pre.costing.approval.wizard',
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'view_id': view.id,
+                'target': 'new',
+                'context': {
+                    'default_quotation': self.id
+                }
+            }
 
 
 class SaleOrderLine(models.Model):

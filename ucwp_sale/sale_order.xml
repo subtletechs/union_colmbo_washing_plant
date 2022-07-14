@@ -27,6 +27,24 @@
                 />
             </xpath>
 
+            <!-- Confirm button in quotation state -->
+            <xpath expr="//button[9]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <!-- Pre costing confirm -->
+            <xpath expr="//button[@id='action_confirm']" position="before">
+                <button name="pre_costing_confirm" type="object"
+                            string="Confirm Pre costing" class="oe_highlight"
+                            attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('is_approved', '=', True)]}"/>
+            </xpath>
+            <!-- Send by email button in draft state -->
+            <xpath expr="//button[6]" position="replace">
+                <button name="action_quotation_send" string="Send by Email"
+                        state="draft"
+                        type="object" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('is_approved', '=', False)]}"
+                        class="btn-primary" data-hotkey="g"/>
+            </xpath>
+
             <!-- Garment Receipt State Button -->
             <xpath expr="//button[@name='preview_sale_order']" position="before">
                 <button name="preview_garment_receipt"
