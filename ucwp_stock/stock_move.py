@@ -671,7 +671,7 @@ class Picking(models.Model):
                                     product_id.name) + " Dose not have enough quantities at " + str(location_id.name)
                                 raise ValidationError(error)
         # When validate more quantity than sale order quantity
-        if self.sale_id:
+        if self.sale_id and self.garment_receipt:
             sale_id = self.sale_id.id
             for move in self.move_ids_without_package:
                 done_qty = move.quantity_done
