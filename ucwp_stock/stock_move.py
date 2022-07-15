@@ -695,8 +695,15 @@ class Picking(models.Model):
                                     sale_order_qty += line.product_uom_qty
                         if actually_received > sale_order_qty:
                             ir_model_data = self.env['ir.model.data']
-                            template_id = ir_model_data._xmlid_lookup('union_colmbo_washing_plant.extra_qty_notification_email')[2]
-                            compose_form_id = ir_model_data._xmlid_lookup('mail.email_compose_message_wizard_form')[2]
+                            try:
+                                template_id = ir_model_data._xmlid_lookup('union_colmbo_washing_plant.extra_qty_notification_email')[2]
+                            except ValueError:
+                                template_id = False
+
+                            try:
+                                compose_form_id = ir_model_data._xmlid_lookup('mail.email_compose_message_wizard_form')[2]
+                            except ValueError:
+                                compose_form_id = False
                             ctx = dict(self.env.context or {})
                             ctx.update({
                                 'default_model': 'stock.picking',
@@ -718,7 +725,7 @@ class Picking(models.Model):
                                 'view_id': compose_form_id,
                                 'target': 'new',
                                 'context': ctx,
-                            }
+                            }, super(Picking, self).button_validate()
 
         return super(Picking, self).button_validate()
 
