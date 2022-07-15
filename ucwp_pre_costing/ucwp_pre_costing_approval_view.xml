@@ -63,13 +63,15 @@
                     </div>
                     <br/>
                     <div>
-                        <p>
-                            Product Pre costing Total is greater than product subtotal in Sale order
-                        </p>
+<!--                        <p>-->
+<!--                            Sale order price of (product name) is less than the agreed price on pre-costing-->
+<!--                        </p>-->
+                        <field name="warning"/>
                     </div>
                     <group>
                         <group>
                             <field name="quotation" invisible="1"/>
+                            <field name="need_to_approve_products" invisible="1"/>
                         </group>
                         <group>
                         </group>

@@ -6,7 +6,8 @@ class PreCosting(models.Model):
     _description = "Pre Costing"
 
     name = fields.Char(string="Name", default="New")
-    product_id = fields.Many2one(comodel_name="product.product", string="Product", required=True)
+    product_id = fields.Many2one(comodel_name="product.product", string="Product", required=True,
+                                 domain="[('is_garment', '=', True)]")
     res_currency = fields.Many2one(comodel_name='res.currency', string="Currency Type", required=True)
     total_wet_line_costs = fields.Monetary(currency_field='res_currency', string="Total Price(Wet)", readonly=True,
                                            store=True,

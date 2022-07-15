@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     pre_costing = fields.Many2many(comodel_name="pre.costing", string="Pre Costing",
-                                   domain="[('state', '=', 'confirm')]", required=True)
+                                   domain="[('state', '=', 'confirm')]")
 
     need_to_approve = fields.Boolean(string="Need Pre Cost Approval", default=True, required=True)
     is_approved = fields.Boolean(string="Approved", default=False, store=True)
@@ -191,6 +191,7 @@ class SaleOrder(models.Model):
 
     def pre_costing_confirm(self):
         """ Check Pre costing totals and sale order lines """
+        need_to_approve_products = []
         if self.garment_sales:
             if self.order_line:
                 if self.pre_costing:
@@ -198,18 +199,57 @@ class SaleOrder(models.Model):
                     pre_cost_product_ids = []
                     for record in self.pre_costing:
                         pre_cost_product_ids.append(record.product_id.id)
+                    need_pre_costing_products = []  # products without pre costings
+                    pre_costing_so_line_products = []  # product ids that are used in so lines and pre costing
+
                     for sale_order_line in self.order_line:
                         if sale_order_line.product_id.id in pre_cost_product_ids:
                             for pre_cost_record in self.pre_costing:
                                 if pre_cost_record.product_id == sale_order_line.product_id:
+                                    pre_costing_so_line_products.append(pre_cost_record.product_id.id)
                                     if pre_cost_record.total_cost_of_wet_and_dry > sale_order_line.price_unit:
-                                        self.need_to_approve = True
-                                        break
-                                    else:
-                                        self.need_to_approve = False
+                                        need_to_approve_products.append(pre_cost_record.product_id.display_name)
+                                        # self.need_to_approve = True
+                                        # break
+                                    # else:
+                                    #     self.need_to_approve = False
                         else:
-                            raise ValidationError(
-                                _("Select a pre costing for " + sale_order_line.product_id.display_name))
+                            need_pre_costing_products.append(sale_order_line.product_id.display_name)
+                    # pre_cost_product_ids - pre_costing_so_line_products = extra pre costings
+                    # Get extra pre costings
+                    for element in pre_costing_so_line_products:
+                        pre_cost_product_ids.remove(element)
+                    # Extra pre costing records
+                    extra_pre_costing_products = []
+                    for extra_pre_costing in pre_cost_product_ids:
+                        pre_costings = self.env['pre.costing'].search(
+                            [('product_id', '=', extra_pre_costing), ('state', '=', 'confirm')], limit=1)
+                        extra_pre_costing_products.append(pre_costings.display_name)
+
+                    if len(need_to_approve_products) > 0:
+                        self.need_to_approve = True
+                        self.is_approved = False
+                    else:
+                        self.need_to_approve = False
+                        self.is_approved = True
+                    # Error message for product/s in sale order lines without pre costing record
+                    if len(need_pre_costing_products) > 0:
+                        if len(extra_pre_costing_products) > 0:
+                            message = "Select pre costing/s for " + ', '.join(
+                                [str(product) for product in need_pre_costing_products]) + " and " + ', '.join(
+                                [str(record) for record in
+                                 extra_pre_costing_products]) + " pre costing record/s arn't used"
+                        else:
+                            message = "Select pre costing/s for " + ', '.join(
+                                [str(product) for product in need_pre_costing_products])
+                        raise ValidationError(
+                            _(message))
+                    if len(extra_pre_costing_products) > 0:
+                        message = ', '.join(
+                            [str(record) for record in extra_pre_costing_products]) + " pre costing record/s arn't used"
+                        raise ValidationError(
+                            _(message))
+                    # Get extra pre costing records
                 else:
                     raise ValidationError(_("Select pre costing records"))
             else:
@@ -227,7 +267,9 @@ class SaleOrder(models.Model):
                 'view_id': view.id,
                 'target': 'new',
                 'context': {
-                    'default_quotation': self.id
+                    'default_quotation': self.id,
+                    'default_need_to_approve_products': ', '.join(
+                        [str(product) for product in need_to_approve_products])
                 }
             }
 

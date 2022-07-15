@@ -23,6 +23,8 @@ class PreCostingApprovalWizard(models.TransientModel):
     _name = "pre.costing.approval.wizard"
 
     quotation = fields.Many2one(comodel_name="sale.order", string="Quotation", domain="[('state', '=', 'draft')]")
+    need_to_approve_products = fields.Char(string="Need to approve")
+    warning = fields.Text(readonly=True)
 
     def create_approval(self):
         """Create Pre Costing Approval record"""
@@ -30,3 +32,8 @@ class PreCostingApprovalWizard(models.TransientModel):
             'quotation': self.quotation.id,
             'state': 'waiting',
         })
+
+    @api.onchange('need_to_approve_products')
+    def _warning(self):
+        self.warning = 'Sale order price of ' + str(
+            self.need_to_approve_products) + ' product/s is/are less than the agreed price on pre-costing'

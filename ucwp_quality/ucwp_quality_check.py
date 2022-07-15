@@ -202,7 +202,8 @@ class QualityCheckLineInfo(models.Model):
         if self.quality_point == 'after_wash' and self.pass_fail == 'pass':
             self.write({'state': 'processed'})
             view = self.env.ref('stock.view_picking_form')
-            internal_transfer_operation = self.env['stock.picking.type'].search([('code', '=', 'internal')])
+            internal_transfer_operation = self.env['stock.picking.type'].search(
+                [('code', '=', 'internal'), ('use_create_lots', '=', False)])
             return {
                 'res_model': 'stock.picking',
                 'type': 'ir.actions.act_window',
@@ -224,15 +225,16 @@ class QualityCheckLineInfo(models.Model):
             'view_mode': 'form',
             'view_id': view.id,
             'target': 'new',
-            'context': {'active_id': self.ucwp_quality_check_id.grn.id,
+            'context': {'active_id': self.quality_check_line_id.ucwp_quality_check_id.grn.id,
                         'active_model': 'stock.picking', 'default_is_receipt_return': True},
         }
 
     def rewash_garment(self):
         self.write({'state': 'rewashed'})
-        if self.pass_fail == 'fail' and self.ucwp_quality_check_id.quality_point == 'after_wash':
+        if self.pass_fail == 'fail' and self.quality_point == 'after_wash':
             view = self.env.ref('stock.view_picking_form')
-            internal_transfer_operation = self.env['stock.picking.type'].search([('code', '=', 'internal')])
+            internal_transfer_operation = self.env['stock.picking.type'].search(
+                [('code', '=', 'internal'), ('use_create_lots', '=', False)])
             return {
                 'res_model': 'stock.picking',
                 'type': 'ir.actions.act_window',
@@ -259,4 +261,3 @@ class QualityCheckLineInfo(models.Model):
     #             'default_picking_type_id': internal_transfer_operation.id,
     #         },
     #     }
-
