@@ -21,6 +21,14 @@
         <field name="model">rewash.lot.creation</field>
         <field name="arch" type="xml">
             <form string="Re-wash Lot Numbers">
+                <header>
+                    <field name="is_approved" invisible="1"/>
+                    <button name="action_confirm" string="Approve"
+                            type="object" class="oe_highlight"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('is_approved', '=', True)]}"
+                            />
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <label for="name"/>
@@ -40,6 +48,8 @@
                         <page name="fail_lot_quantity_lines" string="Fail Lots">
                             <field name="fail_lot_quantity_lines">
                                 <tree string="Fail Lots" editable="bottom">
+                                    <field name="product_id" invisible="1"/>
+                                    <field name="location_src_id" invisible="1"/>
                                     <field name="lot_id"/>
                                     <field name="available_qty"/>
                                     <field name="allocate_qty"/>

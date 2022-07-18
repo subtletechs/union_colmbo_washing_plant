@@ -9,7 +9,7 @@ class UCWPQualityCheck(models.Model):
 
     # [UC-11]
     name = fields.Char(string="Quality Check Number", default="New")
-    grn = fields.Many2one(comodel_name="stock.picking", string="GRN")
+    grn = fields.Many2one(comodel_name="stock.picking", string="GRN", domain="[('garment_receipt', '=', True)]")
     quality_check_lines = fields.One2many(comodel_name="quality.check.lines", inverse_name="ucwp_quality_check_id",
                                           string="Quality Lines")
     quality_point = fields.Selection([('before_wash', 'Before Wash'), ('after_wash', 'After Wash')],
