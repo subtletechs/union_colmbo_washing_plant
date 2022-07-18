@@ -716,6 +716,8 @@ class Picking(models.Model):
                                 'force_email': True,
                             })
 
+                            res = super(Picking, self).button_validate()
+
                             return {
                                 'name': _('Compose Email'),
                                 'type': 'ir.actions.act_window',
@@ -725,7 +727,7 @@ class Picking(models.Model):
                                 'view_id': compose_form_id,
                                 'target': 'new',
                                 'context': ctx,
-                            }, super(Picking, self).button_validate()
+                            }
 
         return super(Picking, self).button_validate()
 
