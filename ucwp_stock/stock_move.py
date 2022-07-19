@@ -100,7 +100,7 @@ class StockMove(models.Model):
             view = self.env.ref('stock.view_stock_move_operations')
         elif self.is_garment:
             view = self.env.ref('union_colmbo_washing_plant.view_stock_move_nosuggest_operations_garment_receipt')
-        elif self.is_chemical:
+        elif self.is_chemical or self.picking_id.chemical_receipt:
             view = self.env.ref('union_colmbo_washing_plant.view_stock_move_nosuggest_operations_chemical_receipt')
         else:
             view = self.env.ref('stock.view_stock_move_nosuggest_operations')
