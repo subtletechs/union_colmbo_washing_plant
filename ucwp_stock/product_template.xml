@@ -470,7 +470,15 @@
                         <group string="Risk">
                             <field name="severity"/>
                             <field name="likelihood"/>
-                            <field name="risk_rating"/>
+                            <!-- Change risk rating color according to risk rating value -->
+                            <field name="risk_rating" style="background-color: #00ff00; color: #ffffff;"
+                                   attrs="{'invisible': [('risk_rating', 'not in', [1, 2, 3, 4, 5])]}"/>
+                            <field name="risk_rating" style="background-color: #ffff00;"
+                                   attrs="{'invisible': [('risk_rating', 'not in', [6, 7, 8, 9, 10])]}"/>
+                            <field name="risk_rating" style="background-color: #663300; color: #ffffff;"
+                                   attrs="{'invisible': [('risk_rating', 'not in', [11, 12, 13, 14, 15])]}"/>
+                            <field name="risk_rating" style="background-color: 	#ff0000; color: #ffffff;"
+                                   attrs="{'invisible': [('risk_rating', 'not in', [16, 17, 18, 19, 20, 21, 22, 23, 24, 25])]}"/>
                         </group>
                     </group>
                     <group>
