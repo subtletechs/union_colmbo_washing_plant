@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Internal Lab Tests list view -->
+    <record id="internal_lab_tests_tree_view" model="ir.ui.view">
+        <field name="name">internal.lab.tests.tree.view</field>
+        <field name="model">internal.lab.tests</field>
+        <field name="arch" type="xml">
+            <tree string="Internal Lab Tests">
+                <field name="name"/>
+                <field name="style_no"/>
+                <field name="date_in"/>
+                <field name="date_out"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Internal Lab Tests form view -->
+    <record id="internal_lab_tests_form_view" model="ir.ui.view">
+        <field name="name">internal.lab.tests.form.view</field>
+        <field name="model">internal.lab.tests</field>
+        <field name="arch" type="xml">
+            <form string="Internal Lab Tests">
+                <header>
+                    <button name="action_confirm" string="Confirm"
+                            type="object" class="oe_highlight"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state', '=', 'confirm')]}"
+                            />
+                    <button name="set_to_draft" string="Set to Draft"
+                            type="object"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state', '=', 'draft')]}"
+                            />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_in"/>
+                            <field name="date_out"/>
+                        </group>
+                        <group string="Overall Rating">
+                            <field name="is_pass"/>
+                            <field name="is_fail"/>
+                            <field name="is_data"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Garment Info">
+                            <field name="style"/>
+                            <field name="style_no"/>
+                            <field name="customer"/>
+                            <field name="buyer"/>
+                            <field name="garment_type"/>
+                        </group>
+                        <group string="Test Info">
+                            <field name="tested_property"/>
+                            <field name="testing_method"/>
+                            <field name="requirement"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="samples"/>
+                            <field name="wash_type"/>
+                            <field name="season"/>
+                            <field name="country"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="test_results" string="Test Results">
+                            <table class="table table-bordered mb64">
+                                <tr>
+                                    <th>Test Property</th>
+                                    <th>Pass</th>
+                                    <th>Fail</th>
+                                    <th>Result</th>
+                                    <th>Requirement</th>
+                                </tr>
+                                <tr>
+                                   <td>Ph Value</td>
+                                   <td>
+                                       <field name="ph_is_pass"/>
+                                   </td>
+                                   <td>
+                                       <field name="ph_is_fail"/>
+                                   </td>
+                                   <td>
+                                       <field name="ph_result"/>
+                                   </td>
+                                   <td>
+                                       <field name="ph_requirement"/>
+                                   </td>
+                                </tr>
+                                <tr>
+                                    <td>Dry</td>
+                                    <td>
+                                       <field name="dry_is_pass"/>
+                                   </td>
+                                   <td>
+                                       <field name="dry_is_fail"/>
+                                   </td>
+                                   <td>
+                                       <field name="dry_result"/>
+                                   </td>
+                                   <td>
+                                       <field name="dry_requirement"/>
+                                   </td>
+                                </tr>
+                                <tr>
+                                    <td>Wet</td>
+                                    <td>
+                                       <field name="wet_is_pass"/>
+                                   </td>
+                                   <td>
+                                       <field name="wet_is_fail"/>
+                                   </td>
+                                   <td>
+                                       <field name="wet_result"/>
+                                   </td>
+                                   <td>
+                                       <field name="wet_requirement"/>
+                                   </td>
+                                </tr>
+                            </table>
+                        </page>
+                        <page name="image" string="Image">
+                            <field name="image" widget="image"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for Internal Lab Tests -->
+    <record id="internal_lab_tests_action" model="ir.actions.act_window">
+        <field name="name">Internal Lab Tests</field>
+        <field name="res_model">internal.lab.tests</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="internal_lab_tests_action" id="internal_lab_tests_menu"
+            parent="stock.menu_stock_root" sequence="89"/>
+
+</odoo>

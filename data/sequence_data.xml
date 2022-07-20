@@ -106,5 +106,17 @@
         </record>
 
 
+        <!-- Sequence for Internal Lab Tests -->
+        <record id="internal_lab_tests_sequence" model="ir.sequence">
+            <field name="name">Internal Lab Tests</field>
+            <field name="code">internal.lab.tests</field>
+            <field name="implementation">standard</field>
+            <field name="prefix">INT/LAB/</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+        </record>
+
+
     </data>
 </odoo>

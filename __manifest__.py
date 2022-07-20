@@ -35,6 +35,7 @@
         'ucwp_stock/res_config_settings.xml',
         'ucwp_stock/product_name_change_log.xml',
         'ucwp_stock/lot_creation_view.xml',
+        'ucwp_stock/internal_lab_tests_view.xml',
         'ucwp_sale/sale_order.xml',
         'ucwp_sale/res_partner_view.xml',
         'ucwp_mrp/mrp_bom_views.xml',
