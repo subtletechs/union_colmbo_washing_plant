@@ -366,6 +366,15 @@ class Picking(models.Model):
     bypass_comment = fields.Text(string="Comment")
     bypassed_by = fields.Many2one(comodel_name='res.users', string="Bypassed By", readonly=True)
 
+    @api.onchange('garment_select')
+    def set_location_dest_id(self):
+        sample_room = self.env['stock.location'].search([('locations_category', '=', 'sample')])
+        logistic = self.env['stock.location'].search([('locations_category', '=', 'logistic')])
+        if self.garment_select == 'sample':
+            self.location_dest_id = sample_room.id
+        if self.garment_select == 'bulk':
+            self.location_dest_id = logistic.id
+
     @api.onchange('bypass_qc')
     def set_bypass_user(self):
         """When user click to bypass the before QC, map the user who did the change"""
