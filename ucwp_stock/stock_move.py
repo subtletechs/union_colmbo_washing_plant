@@ -643,11 +643,11 @@ class Picking(models.Model):
                                 quantity = stock_quant.quantity
                                 if quantity < qty_done:
                                     error = "Product " + str(product_id.name) + ", Lot " + str(
-                                        lot.name) + " Dose not have enough quantities at " + str(location_id.name)
+                                        lot.name) + " Does not have enough quantities at " + str(location_id.name)
                                     raise ValidationError(error)
                             else:
                                 error = "Product " + str(product_id.name) + ", Lot " + str(
-                                    lot.name) + " Dose not have enough quantities at " + str(location_id.name)
+                                    lot.name) + " Does not have enough quantities at " + str(location_id.name)
                                 raise ValidationError(error)
 
                 elif tracking_method == 'none':
@@ -663,12 +663,12 @@ class Picking(models.Model):
                                 quantity = stock_quant.quantity
                                 if quantity < qty_done:
                                     error = "Product " + str(
-                                        product_id.name) + " Dose not have enough quantities at " + str(
+                                        product_id.name) + " Does not have enough quantities at " + str(
                                         location_id.name)
                                     raise ValidationError(error)
                             else:
                                 error = "Product " + str(
-                                    product_id.name) + " Dose not have enough quantities at " + str(location_id.name)
+                                    product_id.name) + " Does not have enough quantities at " + str(location_id.name)
                                 raise ValidationError(error)
         # When validate more quantity than sale order quantity
         if self.sale_id and self.garment_receipt:
