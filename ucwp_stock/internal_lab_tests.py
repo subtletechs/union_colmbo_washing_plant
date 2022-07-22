@@ -5,9 +5,10 @@ from datetime import datetime
 
 class InternalLabTests(models.Model):
     _name = "internal.lab.tests"
-    _description = "Internal Lab Tests"
+    _inherit = ['mail.thread']
+    _description = "Internal Lab Test record"
 
-    name = fields.Char(string="Report No", default="New")
+    name = fields.Char(string="Report No", default="New", tracking=True)
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')], string="Status", default="draft")
     date_in = fields.Datetime(string="Date In")
     date_out = fields.Datetime(string="Date Out", readonly=True)

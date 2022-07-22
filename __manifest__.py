@@ -15,6 +15,7 @@
         'hr',
         'sale',
         'purchase',
+        'mail',
     ],
     'data': [
         'report/quality_check_report.xml',

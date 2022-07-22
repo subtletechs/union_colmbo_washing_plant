@@ -26,12 +26,12 @@
                             type="object" class="oe_highlight"
                             groups="base.group_user"
                             attrs="{'invisible': [('state', '=', 'confirm')]}"
-                            />
+                    />
                     <button name="set_to_draft" string="Set to Draft"
                             type="object"
                             groups="base.group_user"
                             attrs="{'invisible': [('state', '=', 'draft')]}"
-                            />
+                    />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
@@ -85,49 +85,49 @@
                                     <th>Requirement</th>
                                 </tr>
                                 <tr>
-                                   <td>Ph Value</td>
-                                   <td>
-                                       <field name="ph_is_pass"/>
-                                   </td>
-                                   <td>
-                                       <field name="ph_is_fail"/>
-                                   </td>
-                                   <td>
-                                       <field name="ph_result"/>
-                                   </td>
-                                   <td>
-                                       <field name="ph_requirement"/>
-                                   </td>
+                                    <td>Ph Value</td>
+                                    <td>
+                                        <field name="ph_is_pass"/>
+                                    </td>
+                                    <td>
+                                        <field name="ph_is_fail"/>
+                                    </td>
+                                    <td>
+                                        <field name="ph_result"/>
+                                    </td>
+                                    <td>
+                                        <field name="ph_requirement"/>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Dry</td>
                                     <td>
-                                       <field name="dry_is_pass"/>
-                                   </td>
-                                   <td>
-                                       <field name="dry_is_fail"/>
-                                   </td>
-                                   <td>
-                                       <field name="dry_result"/>
-                                   </td>
-                                   <td>
-                                       <field name="dry_requirement"/>
-                                   </td>
+                                        <field name="dry_is_pass"/>
+                                    </td>
+                                    <td>
+                                        <field name="dry_is_fail"/>
+                                    </td>
+                                    <td>
+                                        <field name="dry_result"/>
+                                    </td>
+                                    <td>
+                                        <field name="dry_requirement"/>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Wet</td>
                                     <td>
-                                       <field name="wet_is_pass"/>
-                                   </td>
-                                   <td>
-                                       <field name="wet_is_fail"/>
-                                   </td>
-                                   <td>
-                                       <field name="wet_result"/>
-                                   </td>
-                                   <td>
-                                       <field name="wet_requirement"/>
-                                   </td>
+                                        <field name="wet_is_pass"/>
+                                    </td>
+                                    <td>
+                                        <field name="wet_is_fail"/>
+                                    </td>
+                                    <td>
+                                        <field name="wet_result"/>
+                                    </td>
+                                    <td>
+                                        <field name="wet_requirement"/>
+                                    </td>
                                 </tr>
                             </table>
                         </page>
@@ -136,6 +136,10 @@
                         </page>
                     </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
