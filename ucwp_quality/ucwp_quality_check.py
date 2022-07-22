@@ -113,6 +113,8 @@ class QualityCheckLines(models.Model):
                                               inverse_name="quality_check_line_id", string="Quality Check Info")
     rest_qty = fields.Float(string="Rest Inspected qty", compute="_set_rest_inspected_qty")
 
+    grn = fields.Many2one(comodel_name="stock.picking", string="GRN", related="ucwp_quality_check_id.grn", store=True)
+
     # Set initial value to rest qty
     @api.depends('quality_check_line_info.quantity')
     def _set_rest_inspected_qty(self):
@@ -143,6 +145,12 @@ class QualityCheckLines(models.Model):
                 'domain': {'product': [('id', 'in', product_ids)]}
             }
 
+    @api.onchange('inspected_qty', 'lot_no')
+    def _validate_inspected_qty(self):
+        if self.inspected_qty and self.lot_no:
+            if self.inspected_qty > self.lot_no.product_qty:
+                raise ValidationError(_("Inspected quantity cannot be greater than product quantity of lot"))
+
 
 class QualityCheckLineInfo(models.Model):
     _name = "quality.check.line.info"
@@ -159,6 +167,8 @@ class QualityCheckLineInfo(models.Model):
     quality_check_line_id = fields.Many2one(comodel_name="quality.check.lines", string="Quality Check Line ID")
     quality_point = fields.Selection([('before_wash', 'Before Wash'), ('after_wash', 'After Wash')],
                                      string="Quality Point")
+
+    grn = fields.Many2one(comodel_name="stock.picking", string="GRN", related="quality_check_line_id.grn", store=True)
 
     display_process_button = fields.Boolean(compute="_display_button")
     display_return_button = fields.Boolean(compute="_display_button")
@@ -225,8 +235,9 @@ class QualityCheckLineInfo(models.Model):
             'view_mode': 'form',
             'view_id': view.id,
             'target': 'new',
-            'context': {'active_id': self.quality_check_line_id.ucwp_quality_check_id.grn.id,
-                        'active_model': 'stock.picking', 'default_is_receipt_return': True},
+            'context': {'active_id': self.grn.id,
+                        'active_model': 'stock.picking',
+                        'default_is_receipt_return': True},
         }
 
     def rewash_garment(self):

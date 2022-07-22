@@ -54,6 +54,7 @@
                         <page string="Quality Lines" name="quality_check_lines">
                             <field name="quality_check_lines" context="{'default_quality_point':quality_point}">
                                 <tree string="Quality Lines">
+                                    <field name="grn" invisible="1"/>
                                     <field name="quality_point" invisible="1"/>
                                     <field name="product"/>
                                     <field name="lot_no"/>
@@ -87,6 +88,7 @@
             <form string="Quality Lines">
                 <header>
                     <field name="quality_point" invisible="1"/>
+                    <field name="grn" invisible="1"/>
                 </header>
                 <sheet>
                     <group>
@@ -136,6 +138,7 @@
                     <field name="display_return_button" invisible="1"/>
                     <field name="display_rewash_button" invisible="1"/>
                     <!-- <field name="display_dispose_button" invisible="1"/>-->
+                     <field name="grn" invisible="1"/>
 
                     <button name="process_garment" type="object"
                             class="oe_highlight" groups="base.group_user"
