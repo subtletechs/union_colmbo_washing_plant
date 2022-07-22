@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <tree string="Internal Lab Tests">
                 <field name="name"/>
-                <field name="style_no"/>
+                <field name="product_id"/>
                 <field name="date_in"/>
                 <field name="date_out"/>
                 <field name="state"/>
@@ -54,7 +54,7 @@
                     </group>
                     <group>
                         <group string="Garment Info">
-                            <field name="style"/>
+                            <field name="product_id"/>
                             <field name="style_no"/>
                             <field name="customer"/>
                             <field name="buyer"/>
@@ -132,6 +132,7 @@
                             </table>
                         </page>
                         <page name="image" string="Image">
+                            <label for="image" string="Image of Testing Sample"/>
                             <field name="image" widget="image"/>
                         </page>
                     </notebook>

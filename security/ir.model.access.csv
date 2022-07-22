@@ -54,4 +54,3 @@ internal_lab_tests_access_base_user,internal_lab_tests_access_base,model_interna
 tested_property_access_base_user,tested_property_access_base,model_tested_property,base.group_user,1,1,1,1
 testing_method_access_base_user,testing_method_access_base,model_testing_method,base.group_user,1,1,1,1
 season_access_base_user,season_access_base,model_season,base.group_user,1,1,1,1
-country_access_base_user,country_access_base,model_country,base.group_user,1,1,1,1

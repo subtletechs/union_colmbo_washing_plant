@@ -8,25 +8,29 @@ class InternalLabTests(models.Model):
     _inherit = ['mail.thread']
     _description = "Internal Lab Test record"
 
-    name = fields.Char(string="Report No", default="New", tracking=True)
+    name = fields.Char(string="Report No", default="New", tracking=True, readonly=True)
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')], string="Status", default="draft")
-    date_in = fields.Datetime(string="Date In")
-    date_out = fields.Datetime(string="Date Out", readonly=True)
+    date_in = fields.Datetime(string="Date In", tracking=True)
+    date_out = fields.Datetime(string="Date Out", tracking=True, readonly=True)
     is_pass = fields.Boolean(string="Pass")
     is_fail = fields.Boolean(string="Fail")
     is_data = fields.Boolean(string="Data")
-    style = fields.Many2one(comodel_name="product.product", string="Style")
-    style_no = fields.Char(string="Style No", related="style.default_code", store=True)
-    customer = fields.Many2one(comodel_name="res.partner", string="Factory", related="style.customer", store=True)
-    buyer = fields.Many2one(comodel_name="res.partner", string="Buyer", related="style.buyer", store=True)
-    garment_type = fields.Many2one(comodel_name="garment.type", string="Item", related="style.garment_type", store=True)
+    product_id = fields.Many2one(comodel_name="product.product", string="Style", domain="[('is_garment', '=', True)]",
+                                 tracking=True)
+    style_no = fields.Char(string="Style No", related="product_id.default_code", store=True)
+    customer = fields.Many2one(comodel_name="res.partner", string="Factory", related="product_id.customer", store=True)
+    buyer = fields.Many2one(comodel_name="res.partner", string="Buyer", related="product_id.buyer", store=True)
+    garment_type = fields.Many2one(comodel_name="garment.type", string="Item", related="product_id.garment_type",
+                                   store=True)
     tested_property = fields.Many2one(comodel_name="tested.property", string="Tested Property")
     testing_method = fields.Many2one(comodel_name="testing.method", string="Testing Method")
     requirement = fields.Text(string="Requirement")
-    samples = fields.Many2one(comodel_name="garment.sample", string="Sample Type", related="style.samples", store=True)
-    wash_type = fields.Many2one(comodel_name="wash.type", string="Wash Type", related="style.wash_type", store=True)
+    samples = fields.Many2one(comodel_name="garment.sample", string="Sample Type", related="product_id.samples",
+                              store=True)
+    wash_type = fields.Many2one(comodel_name="wash.type", string="Wash Type", related="product_id.wash_type",
+                                store=True)
     season = fields.Many2one(comodel_name="season", string="Season")
-    country = fields.Many2one(comodel_name="country", string="Country")
+    country = fields.Many2one(comodel_name="res.country", string="Country")
     ph_is_pass = fields.Boolean(string="Ph Pass")
     ph_is_fail = fields.Boolean(string="Ph Fail")
     ph_result = fields.Text(string="Ph Result")
@@ -106,9 +110,3 @@ class Season(models.Model):
     _name = "season"
 
     name = fields.Text(string="Season")
-
-
-class Country(models.Model):
-    _name = "country"
-
-    name = fields.Char(string="Name")
