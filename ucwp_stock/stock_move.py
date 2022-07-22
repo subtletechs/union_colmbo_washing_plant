@@ -679,6 +679,19 @@ class Picking(models.Model):
                                 error = "Product " + str(
                                     product_id.name) + " Does not have enough quantities at " + str(location_id.name)
                                 raise ValidationError(error)
+
+        # Do not allow to validate without setting the washing options
+        if self.garment_receipt and self.move_ids_without_package:
+            lots_without_washing_options = []
+            for picking_line in self.move_ids_without_package:
+                if picking_line.move_line_nosuggest_ids:
+                    for split_line in picking_line.move_line_nosuggest_ids:
+                        if not split_line.washing_options:
+                            lots_without_washing_options.append(split_line.barcode)
+            if len(lots_without_washing_options) > 0:
+                raise ValidationError(_("Washing option/s has not been set for " + ', '.join(
+                                    [barcode for barcode in lots_without_washing_options])))
+
         # When validate more quantity than sale order quantity
         if self.sale_id and self.garment_receipt:
             sale_id = self.sale_id.id
@@ -705,12 +718,15 @@ class Picking(models.Model):
                         if actually_received > sale_order_qty:
                             ir_model_data = self.env['ir.model.data']
                             try:
-                                template_id = ir_model_data._xmlid_lookup('union_colmbo_washing_plant.extra_qty_notification_email')[2]
+                                template_id = \
+                                ir_model_data._xmlid_lookup('union_colmbo_washing_plant.extra_qty_notification_email')[
+                                    2]
                             except ValueError:
                                 template_id = False
 
                             try:
-                                compose_form_id = ir_model_data._xmlid_lookup('mail.email_compose_message_wizard_form')[2]
+                                compose_form_id = ir_model_data._xmlid_lookup('mail.email_compose_message_wizard_form')[
+                                    2]
                             except ValueError:
                                 compose_form_id = False
                             ctx = dict(self.env.context or {})
